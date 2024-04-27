@@ -1,3 +1,19 @@
 <resources>
-    <string name="app_name">Playlist5</string>
+    <string name="app_name" translatable="false">Practicum Project</string>
+    <string name="title_hello">Привет, Практикум</string>
+    <string name="poisk" translatable="false">Поиск</string>
+    <string name="settings" translatable="false">Настройки</string>
+    <string name="media" translatable="false">Медиатека</string>
+    <string name="darkmode" translatable="false">Темная тема</string>
+    <string name="share" translatable="false">Поделиться приложением</string>
+    <string name="support" translatable="false"> Написать в поддержку</string>
+    <string name="documentation" translatable="false">Пользовательское соглашение</string>
+    <string name="share_message" translatable="false">"https://practicum.yandex.ru/profile/android-developer/"</string>
+    <string name="topic" translatable="false">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="context" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="contact" translatable="false">s.eglence@yandex.ru</string>
+    <string name="agreement" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="clear_icon" translatable="false">Очистить</string>
+    <string name="search" translatable="false">Поиск</string>
+
 </resources>

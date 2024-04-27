@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/colorPrimaryVariant"
+    android:padding="@dimen/button_margin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="28dp">
+
+        <Button
+
+            android:id="@+id/light_mode"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:backgroundTint="?attr/colorPrimaryVariant"
+            android:outlineProvider="none"
+            app:icon="@drawable/light_mode"
+            app:iconTint="?attr/colorOnPrimary"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:padding="@dimen/button_margin"
+            android:text="@string/settings"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="@dimen/size26"
+            tools:ignore="InefficientWeight,RtlHardcoded" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        >
+
+        <TextView
+            style="@style/text_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/darkmode"
+            android:layout_marginStart="@dimen/button_margin" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/zero"
+            android:thumbTint="?attr/colorControlActivated"
+            android:layout_gravity="end"
+            android:minWidth="@dimen/button_width"
+            tools:ignore="TouchTargetSizeCheck" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_settings"
+            android:layout_weight="1"
+            android:text="@string/share"
+            tools:ignore="InefficientWeight" />
+
+        <Button
+            android:id="@+id/vector"
+            app:icon="@drawable/vector"
+            style="@style/settings_button_style"
+            tools:ignore="SpeakableTextPresentCheck"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_settings"
+            android:layout_weight="1"
+            android:text="@string/support"
+            tools:ignore="InefficientWeight" />
+
+        <Button
+            android:id="@+id/support"
+            app:icon="@drawable/support"
+            style="@style/settings_button_style"
+            tools:ignore="SpeakableTextPresentCheck" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_settings"
+            android:layout_weight="1"
+            android:text="@string/documentation" />
+
+        <Button
+            android:id="@+id/arrow_forward"
+            app:icon="@drawable/arrow_forward"
+            style="@style/settings_button_style"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+    </LinearLayout>
+
+</LinearLayout>
