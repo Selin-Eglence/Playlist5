@@ -33,6 +33,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:backgroundTint="@color/white"
+            android:fontFamily= "@font/ys_display_medium"
             android:padding="@dimen/button_margin"
             android:text="@string/settings"
             android:textColor="?attr/colorOnPrimary"
@@ -51,14 +52,15 @@
         <TextView
             style="@style/text_settings"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_height="64dp"
             android:text="@string/darkmode"
             android:layout_marginStart="@dimen/button_margin" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchBtn"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/zero"
+            android:layout_height="64dp"
             android:thumbTint="?attr/colorControlActivated"
             android:layout_gravity="end"
             android:minWidth="@dimen/button_width"
@@ -67,7 +69,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
@@ -86,7 +88,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
@@ -106,7 +108,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 

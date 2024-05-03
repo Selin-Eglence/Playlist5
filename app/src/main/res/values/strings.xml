@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Practicum Project</string>
+    <string name="app" translatable="false">Playlist Maker</string>
     <string name="title_hello">Привет, Практикум</string>
     <string name="poisk" translatable="false">Поиск</string>
     <string name="settings" translatable="false">Настройки</string>
@@ -15,5 +15,7 @@
     <string name="agreement" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
     <string name="clear_icon" translatable="false">Очистить</string>
     <string name="search" translatable="false">Поиск</string>
+    <string name="arrow_back" translatable="false">Обратная стрелка</string>
+    <string name="arrow_forward" translatable="false">Стрелка вперед</string>
 
 </resources>

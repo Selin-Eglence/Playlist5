@@ -9,7 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.EditText
 
-class Poisk_Activity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity() {
 
     private var text: String = ""
 
@@ -27,6 +27,7 @@ class Poisk_Activity : AppCompatActivity() {
 
         clearButton.setOnClickListener {
             inputEditText.setText("")
+            clearButton.visibility=View.GONE
         }
 
         val simpleTextWatcher = object : TextWatcher {

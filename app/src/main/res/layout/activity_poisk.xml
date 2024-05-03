@@ -10,8 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <Button
 
@@ -46,7 +46,6 @@
 
 
         <EditText
-            android:maxLines="1"
             android:id="@+id/inputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,6 +59,7 @@
             android:hint="@string/search"
             android:inputType="text"
             android:maxLength="15"
+            android:maxLines="1"
             android:padding="8dp"
             android:paddingStart="12dp"
             android:textColor="@color/black"
@@ -73,11 +73,11 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:paddingEnd="24dp"
             android:contentDescription="@string/clear_icon"
+            android:paddingEnd="24dp"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:visibility="invisible"
-            app:tint="?attr/editTextColor"/>
+            app:tint="?attr/editTextColor" />
     </FrameLayout>
 
 
