@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.EditText
@@ -12,6 +13,10 @@ import android.widget.EditText
 class SearchActivity : AppCompatActivity() {
 
     private var text: String = ""
+    private fun hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,10 +30,15 @@ class SearchActivity : AppCompatActivity() {
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
         inputEditText.requestFocus()
 
+
+
         clearButton.setOnClickListener {
             inputEditText.setText("")
             clearButton.visibility=View.GONE
+            hideKeyboard(inputEditText)
         }
+
+
 
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {

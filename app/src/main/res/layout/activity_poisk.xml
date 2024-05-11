@@ -32,7 +32,7 @@
             android:layout_weight="1"
             android:backgroundTint="@color/white"
             android:padding="@dimen/button_margin"
-            android:text="@string/settings"
+            android:text="@string/search"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="@dimen/size26"
             tools:ignore="InefficientWeight,RtlHardcoded" />
@@ -64,7 +64,7 @@
             android:paddingStart="12dp"
             android:textColor="@color/black"
             android:textColorHint="?attr/editTextColor"
-            tools:ignore="TouchTargetSizeCheck,TextContrastCheck">
+            tools:ignore="Autofill,DuplicateSpeakableTextCheck,RtlSymmetry,TextContrastCheck,TouchTargetSizeCheck,VisualLintTextFieldSize">
 
         </EditText>
 
@@ -77,7 +77,8 @@
             android:paddingEnd="24dp"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:visibility="invisible"
-            app:tint="?attr/editTextColor" />
+            app:tint="?attr/editTextColor"
+            tools:ignore="RtlSymmetry" />
     </FrameLayout>
 
 
