@@ -48,10 +48,10 @@
         >
 
         <Switch
+            android:id="@+id/switchBtn"
             style="@style/Switch"
             android:text="@string/darkmode"
             android:thumbTint="?attr/colorControlActivated"
-
             tools:ignore="TouchTargetSizeCheck" />
 
     </LinearLayout>
