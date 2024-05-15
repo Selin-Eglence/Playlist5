@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="button_width">48dp</dimen>
+    <dimen name="button_margin">16dp</dimen>
+    <dimen name="margin10">10dp</dimen>
+    <dimen name="margin40">40dp</dimen>
+    <dimen name="padding8">8dp</dimen>
+    <dimen name="zero">0dp</dimen>
+    <dimen name="size16">16sp</dimen>
+    <dimen name="size26">26sp</dimen>
+    <dimen name="size22">22sp</dimen>
+    <dimen name="size61dp">61dp</dimen>
+</resources>
