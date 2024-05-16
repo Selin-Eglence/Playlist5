@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.widget.Switch
 import android.widget.Button
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.SwitchCompat
+
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
