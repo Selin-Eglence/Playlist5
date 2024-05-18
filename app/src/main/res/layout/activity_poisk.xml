@@ -86,11 +86,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/button_margin"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/tracklist">
 
     </androidx.recyclerview.widget.RecyclerView>
-
-
-
 
 </LinearLayout>

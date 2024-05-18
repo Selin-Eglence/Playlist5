@@ -94,7 +94,7 @@ class SearchActivity : AppCompatActivity() {
         const val INPUT = "INPUT"
     }
 
-    val tracklist = TrackAdapter(
+    private val tracklist = TrackAdapter(
         listOf(
             Track(
                 "Smells Like Teen Spirit",
