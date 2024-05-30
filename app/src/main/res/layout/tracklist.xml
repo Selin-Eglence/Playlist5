@@ -46,15 +46,24 @@
                 android:textColor="?attr/colorOnSecondary"
                 tools:text="Group name " />
 
+            <TextView
+                android:id="@+id/text_separator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_separator"
+                android:textColor="?attr/colorOnSecondary"/>
+
+
 
             <TextView
                 android:id="@+id/trackTime"
                 style="@style/artistStyle"
-                android:layout_marginStart="2dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="?attr/colorOnSecondary"
-                tools:text="Track time" />
+                tools:text=" Track time"
+                android:layout_weight="0"
+                />
 
         </LinearLayout>
 

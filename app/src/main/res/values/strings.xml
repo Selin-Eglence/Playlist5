@@ -21,6 +21,7 @@
     <string name="something_wrong"> Проблемы со связью\n\nЗагрузка не удалась.  Проверьте\nподключение к интернету</string>
     <string name="refresh">Обновить</string>
     <string name="error">Ошибка</string>
+    <string name="text_separator">" • "</string>
 
 
 </resources>
