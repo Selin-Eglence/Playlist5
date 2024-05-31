@@ -13,7 +13,6 @@ import android.widget.ImageView
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.view.isEmpty
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -79,8 +78,10 @@ class SearchActivity : AppCompatActivity() {
 
 
         clearButton.setOnClickListener {
-            inputEditText.setText("")
+            inputEditText.text.clear()
+            tracks.clear()
             clearButton.visibility = View.GONE
+            adapter.notifyDataSetChanged()
             hideKeyboard(inputEditText)
         }
         arrow.setOnClickListener {
@@ -110,6 +111,8 @@ class SearchActivity : AppCompatActivity() {
                 // empty
             }
         }
+
+        inputEditText.addTextChangedListener(simpleTextWatcher)
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 trackService.search(inputEditText.text.toString())
@@ -118,22 +121,27 @@ class SearchActivity : AppCompatActivity() {
                             call: Call<TrackResponse>,
                             response: Response<TrackResponse>
                         ) {
-                            if (response.code() == 200) {
-                                tracks.clear()
-                                if (response.body()?.results?.isNotEmpty() == true) {
-                                    errorMessage.isVisible = false
-                                    tracks.addAll(response.body()?.results!!)
-                                    adapter.notifyDataSetChanged()
+                            when (response.code()) {
+                                200 -> {
+                                    if (response.body()?.results?.isNotEmpty() == true) {
+                                        tracks.clear()
+                                        errorMessage.isVisible = false
+                                        tracks.addAll(response.body()?.results!!)
+                                        adapter.notifyDataSetChanged()
+                                    } else {
+                                        errorMessage.isVisible = true
+                                        refreshButton.isVisible = false
+                                        errorText.text = getString(R.string.nothing_found)
+                                        errorImage.setImageResource(R.drawable.emodji_error)
+                                    }
                                 }
-                                if (trackset.isEmpty()) {
-                                    errorText.text = getString(R.string.nothing_found)
-                                    errorImage.setImageResource(R.drawable.emodji_error)
-                                }
-                            } else {
-                                errorText.text = getString(R.string.something_wrong)
-                                errorImage.setImageResource(R.drawable.noconnection_error)
-                                refreshButton.isVisible = true
 
+                                else -> {
+                                    errorText.text = getString(R.string.something_wrong)
+                                    errorImage.setImageResource(R.drawable.noconnection_error)
+                                    refreshButton.isVisible = true
+
+                                }
                             }
                         }
 
@@ -143,12 +151,10 @@ class SearchActivity : AppCompatActivity() {
                             refreshButton.isVisible = true
                         }
 
+
                     })
-                true
             }
-            false
-        }
-        inputEditText.addTextChangedListener(simpleTextWatcher)
+            false}
     }
 
 
@@ -158,7 +164,6 @@ class SearchActivity : AppCompatActivity() {
     }
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        val inputEditText = findViewById<EditText>(R.id.inputEditText)
         text = savedInstanceState.getString(INPUT, text)
         inputEditText.setText(text)
     }
@@ -167,6 +172,6 @@ class SearchActivity : AppCompatActivity() {
         const val INPUT = "INPUT"
     }
 
+    }
 
 
-}
