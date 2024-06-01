@@ -161,11 +161,11 @@ class SearchActivity : AppCompatActivity() {
             }
 
         override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+            tracks.clear()
+            adapter.notifyDataSetChanged()
             errorText.text = getString(R.string.something_wrong)
             errorImage.setImageResource(R.drawable.noconnection_error)
             refreshButton.isVisible = true
-            tracks.clear()
-            adapter.notifyDataSetChanged()
         }
     })
     }
