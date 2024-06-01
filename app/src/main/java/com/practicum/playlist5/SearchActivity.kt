@@ -96,6 +96,9 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
+        refreshButton.setOnClickListener {
+            search() }
+
 
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -112,49 +115,59 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        inputEditText.addTextChangedListener(simpleTextWatcher)
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                trackService.search(inputEditText.text.toString())
-                    .enqueue(object : Callback<TrackResponse> {
-                        override fun onResponse(
-                            call: Call<TrackResponse>,
-                            response: Response<TrackResponse>
-                        ) {
-                            when (response.code()) {
-                                200 -> {
-                                    if (response.body()?.results?.isNotEmpty() == true) {
-                                        tracks.clear()
-                                        errorMessage.isVisible = false
-                                        tracks.addAll(response.body()?.results!!)
-                                        adapter.notifyDataSetChanged()
-                                    } else {
-                                        errorMessage.isVisible = true
-                                        refreshButton.isVisible = false
-                                        errorText.text = getString(R.string.nothing_found)
-                                        errorImage.setImageResource(R.drawable.emodji_error)
-                                    }
-                                }
-
-                                else -> {
-                                    errorText.text = getString(R.string.something_wrong)
-                                    errorImage.setImageResource(R.drawable.noconnection_error)
-                                    refreshButton.isVisible = true
-
-                                }
-                            }
-                        }
-
-                        override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                            errorText.text = getString(R.string.something_wrong)
-                            errorImage.setImageResource(R.drawable.noconnection_error)
-                            refreshButton.isVisible = true
-                        }
-
-
-                    })
+                search()
             }
             false}
+        inputEditText.addTextChangedListener(simpleTextWatcher)
+    }
+
+
+    private fun search() {
+    trackService.search(inputEditText.text.toString())
+    .enqueue(object : Callback<TrackResponse> {
+        override fun onResponse(
+            call: Call<TrackResponse>,
+            response: Response<TrackResponse>
+        ) {
+            if (response.code() == 200) {
+                    tracks.clear()
+                    if (response.body()?.results?.isNotEmpty() == true) {
+                        tracks.clear()
+                        errorMessage.isVisible = false
+                        tracks.addAll(response.body()?.results!!)
+                        adapter.notifyDataSetChanged()
+
+                    }
+                    else {
+                        tracks.clear()
+                        adapter.notifyDataSetChanged()
+                        errorMessage.isVisible = true
+                        refreshButton.isVisible = false
+                        errorText.text = getString(R.string.nothing_found)
+                        errorImage.setImageResource(R.drawable.emodji_error)
+                    }
+                }
+
+                else {
+                tracks.clear()
+                adapter.notifyDataSetChanged()
+                    errorText.text = getString(R.string.something_wrong)
+                    errorImage.setImageResource(R.drawable.noconnection_error)
+                    refreshButton.isVisible = true
+
+                }
+            }
+
+        override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+            errorText.text = getString(R.string.something_wrong)
+            errorImage.setImageResource(R.drawable.noconnection_error)
+            refreshButton.isVisible = true
+            tracks.clear()
+            adapter.notifyDataSetChanged()
+        }
+    })
     }
 
 
