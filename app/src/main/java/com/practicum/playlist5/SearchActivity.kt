@@ -1,6 +1,7 @@
 package com.practicum.playlist5
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -21,6 +22,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import android.util.Log
+
 
 
 class SearchActivity : AppCompatActivity() {
@@ -76,8 +79,12 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.requestFocus()
 
 
+        Log.d(TAG, "onCreate: Activity created")
+
+
 
         clearButton.setOnClickListener {
+            Log.d(TAG, "onClick: Clear button clicked")
             inputEditText.text.clear()
             tracks.clear()
             clearButton.visibility = View.GONE
@@ -89,6 +96,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         fun clearButtonVisibility(s: CharSequence?): Int {
+
             return if (s.isNullOrEmpty()) {
                 View.GONE
             } else {
@@ -97,6 +105,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         refreshButton.setOnClickListener {
+            Log.d(TAG,"onClick : Refresh button clicked")
             search() }
 
 
@@ -106,6 +115,7 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                Log.d(TAG,"Text changed")
                 text = inputEditText.text.toString()
                 clearButton.visibility = clearButtonVisibility(s)
             }
@@ -117,6 +127,7 @@ class SearchActivity : AppCompatActivity() {
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
+                Log.d(TAG, "onEditorAction: Search triggered by IME action DONE")
                 search()
             }
             false}
@@ -125,22 +136,30 @@ class SearchActivity : AppCompatActivity() {
 
 
     private fun search() {
-    trackService.search(inputEditText.text.toString())
+        Log.d(TAG, "search: Started search for ${inputEditText.text.toString()}")
+        tracks.clear()
+        adapter.notifyDataSetChanged()
+        trackService.search(inputEditText.text.toString())
     .enqueue(object : Callback<TrackResponse> {
         override fun onResponse(
             call: Call<TrackResponse>,
             response: Response<TrackResponse>
         ) {
+            Log.d(TAG, "onResponse: Received response with code ${response.code()}")
             if (response.code() == 200) {
                     tracks.clear()
+
                     if (response.body()?.results?.isNotEmpty() == true) {
+                        Log.d(TAG, "onResponse: Found ${response.body()?.results!!.size} tracks")
                         tracks.clear()
+                        refreshButton.isVisible = false
                         errorMessage.isVisible = false
                         tracks.addAll(response.body()?.results!!)
                         adapter.notifyDataSetChanged()
 
                     }
-                    else {
+                    if (tracks.isEmpty()) {
+                        Log.d(TAG, "onResponse: No tracks found")
                         tracks.clear()
                         adapter.notifyDataSetChanged()
                         errorMessage.isVisible = true
@@ -149,25 +168,24 @@ class SearchActivity : AppCompatActivity() {
                         errorImage.setImageResource(R.drawable.emodji_error)
                     }
                 }
-
                 else {
-                tracks.clear()
-                adapter.notifyDataSetChanged()
-                    errorText.text = getString(R.string.something_wrong)
-                    errorImage.setImageResource(R.drawable.noconnection_error)
-                    refreshButton.isVisible = true
-
+                    Log.d(TAG,"network problem")
+                handleNetworkError()
                 }
             }
-
         override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-            tracks.clear()
-            adapter.notifyDataSetChanged()
-            errorText.text = getString(R.string.something_wrong)
-            errorImage.setImageResource(R.drawable.noconnection_error)
-            refreshButton.isVisible = true
+            Log.d(TAG,"network failure",t)
+           handleNetworkError()
         }
     })
+    }
+
+    private fun handleNetworkError() {
+    Log.d(TAG,"handling network error")
+        errorMessage.isVisible = true
+        errorText.text = getString(R.string.something_wrong)
+        errorImage.setImageResource(R.drawable.noconnection_error)
+        refreshButton.isVisible = true
     }
 
 
