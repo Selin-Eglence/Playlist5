@@ -79,12 +79,10 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.requestFocus()
 
 
-        Log.d(TAG, "onCreate: Activity created")
 
 
 
         clearButton.setOnClickListener {
-            Log.d(TAG, "onClick: Clear button clicked")
             inputEditText.text.clear()
             tracks.clear()
             clearButton.visibility = View.GONE
@@ -105,7 +103,6 @@ class SearchActivity : AppCompatActivity() {
         }
 
         refreshButton.setOnClickListener {
-            Log.d(TAG,"onClick : Refresh button clicked")
             search() }
 
 
@@ -115,7 +112,6 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Log.d(TAG,"Text changed")
                 text = inputEditText.text.toString()
                 clearButton.visibility = clearButtonVisibility(s)
             }
@@ -127,7 +123,6 @@ class SearchActivity : AppCompatActivity() {
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                Log.d(TAG, "onEditorAction: Search triggered by IME action DONE")
                 search()
             }
             false}
@@ -136,7 +131,6 @@ class SearchActivity : AppCompatActivity() {
 
 
     private fun search() {
-        Log.d(TAG, "search: Started search for ${inputEditText.text.toString()}")
         tracks.clear()
         adapter.notifyDataSetChanged()
         trackService.search(inputEditText.text.toString())
@@ -169,19 +163,16 @@ class SearchActivity : AppCompatActivity() {
                     }
                 }
                 else {
-                    Log.d(TAG,"network problem")
                 handleNetworkError()
                 }
             }
         override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-            Log.d(TAG,"network failure",t)
            handleNetworkError()
         }
     })
     }
 
     private fun handleNetworkError() {
-    Log.d(TAG,"handling network error")
         errorMessage.isVisible = true
         errorText.text = getString(R.string.something_wrong)
         errorImage.setImageResource(R.drawable.noconnection_error)
