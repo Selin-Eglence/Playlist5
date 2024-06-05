@@ -17,5 +17,11 @@
     <string name="search" translatable="false">Поиск</string>
     <string name="arrow_back" translatable="false">Обратная стрелка</string>
     <string name="arrow_forward" translatable="false">Стрелка вперед</string>
+    <string name="nothing_found">Ничего не нашлось</string>
+    <string name="something_wrong"> Проблемы со связью\n\nЗагрузка не удалась.  Проверьте\nподключение к интернету</string>
+    <string name="refresh">Обновить</string>
+    <string name="error">Ошибка</string>
+    <string name="text_separator">" • "</string>
+
 
 </resources>
