@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -26,6 +25,8 @@
         <TextView
             android:id="@+id/trackName"
             style="@style/title"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding14"
@@ -33,27 +34,41 @@
             tools:text="Track Name"/>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="@dimen/size16"
             android:gravity="start|center_vertical"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/artistName"
                 style="@style/artistStyle"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:textColor="?attr/colorOnSecondary"
-                tools:text="Group name " />
+                tools:text="Group name "/>
 
+            <TextView
+                android:id="@+id/text_separator"
+                style="@style/artistStyle"
+                android:maxLines="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_separator"
+                android:textColor="?attr/colorOnSecondary"/>
 
             <TextView
                 android:id="@+id/trackTime"
                 style="@style/artistStyle"
+                android:maxLines="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="?attr/colorOnSecondary"
-                tools:text="Track time" />
+                tools:text="Track time"/>
 
         </LinearLayout>
 
@@ -67,6 +82,5 @@
         android:layout_marginEnd="@dimen/padding12"
         android:backgroundTint="?attr/colorPrimaryVariant"
         app:srcCompat="@drawable/arrow_forward" />
-
 
 </LinearLayout>
