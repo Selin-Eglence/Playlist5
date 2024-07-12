@@ -42,6 +42,9 @@ class SearchHistory(private val context: Context, private val adapter: TrackAdap
         val tracks = getTrackHistory().toMutableList()
         tracks.removeAll { it.trackId == track.trackId }
         tracks.add(0, track)
+        if (tracks.size > 10) {
+            tracks.removeAt(tracks.size - 1)
+        }
         val trackJson = Gson().toJson(tracks)
         searchHistPref.edit().putString(KEY, trackJson).apply()
         updateHistory()

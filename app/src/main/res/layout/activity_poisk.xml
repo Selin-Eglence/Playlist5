@@ -35,7 +35,7 @@
             android:padding="@dimen/button_margin"
             android:text="@string/search"
             android:textColor="?attr/colorOnPrimary"
-            android:textSize="@dimen/size26"
+            android:textSize="@dimen/size22"
             tools:ignore="InefficientWeight,RtlHardcoded" />
     </LinearLayout>
 
@@ -56,7 +56,7 @@
             android:layout_marginHorizontal="@dimen/button_margin"
             android:layout_marginVertical="@dimen/padding8"
             android:background="@drawable/cancel_icon"
-            android:drawableStart="@drawable/lupa1"
+            android:drawableStart="@drawable/search_icon"
             android:textCursorDrawable="@drawable/cursor"
             android:drawablePadding="12dp"
             android:drawableTint="?attr/editTextColor"
@@ -65,23 +65,22 @@
             android:maxLength="15"
             android:maxLines="1"
             android:padding="8dp"
-            android:paddingStart="12dp"
+            android:paddingStart="13dp"
             android:textColor="@color/black"
             android:textColorHint="?attr/editTextColor"
             tools:ignore="Autofill,DuplicateSpeakableTextCheck,RtlSymmetry,TextContrastCheck,TouchTargetSizeCheck,VisualLintTextFieldSize">
-
         </EditText>
 
         <ImageView
             android:id="@+id/clearIcon"
-            android:layout_marginEnd="30dp"
-            android:layout_width="@dimen/size18dp"
+            android:layout_width="@dimen/size16"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="30dp"
             android:contentDescription="@string/clear_icon"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            android:visibility="invisible"
             android:scaleType="fitCenter"
+            android:src="@drawable/cancel_button"
+            android:visibility="visible"
             app:tint="?attr/editTextColor"
             tools:ignore="RtlSymmetry" />
     </FrameLayout>
