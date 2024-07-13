@@ -39,7 +39,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var trackset: RecyclerView
     private lateinit var arrow: Button
     private lateinit var inputEditText: EditText
-    private lateinit var clearButton: FrameLayout
+    private lateinit var clearButton: ImageView
     private lateinit var errorMessage: LinearLayout
     private lateinit var errorImage: ImageView
     private lateinit var errorText: TextView

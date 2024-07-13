@@ -71,24 +71,22 @@
             tools:ignore="Autofill,DuplicateSpeakableTextCheck,RtlSymmetry,TextContrastCheck,TouchTargetSizeCheck,VisualLintTextFieldSize">
         </EditText>
 
-        <FrameLayout
+        <ImageView
             android:id="@+id/clearIcon"
             android:layout_width="40dp"
             android:layout_height="36dp"
+            android:paddingLeft="@dimen/padding12"
+            android:paddingRight="@dimen/padding12"
+            android:paddingTop="@dimen/margin10"
+            android:paddingBottom="@dimen/margin10"
             android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="17dp">
-
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="center"
-                android:contentDescription="@string/clear_icon"
-                android:scaleType="fitCenter"
-                android:src="@drawable/cancel_button"
-                android:visibility="invisible"
-                app:tint="?attr/editTextColor"
-                tools:ignore="RtlSymmetry"/>
-        </FrameLayout>
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/clear_icon"
+            android:scaleType="fitCenter"
+            android:src="@drawable/cancel_button"
+            android:visibility="visible"
+            app:tint="?attr/editTextColor"
+            tools:ignore="RtlSymmetry"/>
     </FrameLayout>
 
     <FrameLayout
