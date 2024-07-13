@@ -81,7 +81,7 @@
             android:contentDescription="@string/clear_icon"
             android:scaleType="fitCenter"
             android:src="@drawable/cancel_button"
-            android:visibility="visible"
+            android:visibility="invisible"
             app:tint="?attr/editTextColor"
             tools:ignore="RtlSymmetry"/>
     </FrameLayout>
