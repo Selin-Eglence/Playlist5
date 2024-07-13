@@ -23,6 +23,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import android.util.Log
+import android.widget.FrameLayout
 import android.widget.Toast
 
 class SearchActivity : AppCompatActivity() {
@@ -38,7 +39,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var trackset: RecyclerView
     private lateinit var arrow: Button
     private lateinit var inputEditText: EditText
-    private lateinit var clearButton: ImageView
+    private lateinit var clearButton: FrameLayout
     private lateinit var errorMessage: LinearLayout
     private lateinit var errorImage: ImageView
     private lateinit var errorText: TextView

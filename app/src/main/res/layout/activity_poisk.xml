@@ -58,7 +58,7 @@
             android:background="@drawable/cancel_icon"
             android:drawableStart="@drawable/search_icon"
             android:textCursorDrawable="@drawable/cursor"
-            android:drawablePadding="12dp"
+            android:drawablePadding="8dp"
             android:drawableTint="?attr/editTextColor"
             android:hint="@string/search"
             android:inputType="text"
@@ -71,18 +71,24 @@
             tools:ignore="Autofill,DuplicateSpeakableTextCheck,RtlSymmetry,TextContrastCheck,TouchTargetSizeCheck,VisualLintTextFieldSize">
         </EditText>
 
-        <ImageView
+        <FrameLayout
             android:id="@+id/clearIcon"
-            android:layout_width="@dimen/size16"
-            android:layout_height="match_parent"
+            android:layout_width="40dp"
+            android:layout_height="36dp"
             android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="30dp"
-            android:contentDescription="@string/clear_icon"
-            android:scaleType="fitCenter"
-            android:src="@drawable/cancel_button"
-            android:visibility="visible"
-            app:tint="?attr/editTextColor"
-            tools:ignore="RtlSymmetry" />
+            android:layout_marginEnd="17dp">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/clear_icon"
+                android:scaleType="fitCenter"
+                android:src="@drawable/cancel_button"
+                android:visibility="visible"
+                app:tint="?attr/editTextColor"
+                tools:ignore="RtlSymmetry"/>
+        </FrameLayout>
     </FrameLayout>
 
     <FrameLayout
