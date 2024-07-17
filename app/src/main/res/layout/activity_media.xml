@@ -4,6 +4,247 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Media_Activity">
+    tools:context=".Media_Activity"
+    android:background="?attr/colorPrimaryVariant">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/leftBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="25dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rightBorder"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+        <Button
+            android:id="@+id/light_mode"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:layout_constraintStart_toStartOf="@id/leftBorder"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@null"
+            android:backgroundTint="?attr/colorPrimaryVariant"
+            android:outlineProvider="none"
+            app:icon="@drawable/light_mode"
+            app:iconTint="?attr/colorOnPrimary"
+            tools:ignore="SpeakableTextPresentCheck"/>
+
+
+    <ImageView
+        android:id="@+id/albumImage"
+        android:layout_width="312dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/size_24dp"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:layout_constraintTop_toBottomOf="@id/light_mode"
+        app:layout_constraintCircleRadius="@dimen/radius_8dp"
+        app:srcCompat="@drawable/placeholder"
+        app:layout_constraintDimensionRatio="1:1"
+        android:layout_marginTop="26dp">
+
+    </ImageView>
+
+    <TextView
+        android:id="@+id/trackName"
+        style="@style/media_name"
+        android:textSize="@dimen/size22"
+        android:text="@string/nothing_found"
+        android:layout_width="0dp"
+        android:layout_height="26dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"
+        app:layout_constraintEnd_toEndOf="@id/albumImage"
+        app:layout_constraintStart_toStartOf="@id/albumImage"
+        app:layout_constraintTop_toBottomOf="@id/albumImage"
+        android:layout_marginTop="@dimen/size_24dp"
+        tools:ignore="MissingConstraints">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/artistName"
+        android:layout_width="0dp"
+        android:layout_height="16dp"
+        android:text="@string/nothing_found"
+        style="@style/media_name"
+        android:textSize="@dimen/size14"
+        android:layout_marginTop="@dimen/padding8"
+        app:layout_constraintEnd_toEndOf="@id/trackName"
+        app:layout_constraintStart_toStartOf="@id/trackName"
+        app:layout_constraintTop_toBottomOf="@id/trackName"
+        tools:ignore="MissingConstraints">
+
+    </TextView>
+
+    <ImageView
+        android:id="@+id/play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/button_margin"
+        app:layout_constraintEnd_toStartOf="@+id/rightBorder"
+        app:layout_constraintStart_toStartOf="@+id/leftBorder"
+        app:layout_constraintTop_toBottomOf="@+id/artistName"
+        app:srcCompat="@drawable/play_icon"
+        app:tint="?attr/colorOnPrimary" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/playtracker"
+        android:text="0:00"
+        app:layout_constraintTop_toBottomOf="@+id/play"
+        app:layout_constraintEnd_toEndOf="@+id/play"
+        app:layout_constraintStart_toStartOf="@+id/play"
+        android:gravity="center"
+        style="@style/RightText">
+
+    </TextView>
+
+
+
+    <ImageView
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/play"
+        app:layout_constraintStart_toStartOf="@+id/leftBorder"
+        app:layout_constraintTop_toTopOf="@+id/play"
+        app:srcCompat="@drawable/add_track"
+        android:background="?attr/colorPrimaryVariant" />
+
+    <ImageView
+        android:id="@+id/iv_like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/play"
+        app:layout_constraintEnd_toStartOf="@+id/rightBorder"
+        app:layout_constraintTop_toTopOf="@+id/play"
+        app:srcCompat="@drawable/like" />
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/tv_country"
+        android:text="@string/country"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/leftBorder"
+        style="@style/LeftText"
+
+        />
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/country_name"
+        android:text="@string/no_data_available"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_country"
+        app:layout_constraintEnd_toEndOf="@+id/rightBorder"
+        style="@style/RightText"
+        />
+
+
+
+    <TextView
+        android:id="@+id/genre"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/genre"
+        app:layout_constraintBottom_toTopOf="@id/tv_country"
+        app:layout_constraintStart_toStartOf="@+id/leftBorder"
+        style="@style/LeftText"
+        />
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/genre_name"
+        android:text="@string/no_data_available"
+        app:layout_constraintBaseline_toBaselineOf="@+id/genre"
+        app:layout_constraintBottom_toTopOf="@id/country_name"
+        app:layout_constraintEnd_toEndOf="@+id/rightBorder"
+        style="@style/RightText"
+        />
+
+
+    <TextView
+        android:id="@+id/year"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/year"
+        app:layout_constraintBottom_toTopOf="@id/genre"
+        app:layout_constraintStart_toStartOf="@+id/leftBorder"
+        style="@style/LeftText"
+        />
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/year_name"
+        app:layout_constraintBaseline_toBaselineOf="@+id/year"
+        android:text="@string/no_data_available"
+        app:layout_constraintBottom_toTopOf="@id/genre_name"
+        app:layout_constraintEnd_toEndOf="@+id/rightBorder"
+        style="@style/RightText"
+        />
+
+    <TextView
+        android:id="@+id/album"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/album"
+        app:layout_constraintBottom_toTopOf="@id/year"
+        app:layout_constraintStart_toStartOf="@+id/leftBorder"
+        style="@style/LeftText"
+        />
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:id="@+id/album_name"
+        app:layout_constraintBaseline_toBaselineOf="@+id/album"
+        android:text="@string/no_data_available"
+        app:layout_constraintStart_toEndOf="@id/album"
+        app:layout_constraintBottom_toTopOf="@id/year_name"
+        app:layout_constraintEnd_toEndOf="@+id/rightBorder"
+        style="@style/RightText"
+
+        />
+
+    <TextView
+        android:id="@+id/duration"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/duration"
+        app:layout_constraintBottom_toTopOf="@id/album"
+        app:layout_constraintStart_toStartOf="@+id/leftBorder"
+        style="@style/LeftText"
+        />
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/timing"
+        app:layout_constraintBaseline_toBaselineOf="@+id/duration"
+        android:text="@string/no_data_available"
+        app:layout_constraintBottom_toTopOf="@id/album_name"
+        app:layout_constraintEnd_toEndOf="@+id/rightBorder"
+        style="@style/RightText"
+        />
+
+
+
+
+
+
+    
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

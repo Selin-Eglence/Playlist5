@@ -32,6 +32,27 @@
     </style>
 
 
+        <style name="LeftText">
+            <item name="android:layout_width">wrap_content</item>
+            <item name="android:layout_height">wrap_content</item>
+            <item name="android:gravity">center</item>
+            <item name="android:textSize">@dimen/size14</item>
+            <item name="android:textAllCaps">false</item>
+            <item name="android:fontFamily">@font/ys_display_regular</item>
+            <item name="android:textColor">@color/grey</item>
+            <item name="android:textFontWeight">400</item>
+            <item name="android:layout_marginBottom">@dimen/padding12</item>
+            <item name="android:ellipsize">end</item>
+            <item name="android:maxLines">1</item>
+            <item name="android:singleLine">true</item>
+        </style>
+
+        <style name="RightText" parent="LeftText">
+            <item name="android:layout_width">0dp</item>
+            <item name="android:textColor">?attr/colorOnPrimary</item>
+            <item name="android:gravity">end</item>
+        </style>
+
     <style name="TintedNavigation" parent="Widget.AppCompat.Toolbar.Button.Navigation">
         <item name="tint">?attr/colorOnPrimary</item>
     </style>
@@ -98,6 +119,13 @@
         <item name="android:gravity">start</item>
         <item name="android:textSize">@dimen/size11</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>
+    </style>
+
+    <style name="media_name">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
 </resources>
