@@ -12,6 +12,10 @@
     <dimen name="size11">11sp</dimen>
     <dimen name="size26">26sp</dimen>
     <dimen name="size22">22sp</dimen>
+    <dimen name="size20">20sp</dimen>
     <dimen name="size64dp">64dp</dimen>
     <dimen name="size61dp">61dp</dimen>
+    <dimen name="size18dp">18dp</dimen>
+    <dimen name="history_search">52dp</dimen>
+
 </resources>

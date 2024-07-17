@@ -22,6 +22,9 @@
     <string name="refresh">Обновить</string>
     <string name="error">Ошибка</string>
     <string name="text_separator">" • "</string>
+    <string name="search_request">Вы искали</string>
+    <string name="clear_history">Очистить историю</string>
+
 
 
 </resources>

@@ -23,37 +23,36 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import android.util.Log
-
-
+import android.widget.FrameLayout
+import android.widget.Toast
 
 class SearchActivity : AppCompatActivity() {
 
     private val ItunesBaseUrl = "https://itunes.apple.com/"
-
     private val retrofit = Retrofit.Builder()
         .baseUrl(ItunesBaseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-
-
     private val trackService = retrofit.create(TrackAPI::class.java)
-    val tracks = mutableListOf<Track>()
-    private val adapter= TrackAdapter(tracks)
+    private val tracklist = ArrayList<Track>()
 
     private lateinit var trackset: RecyclerView
-    private lateinit var arrow :Button
+    private lateinit var arrow: Button
     private lateinit var inputEditText: EditText
-    private lateinit var clearButton:ImageView
-    private lateinit var errorMessage:LinearLayout
-    private lateinit var errorImage:ImageView
-    private lateinit var errorText:TextView
-    private lateinit var refreshButton:Button
-
-
-
-
-
+    private lateinit var clearButton: ImageView
+    private lateinit var errorMessage: LinearLayout
+    private lateinit var errorImage: ImageView
+    private lateinit var errorText: TextView
+    private lateinit var refreshButton: Button
+    private lateinit var searchHistory: SearchHistory
+    private lateinit var hintMessage: TextView
+    private lateinit var historyList: RecyclerView
+    private lateinit var clearHistory: Button
+    private lateinit var searchHistoryLayout: LinearLayout
+    private lateinit var searchAdapter: TrackAdapter
+    private lateinit var historyAdapter: TrackAdapter
     private var text: String = ""
+
     private fun hideKeyboard(view: View) {
         val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
@@ -64,11 +63,8 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_poisk)
 
-
-
         trackset = findViewById(R.id.recyclerview)
         trackset.layoutManager = LinearLayoutManager(this)
-        trackset.adapter = adapter
         arrow = findViewById(R.id.light_mode)
         inputEditText = findViewById(R.id.inputEditText)
         clearButton = findViewById(R.id.clearIcon)
@@ -76,25 +72,26 @@ class SearchActivity : AppCompatActivity() {
         errorImage = findViewById(R.id.ErrorImage)
         errorText = findViewById(R.id.ErrorText)
         refreshButton = findViewById(R.id.RefreshButton)
-        inputEditText.requestFocus()
-
-
-
-
+        hintMessage = findViewById(R.id.hintMessage)
+        historyList = findViewById(R.id.historyList)
+        clearHistory = findViewById(R.id.buttonClearHistory)
+        searchHistoryLayout = findViewById(R.id.searchHistoryLayout)
 
         clearButton.setOnClickListener {
             inputEditText.text.clear()
-            tracks.clear()
+            tracklist.clear()
+            historyList.isVisible= true
             clearButton.visibility = View.GONE
-            adapter.notifyDataSetChanged()
+            searchAdapter.notifyDataSetChanged()
             hideKeyboard(inputEditText)
+            historyMessage()
         }
+
         arrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
         fun clearButtonVisibility(s: CharSequence?): Int {
-
             return if (s.isNullOrEmpty()) {
                 View.GONE
             } else {
@@ -103,8 +100,25 @@ class SearchActivity : AppCompatActivity() {
         }
 
         refreshButton.setOnClickListener {
-            search() }
+            search()
+        }
 
+        inputEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && inputEditText.text.isEmpty() && searchHistory.getTrackHistory().isNotEmpty()) {
+                historyMessage()
+            } else {
+                trackset.isVisible = true
+                errorMessage.isVisible = false
+                searchHistoryLayout.isVisible = false
+            }
+        }
+
+        clearHistory.setOnClickListener {
+            searchHistory.clearTrackHistory()
+            historyAdapter.tracks.clear()
+            historyAdapter.notifyDataSetChanged()
+            searchHistoryLayout.isVisible = false
+        }
 
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -114,6 +128,13 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 text = inputEditText.text.toString()
                 clearButton.visibility = clearButtonVisibility(s)
+                if (inputEditText.hasFocus() && s?.isEmpty() == true) {
+                    historyMessage()
+                } else {
+                    trackset.isVisible = true
+                    errorMessage.isVisible = false
+                    searchHistoryLayout.isVisible = false
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -125,14 +146,42 @@ class SearchActivity : AppCompatActivity() {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 search()
             }
-            false}
+            false
+        }
         inputEditText.addTextChangedListener(simpleTextWatcher)
+
+        val onHistoryTrackClickListener = TrackAdapter.ItemClickListener { track ->
+            Toast.makeText(
+                this@SearchActivity,
+                "Track: " + track.artistName + " - " + track.trackName,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        historyAdapter = TrackAdapter(onHistoryTrackClickListener)
+        historyList.layoutManager = LinearLayoutManager(this)
+        historyList.adapter = historyAdapter
+
+        searchHistory = SearchHistory(this, historyAdapter)
+
+        val onItemClickListener = TrackAdapter.ItemClickListener { track ->
+            searchHistory.addTrack(track)
+            searchHistoryLayout.isVisible = false
+        }
+
+        trackset.layoutManager = LinearLayoutManager(this)
+        searchAdapter = TrackAdapter(onItemClickListener)
+        searchAdapter.tracks = tracklist
+        trackset.adapter = searchAdapter
+
+        // Load history on start
+        searchHistory.updateHistory()
     }
 
-
     private fun search() {
-        tracks.clear()
-        adapter.notifyDataSetChanged()
+        if (inputEditText.text.isEmpty()) return
+        historyList.isVisible = false
+        tracklist.clear()
+        searchAdapter.notifyDataSetChanged()
         trackService.search(inputEditText.text.toString())
     .enqueue(object : Callback<TrackResponse> {
         override fun onResponse(
@@ -141,24 +190,26 @@ class SearchActivity : AppCompatActivity() {
         ) {
             Log.d(TAG, "onResponse: Received response with code ${response.code()}")
             if (response.code() == 200) {
-                    tracks.clear()
+                    tracklist.clear()
 
                     if (response.body()?.results?.isNotEmpty() == true) {
                         Log.d(TAG, "onResponse: Found ${response.body()?.results!!.size} tracks")
-                        tracks.clear()
+                        tracklist.clear()
                         refreshButton.isVisible = false
                         errorMessage.isVisible = false
-                        tracks.addAll(response.body()?.results!!)
-                        adapter.notifyDataSetChanged()
+                        searchHistoryLayout.isVisible = false
+                        tracklist.addAll(response.body()?.results!!)
+                        searchAdapter.notifyDataSetChanged()
 
                     }
-                    if (tracks.isEmpty()) {
+                    if (tracklist.isEmpty()) {
                         Log.d(TAG, "onResponse: No tracks found")
-                        tracks.clear()
-                        adapter.notifyDataSetChanged()
+                        tracklist.clear()
+                        searchAdapter.notifyDataSetChanged()
                         errorMessage.isVisible = true
                         refreshButton.isVisible = false
                         errorText.text = getString(R.string.nothing_found)
+                        searchHistoryLayout.isVisible = false
                         errorImage.setImageResource(R.drawable.emodji_error)
                     }
                 }
@@ -172,8 +223,17 @@ class SearchActivity : AppCompatActivity() {
     })
     }
 
+
+    private fun historyMessage() {
+        trackset.isVisible = false
+        errorMessage.isVisible= false
+        searchHistoryLayout.isVisible= historyAdapter.tracks.isNotEmpty()
+    }
+
+
     private fun handleNetworkError() {
         errorMessage.isVisible = true
+        searchHistoryLayout.isVisible = false
         errorText.text = getString(R.string.something_wrong)
         errorImage.setImageResource(R.drawable.noconnection_error)
         refreshButton.isVisible = true

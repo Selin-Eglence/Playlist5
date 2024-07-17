@@ -20,16 +20,13 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         val switch = findViewById<Switch>(R.id.switchBtn)
-        switch.setOnClickListener {
-            if (switch.isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-
-            else {
-                AppCompatDelegate.setDefaultNightMode (AppCompatDelegate.MODE_NIGHT_NO)
-            }
-
-
+        switch.isChecked = (applicationContext as APP).darkTheme
+        val sharedPreferences = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
+        switch.setOnCheckedChangeListener { _, checked ->
+            (applicationContext as APP).switchTheme(checked)
+            sharedPreferences.edit()
+                .putBoolean(THEME_KEY,checked)
+                .apply()
         }
 
 
