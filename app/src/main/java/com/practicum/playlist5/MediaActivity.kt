@@ -38,12 +38,17 @@ class MediaActivity : AppCompatActivity() {
         val track = intent.getSerializableExtra(SearchActivity.TRACK_KEY) as Track
 
 
-        Glide.with(this)
-            .load(track.artworkUrl1)
+
+            if (track.artworkUrl512.isNullOrEmpty()) {
+                artworkUrl.setImageResource(R.drawable.placeholder)
+            }
+              else{  Glide.with(this)
+            .load(track.artworkUrl512)
             .placeholder(R.drawable.placeholder)
             .centerCrop()
             .transform(RoundedCorners(8))
-            .into(artworkUrl)
+            .into(artworkUrl)}
+
 
 
 
