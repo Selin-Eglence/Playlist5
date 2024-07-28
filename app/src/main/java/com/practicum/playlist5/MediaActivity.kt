@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import java.text.SimpleDateFormat
@@ -17,7 +18,7 @@ class MediaActivity : AppCompatActivity() {
 
     private lateinit var track: Track
 
-    @SuppressLint("ResourceType")
+    @SuppressLint("ResourceType", "SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media)
@@ -39,15 +40,14 @@ class MediaActivity : AppCompatActivity() {
 
 
 
-            if (track.artworkUrl512.isNullOrEmpty()) {
-                artworkUrl.setImageResource(R.drawable.placeholder)
-            }
-              else{  Glide.with(this)
-            .load(track.artworkUrl512)
+
+               Glide.with(this)
+            .load(track?.artworkUrl512)
             .placeholder(R.drawable.placeholder)
+             .error(R.drawable.placeholder)
             .centerCrop()
             .transform(RoundedCorners(8))
-            .into(artworkUrl)}
+            .into(artworkUrl)
 
 
 

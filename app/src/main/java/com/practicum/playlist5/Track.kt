@@ -16,5 +16,5 @@ data class Track(
     val country: String,
 ) : Serializable {
     val artworkUrl512: String
-        get() = artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
+        get() = artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg")?: ""
 }

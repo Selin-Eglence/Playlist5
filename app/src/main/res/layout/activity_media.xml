@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="25dp" />
+        app:layout_constraintGuide_begin="24dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/rightBorder"
@@ -42,7 +42,8 @@
         app:layout_constraintBaseline_toBaselineOf="@id/tv_country"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="16dp"/>
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toEndOf="@id/tv_country"/>
 
     <TextView
         android:id="@+id/genre"
@@ -63,7 +64,8 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/genre"
         app:layout_constraintBottom_toTopOf="@id/country_name"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="16dp" />
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toEndOf="@id/genre"/>
 
     <TextView
         android:id="@+id/year"
@@ -84,7 +86,8 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/year"
         app:layout_constraintBottom_toTopOf="@id/genre_name"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="16dp" />
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toEndOf="@id/year"/>
 
     <TextView
         android:id="@+id/album"
@@ -129,7 +132,8 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/duration"
         app:layout_constraintBottom_toTopOf="@id/album_name"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="16dp" />
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toEndOf="@id/duration"/>
 
     <TextView
         android:id="@+id/playtracker"
@@ -212,15 +216,14 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="@null"
-        android:layout_marginLeft="20dp"
-        android:layout_marginBottom="26dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
         android:backgroundTint="?attr/colorPrimaryVariant"
         android:outlineProvider="none"
         app:icon="@drawable/light_mode"
         app:iconTint="?attr/colorOnPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/albumImage"
         tools:ignore="SpeakableTextPresentCheck" />
 
 
@@ -228,17 +231,16 @@
         android:id="@+id/albumImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
         android:layout_marginBottom="@dimen/size_24dp"
+        android:scaleType="centerCrop"
         app:layout_constrainedHeight="true"
         app:layout_constrainedWidth="true"
+        android:layout_marginTop="26dp"
+        app:layout_constraintBottom_toTopOf="@id/trackName"
         app:layout_constraintCircleRadius="@dimen/radius_8dp"
         app:layout_constraintDimensionRatio="1:1"
-        android:scaleType="centerCrop"
-        app:layout_constraintEnd_toStartOf="@id/rightBorder"
-        app:layout_constraintStart_toStartOf="@id/leftBorder"
-        app:layout_constraintBottom_toTopOf="@id/trackName"
+        app:layout_constraintEnd_toStartOf="@+id/rightBorder"
+        app:layout_constraintStart_toStartOf="@+id/leftBorder"
         app:layout_constraintTop_toBottomOf="@id/light_mode"
         app:srcCompat="@drawable/placeholder">
 
