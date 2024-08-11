@@ -24,6 +24,12 @@
     <string name="text_separator">" • "</string>
     <string name="search_request">Вы искали</string>
     <string name="clear_history">Очистить историю</string>
+    <string name="no_data_available">Нет данных</string>
+    <string name="duration">Длительность</string>
+    <string name="year">Год</string>
+    <string name="genre">Жанр</string>
+    <string name="country">Страна</string>
+    <string name="album">Альбом</string>
 
 
 

@@ -23,7 +23,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import android.util.Log
-import android.widget.FrameLayout
+import android.content.Intent
 import android.widget.Toast
 
 class SearchActivity : AppCompatActivity() {
@@ -156,6 +156,9 @@ class SearchActivity : AppCompatActivity() {
                 "Track: " + track.artistName + " - " + track.trackName,
                 Toast.LENGTH_SHORT
             ).show()
+            AudioPLayerActivity(track)
+
+
         }
         historyAdapter = TrackAdapter(onHistoryTrackClickListener)
         historyList.layoutManager = LinearLayoutManager(this)
@@ -166,6 +169,7 @@ class SearchActivity : AppCompatActivity() {
         val onItemClickListener = TrackAdapter.ItemClickListener { track ->
             searchHistory.addTrack(track)
             searchHistoryLayout.isVisible = false
+            AudioPLayerActivity(track)
         }
 
         trackset.layoutManager = LinearLayoutManager(this)
@@ -252,6 +256,13 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val INPUT = "INPUT"
+        const val TRACK_KEY = "track"
+    }
+
+    private fun AudioPLayerActivity(track:Track){
+        val intent = Intent(this@SearchActivity, MediaActivity::class.java)
+        intent.putExtra(TRACK_KEY,track)
+        startActivity(intent)
     }
 
     }
