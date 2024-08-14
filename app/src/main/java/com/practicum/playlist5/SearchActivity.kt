@@ -24,6 +24,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import android.util.Log
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
+import android.widget.ProgressBar
 import android.widget.Toast
 
 class SearchActivity : AppCompatActivity() {
@@ -51,6 +54,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchHistoryLayout: LinearLayout
     private lateinit var searchAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
+    private lateinit var progressBar: ProgressBar
     private var text: String = ""
 
     private fun hideKeyboard(view: View) {
@@ -76,6 +80,7 @@ class SearchActivity : AppCompatActivity() {
         historyList = findViewById(R.id.historyList)
         clearHistory = findViewById(R.id.buttonClearHistory)
         searchHistoryLayout = findViewById(R.id.searchHistoryLayout)
+        progressBar=findViewById(R.id.progress_bar)
 
         clearButton.setOnClickListener {
             inputEditText.text.clear()
@@ -120,10 +125,12 @@ class SearchActivity : AppCompatActivity() {
             searchHistoryLayout.isVisible = false
         }
 
+
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // empty
             }
+
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 text = inputEditText.text.toString()
@@ -131,6 +138,7 @@ class SearchActivity : AppCompatActivity() {
                 if (inputEditText.hasFocus() && s?.isEmpty() == true) {
                     historyMessage()
                 } else {
+                    searchDebounce()
                     trackset.isVisible = true
                     errorMessage.isVisible = false
                     searchHistoryLayout.isVisible = false
@@ -186,6 +194,7 @@ class SearchActivity : AppCompatActivity() {
         historyList.isVisible = false
         tracklist.clear()
         searchAdapter.notifyDataSetChanged()
+        progressBar.visibility = View.VISIBLE
         trackService.search(inputEditText.text.toString())
     .enqueue(object : Callback<TrackResponse> {
         override fun onResponse(
@@ -193,9 +202,9 @@ class SearchActivity : AppCompatActivity() {
             response: Response<TrackResponse>
         ) {
             Log.d(TAG, "onResponse: Received response with code ${response.code()}")
+            progressBar.visibility = View.GONE
             if (response.code() == 200) {
                     tracklist.clear()
-
                     if (response.body()?.results?.isNotEmpty() == true) {
                         Log.d(TAG, "onResponse: Found ${response.body()?.results!!.size} tracks")
                         tracklist.clear()
@@ -222,6 +231,7 @@ class SearchActivity : AppCompatActivity() {
                 }
             }
         override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+            progressBar.visibility = View.GONE
            handleNetworkError()
         }
     })
@@ -254,16 +264,40 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.setText(text)
     }
 
+
+    private fun AudioPLayerActivity(track:Track){
+        if (clickDebounce()) {
+        val intent = Intent(this@SearchActivity, MediaActivity::class.java)
+        intent.putExtra(TRACK_KEY,track)
+        startActivity(intent)}
+    }
+
     companion object {
         const val INPUT = "INPUT"
         const val TRACK_KEY = "track"
+        const val CLICK_DEBOUNCE_DELAY = 1000L
+        const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
-    private fun AudioPLayerActivity(track:Track){
-        val intent = Intent(this@SearchActivity, MediaActivity::class.java)
-        intent.putExtra(TRACK_KEY,track)
-        startActivity(intent)
+    private var isClickAllowed = true
+    private val handler = Handler(Looper.getMainLooper())
+    val searchRunnable = Runnable { search() }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
+
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
 
     }
 
