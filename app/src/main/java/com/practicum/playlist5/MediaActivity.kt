@@ -1,8 +1,13 @@
 package com.practicum.playlist5
 
+import android.animation.Animator.AnimatorPauseListener
 import android.annotation.SuppressLint
+import android.media.AsyncPlayer
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,8 +20,31 @@ import java.util.Locale
 @Suppress("DEPRECATION")
 class MediaActivity : AppCompatActivity() {
 
+companion object{
+    private const val STATE_DEFAULT = 0
+    private const val STATE_PREPARED = 1
+    private const val STATE_PLAYING = 2
+    private const val STATE_PAUSED = 3
+    private const val TIMER_UPDATE_DELAY = 250L
+
+}
 
     private lateinit var track: Track
+    private lateinit var play:ImageView
+    private lateinit var progressTextView: TextView
+    private var mediaPlayer = MediaPlayer()
+    private var playerState = STATE_DEFAULT
+    private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault())}
+    private val handler = Handler(Looper.getMainLooper())
+    private val timer by lazy { object: Runnable{
+        override fun run() {
+            if (playerState == STATE_PLAYING){
+                progressTextView.text = dateFormat.format(mediaPlayer.currentPosition)
+                handler.postDelayed(this, TIMER_UPDATE_DELAY)
+            }
+        }
+    } }
+
 
     @SuppressLint("ResourceType", "SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +64,9 @@ class MediaActivity : AppCompatActivity() {
         val genre = findViewById<TextView>(R.id.genre_name)
         val country = findViewById<TextView>(R.id.country_name)
         val artworkUrl = findViewById<ImageView>(R.id.albumImage)
-        val track = intent.getSerializableExtra(SearchActivity.TRACK_KEY) as Track
+        track = intent.getSerializableExtra(SearchActivity.TRACK_KEY) as Track
+        play = findViewById(R.id.play)
+        progressTextView= findViewById(R.id.playtracker)
 
 
 
@@ -59,9 +89,68 @@ class MediaActivity : AppCompatActivity() {
         genre.text=track.primaryGenreName
         country.text=track.country
         duration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
+
+
+
+        preparePlayer(track)
+        play.setOnClickListener {
+            playbackControl()
+        }
     }
+
 
     override fun onBackPressed() {
         super.onBackPressed()
         finish() }
+
+    private fun preparePlayer(track:Track) {
+        mediaPlayer.setDataSource(track.previewUrl)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            play.isEnabled = true
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            play.setImageResource(R.drawable.play_icon)
+            playerState = STATE_PREPARED
+            handler.removeCallbacks(timer)
+            progressTextView.text=dateFormat.format(0)
+        }
+    }
+
+    private fun startPlayer() {
+        mediaPlayer.start()
+        playerState = STATE_PLAYING
+        play.setImageResource(R.drawable.pause_icon)
+        handler.post(timer)
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer.pause()
+        play.setImageResource(R.drawable.play_icon)
+        playerState = STATE_PAUSED
+        handler.removeCallbacks(timer)
+    }
+    private fun playbackControl() {
+        when(playerState) {
+            STATE_PLAYING -> {
+                pausePlayer()
+            }
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+            }
+        }
+    }
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
+        handler.removeCallbacks(timer)
+    }
+
+
 }
