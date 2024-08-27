@@ -1,8 +1,6 @@
-package com.practicum.playlist5
+package com.practicum.playlist5.presentation.audio
 
-import android.animation.Animator.AnimatorPauseListener
 import android.annotation.SuppressLint
-import android.media.AsyncPlayer
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,9 +9,11 @@ import android.os.Looper
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.practicum.playlist5.R
+import com.practicum.playlist5.SearchActivity
+import com.practicum.playlist5.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -103,7 +103,7 @@ companion object{
         super.onBackPressed()
         finish() }
 
-    private fun preparePlayer(track:Track) {
+    private fun preparePlayer(track: Track) {
         mediaPlayer.setDataSource(track.previewUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {

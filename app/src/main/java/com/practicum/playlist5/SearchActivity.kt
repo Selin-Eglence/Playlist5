@@ -28,6 +28,10 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.ProgressBar
 import android.widget.Toast
+import com.practicum.playlist5.data.dto.TrackResponse
+import com.practicum.playlist5.domain.models.Track
+import com.practicum.playlist5.data.network.TrackAPI
+import com.practicum.playlist5.presentation.audio.MediaActivity
 
 class SearchActivity : AppCompatActivity() {
 
@@ -198,7 +202,7 @@ class SearchActivity : AppCompatActivity() {
         trackService.search(inputEditText.text.toString())
     .enqueue(object : Callback<TrackResponse> {
         override fun onResponse(
-            call: Call<TrackResponse>,
+           call: Call<TrackResponse>,
             response: Response<TrackResponse>
         ) {
             Log.d(TAG, "onResponse: Received response with code ${response.code()}")
@@ -265,7 +269,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
 
-    private fun AudioPLayerActivity(track:Track){
+    private fun AudioPLayerActivity(track: Track){
         if (clickDebounce()) {
         val intent = Intent(this@SearchActivity, MediaActivity::class.java)
         intent.putExtra(TRACK_KEY,track)

@@ -1,4 +1,4 @@
-package com.practicum.playlist5
+package com.practicum.playlist5.presentation.settings
 
 import android.content.Intent
 import android.net.Uri
@@ -6,7 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Switch
 import android.widget.Button
-import androidx.appcompat.app.AppCompatDelegate
+import com.practicum.playlist5.APP
+import com.practicum.playlist5.PLAYLIST_MAKER_PREFERENCES
+import com.practicum.playlist5.R
+import com.practicum.playlist5.THEME_KEY
 
 
 class SettingsActivity : AppCompatActivity() {
