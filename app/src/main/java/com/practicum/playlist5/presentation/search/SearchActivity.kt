@@ -1,47 +1,44 @@
-package com.practicum.playlist5
+package com.practicum.playlist5.presentation.search
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
+import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.http.NetworkException
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
+import androidx.annotation.RequiresExtension
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import android.util.Log
-import android.content.Intent
-import android.os.Handler
-import android.os.Looper
-import android.widget.ProgressBar
-import android.widget.Toast
-import com.practicum.playlist5.data.dto.TrackResponse
+import com.practicum.playlist5.Creator
+import com.practicum.playlist5.R
+import com.practicum.playlist5.SearchHistory
+import com.practicum.playlist5.domain.api.TrackInteractor
 import com.practicum.playlist5.domain.models.Track
-import com.practicum.playlist5.data.network.TrackAPI
-import com.practicum.playlist5.presentation.audio.MediaActivity
+import com.practicum.playlist5.presentation.audio.AudioPlayerActivity
 
 class SearchActivity : AppCompatActivity() {
 
-    private val ItunesBaseUrl = "https://itunes.apple.com/"
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(ItunesBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    private val trackService = retrofit.create(TrackAPI::class.java)
-    private val tracklist = ArrayList<Track>()
+    private val tracklist = mutableListOf<Track>()
+
+
 
     private lateinit var trackset: RecyclerView
     private lateinit var arrow: Button
@@ -91,9 +88,9 @@ class SearchActivity : AppCompatActivity() {
             tracklist.clear()
             historyList.isVisible= true
             clearButton.visibility = View.GONE
-            searchAdapter.notifyDataSetChanged()
             hideKeyboard(inputEditText)
             historyMessage()
+            searchAdapter.notifyDataSetChanged()
         }
 
         arrow.setOnClickListener {
@@ -186,61 +183,75 @@ class SearchActivity : AppCompatActivity() {
 
         trackset.layoutManager = LinearLayoutManager(this)
         searchAdapter = TrackAdapter(onItemClickListener)
-        searchAdapter.tracks = tracklist
+        searchAdapter.tracks = tracklist as ArrayList<Track>
         trackset.adapter = searchAdapter
 
-        // Load history on start
+
         searchHistory.updateHistory()
     }
 
     private fun search() {
         if (inputEditText.text.isEmpty()) return
+
+        if (!isNetworkAvailable()) {
+            handleNetworkError()
+            return
+        }
         historyList.isVisible = false
         tracklist.clear()
         searchAdapter.notifyDataSetChanged()
         progressBar.visibility = View.VISIBLE
-        trackService.search(inputEditText.text.toString())
-    .enqueue(object : Callback<TrackResponse> {
-        override fun onResponse(
-           call: Call<TrackResponse>,
-            response: Response<TrackResponse>
-        ) {
-            Log.d(TAG, "onResponse: Received response with code ${response.code()}")
-            progressBar.visibility = View.GONE
-            if (response.code() == 200) {
-                    tracklist.clear()
-                    if (response.body()?.results?.isNotEmpty() == true) {
-                        Log.d(TAG, "onResponse: Found ${response.body()?.results!!.size} tracks")
-                        tracklist.clear()
-                        refreshButton.isVisible = false
-                        errorMessage.isVisible = false
-                        searchHistoryLayout.isVisible = false
-                        tracklist.addAll(response.body()?.results!!)
-                        searchAdapter.notifyDataSetChanged()
 
-                    }
-                    if (tracklist.isEmpty()) {
-                        Log.d(TAG, "onResponse: No tracks found")
+
+
+        Creator.provideTrackInteractor().search(inputEditText.text.toString(), object : TrackInteractor.TracksConsumer {
+                override fun consume(foundTrack: List<Track>) {
+                    runOnUiThread {
+                        progressBar.visibility = View.GONE
                         tracklist.clear()
-                        searchAdapter.notifyDataSetChanged()
-                        errorMessage.isVisible = true
-                        refreshButton.isVisible = false
-                        errorText.text = getString(R.string.nothing_found)
-                        searchHistoryLayout.isVisible = false
-                        errorImage.setImageResource(R.drawable.emodji_error)
+                        if (foundTrack.isNotEmpty()) {
+                                    refreshButton.isVisible = false
+                                    errorMessage.isVisible = false
+                                    searchHistoryLayout.isVisible = false
+                                    tracklist.addAll(foundTrack)
+                                    searchAdapter.notifyDataSetChanged()
+
+                        }
+                        else  {
+                                    errorMessage.isVisible = true
+                                    refreshButton.isVisible = false
+                                    errorText.text = getString(R.string.nothing_found)
+                                    searchHistoryLayout.isVisible = false
+                                    errorImage.setImageResource(R.drawable.emodji_error)
+                                }
+
+                    }}
+
+                    override fun onFailure(t: Throwable) {
+                        runOnUiThread {
+                            progressBar.visibility = View.GONE
+                            handleNetworkError()
+                        }
                     }
-                }
-                else {
-                handleNetworkError()
-                }
-            }
-        override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-            progressBar.visibility = View.GONE
-           handleNetworkError()
-        }
-    })
+                })
     }
 
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
+    }
+
+
+
+    private fun handleNetworkError() {
+        tracklist.clear()
+        errorMessage.isVisible = true
+        searchHistoryLayout.isVisible = false
+        errorText.text = getString(R.string.something_wrong)
+        errorImage.setImageResource(R.drawable.noconnection_error)
+        refreshButton.isVisible = true
+    }
 
     private fun historyMessage() {
         trackset.isVisible = false
@@ -248,14 +259,6 @@ class SearchActivity : AppCompatActivity() {
         searchHistoryLayout.isVisible= historyAdapter.tracks.isNotEmpty()
     }
 
-
-    private fun handleNetworkError() {
-        errorMessage.isVisible = true
-        searchHistoryLayout.isVisible = false
-        errorText.text = getString(R.string.something_wrong)
-        errorImage.setImageResource(R.drawable.noconnection_error)
-        refreshButton.isVisible = true
-    }
 
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -271,7 +274,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun AudioPLayerActivity(track: Track){
         if (clickDebounce()) {
-        val intent = Intent(this@SearchActivity, MediaActivity::class.java)
+        val intent = Intent(this@SearchActivity, AudioPlayerActivity::class.java)
         intent.putExtra(TRACK_KEY,track)
         startActivity(intent)}
     }

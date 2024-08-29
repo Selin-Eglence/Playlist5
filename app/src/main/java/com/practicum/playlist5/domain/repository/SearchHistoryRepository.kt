@@ -6,4 +6,5 @@ interface SearchHistoryRepository {
     fun getTrackHistory(): List<Track>
     fun addTrack(track: Track)
     fun clearTrackHistory()
+    fun updateHistory()
 }

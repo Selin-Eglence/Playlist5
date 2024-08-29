@@ -1,16 +1,25 @@
 package com.practicum.playlist5.data.network
 
-import android.content.Context
+
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlist5.domain.models.Track
 import com.practicum.playlist5.domain.repository.SearchHistoryRepository
 
-class SearchHistoryRepositoryImpl(private val context: Context) : SearchHistoryRepository {
+class SearchHistoryRepositoryImpl( private val searchHistPref: SharedPreferences) : SearchHistoryRepository {
 
-    private val searchHistPref: SharedPreferences =
-        context.getSharedPreferences(KEY, Context.MODE_PRIVATE)
+
+
+
+
+    override fun updateHistory() {
+        val trackJson = searchHistPref.getString(KEY, null)
+        if (trackJson != null) {
+            getTrackHistory()
+
+        }
+    }
 
     override fun getTrackHistory(): List<Track> {
         val trackJson = searchHistPref.getString(KEY, null)
@@ -31,11 +40,14 @@ class SearchHistoryRepositoryImpl(private val context: Context) : SearchHistoryR
         }
         val trackJson = Gson().toJson(tracks)
         searchHistPref.edit().putString(KEY, trackJson).apply()
+        updateHistory()
     }
 
     override fun clearTrackHistory() {
         searchHistPref.edit().remove(KEY).apply()
+
     }
+
 
     companion object {
         const val KEY = "tracks"

@@ -8,8 +8,11 @@ class TrackInteractorImpl (private val repository: TrackRepository) : TrackInter
     private val executor = Executors.newCachedThreadPool()
     override fun search(expression: String, consumer: TrackInteractor.TracksConsumer) {
         executor.execute {
-            consumer.consume(repository.search(expression))
+            try {
+            consumer.consume(repository.search(expression))}
 
+            catch (t:Throwable){
+                consumer.onFailure(t) }
         }
 
     }

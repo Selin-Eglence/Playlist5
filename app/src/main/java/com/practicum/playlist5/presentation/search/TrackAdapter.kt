@@ -1,9 +1,10 @@
-package com.practicum.playlist5
+package com.practicum.playlist5.presentation.search
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.practicum.playlist5.R
 import com.practicum.playlist5.domain.models.Track
 import com.practicum.playlist5.presentation.search.TrackViewHolder
 

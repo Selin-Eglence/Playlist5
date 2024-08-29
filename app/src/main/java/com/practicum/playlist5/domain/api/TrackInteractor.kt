@@ -7,5 +7,7 @@ interface TrackInteractor {
 
     interface TracksConsumer {
         fun consume(foundTrack: List<Track>)
+        fun onFailure(t:Throwable)
+
     }
 }

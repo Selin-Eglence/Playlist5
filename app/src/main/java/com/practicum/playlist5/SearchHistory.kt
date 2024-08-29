@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import android.content.SharedPreferences
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlist5.domain.models.Track
+import com.practicum.playlist5.presentation.search.TrackAdapter
 
 class SearchHistory(private val context: Context, private val adapter: TrackAdapter) {
     private val searchHistPref: SharedPreferences =

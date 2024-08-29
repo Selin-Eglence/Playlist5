@@ -5,6 +5,7 @@ import com.practicum.playlist5.data.dto.Response
 import com.practicum.playlist5.data.dto.TrackRequest
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 
 class RetrofitNetworkClient : NetworkClient {
     private val ItunesBaseUrl = "https://itunes.apple.com/"
@@ -14,6 +15,7 @@ class RetrofitNetworkClient : NetworkClient {
         .build()
     private val trackService = retrofit.create(TrackAPI::class.java)
     override fun doRequest(dto: Any): Response {
+        return  try {
         if (dto is TrackRequest) {
             val resp = trackService.search(dto.expression).execute()
             val body = resp.body() ?: Response()
@@ -26,4 +28,11 @@ class RetrofitNetworkClient : NetworkClient {
             }
         }
     }
+        catch (e: IOException) {
+            Response().apply {
+                resultCode = 500
+            }
+    }
+    }
+
 }

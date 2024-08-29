@@ -5,9 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import com.practicum.playlist5.presentation.audio.MediaActivity
+import com.practicum.playlist5.presentation.audio.AudioPlayerActivity
 import com.practicum.playlist5.R
-import com.practicum.playlist5.SearchActivity
+import com.practicum.playlist5.presentation.search.SearchActivity
 import com.practicum.playlist5.presentation.settings.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         val mediaButton = findViewById<Button>(R.id.music)
         mediaButton.setOnClickListener {
-            val intent = Intent(this@MainActivity, MediaActivity::class.java)
+            val intent = Intent(this@MainActivity, AudioPlayerActivity::class.java)
             startActivity(intent)
         }
 

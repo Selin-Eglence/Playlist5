@@ -5,6 +5,7 @@ import com.practicum.playlist5.data.dto.TrackRequest
 import com.practicum.playlist5.data.dto.TrackResponse
 import com.practicum.playlist5.domain.api.TrackRepository
 import com.practicum.playlist5.domain.models.Track
+import java.io.IOException
 
 class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepository {
     override fun search(expression: String): List<Track> {
@@ -24,7 +25,7 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
             }
         }
         else {
-            return emptyList()
+            throw IOException("Network error with code: ${response.resultCode}")
         }
     }
 }

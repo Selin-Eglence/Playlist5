@@ -12,13 +12,13 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlist5.R
-import com.practicum.playlist5.SearchActivity
+import com.practicum.playlist5.presentation.search.SearchActivity
 import com.practicum.playlist5.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Suppress("DEPRECATION")
-class MediaActivity : AppCompatActivity() {
+class AudioPlayerActivity : AppCompatActivity() {
 
 companion object{
     private const val STATE_DEFAULT = 0
@@ -49,7 +49,7 @@ companion object{
     @SuppressLint("ResourceType", "SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_media)
+        setContentView(R.layout.audioplayer_activity)
 
         val arrow = findViewById<Button>(R.id.light_mode)
         arrow.setOnClickListener {
