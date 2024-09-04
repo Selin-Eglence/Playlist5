@@ -1,7 +1,6 @@
-package com.practicum.playlist5.presentation.audio
+package com.practicum.playlist5.ui.audio
 
 import android.annotation.SuppressLint
-import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -11,8 +10,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.practicum.playlist5.creator.Creator
 import com.practicum.playlist5.R
-import com.practicum.playlist5.presentation.search.SearchActivity
+import com.practicum.playlist5.domain.api.AudioPlayerInteractor
+import com.practicum.playlist5.ui.search.SearchActivity
 import com.practicum.playlist5.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -20,36 +21,35 @@ import java.util.Locale
 @Suppress("DEPRECATION")
 class AudioPlayerActivity : AppCompatActivity() {
 
-companion object{
-    private const val STATE_DEFAULT = 0
-    private const val STATE_PREPARED = 1
-    private const val STATE_PLAYING = 2
-    private const val STATE_PAUSED = 3
-    private const val TIMER_UPDATE_DELAY = 250L
+    companion object{
+        private const val TIMER_UPDATE_DELAY = 250L}
 
-}
 
     private lateinit var track: Track
     private lateinit var play:ImageView
     private lateinit var progressTextView: TextView
-    private var mediaPlayer = MediaPlayer()
-    private var playerState = STATE_DEFAULT
-    private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault())}
+    private lateinit var audioPlayerInteractor: AudioPlayerInteractor
+
+    private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
     private val handler = Handler(Looper.getMainLooper())
+
     private val timer by lazy { object: Runnable{
         override fun run() {
-            if (playerState == STATE_PLAYING){
-                progressTextView.text = dateFormat.format(mediaPlayer.currentPosition)
+            if (audioPlayerInteractor.isPlaying()){
+                progressTextView?.text = dateFormat.format(audioPlayerInteractor.getCurrentPosition())
                 handler.postDelayed(this, TIMER_UPDATE_DELAY)
             }
         }
     } }
 
 
+
     @SuppressLint("ResourceType", "SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.audioplayer_activity)
+
+        audioPlayerInteractor = Creator.provideAudioPlayerInteractor()
 
         val arrow = findViewById<Button>(R.id.light_mode)
         arrow.setOnClickListener {
@@ -71,10 +71,10 @@ companion object{
 
 
 
-               Glide.with(this)
+        Glide.with(this)
             .load(track?.artworkUrl512)
             .placeholder(R.drawable.placeholder)
-             .error(R.drawable.placeholder)
+            .error(R.drawable.placeholder)
             .centerCrop()
             .transform(RoundedCorners(8))
             .into(artworkUrl)
@@ -92,7 +92,9 @@ companion object{
 
 
 
-        preparePlayer(track)
+        audioPlayerInteractor.preparePlayer(track)
+
+
         play.setOnClickListener {
             playbackControl()
         }
@@ -103,44 +105,30 @@ companion object{
         super.onBackPressed()
         finish() }
 
-    private fun preparePlayer(track: Track) {
-        mediaPlayer.setDataSource(track.previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            play.isEnabled = true
-            playerState = STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            play.setImageResource(R.drawable.play_icon)
-            playerState = STATE_PREPARED
-            handler.removeCallbacks(timer)
-            progressTextView.text=dateFormat.format(0)
+
+    private fun playbackControl() {
+        if (audioPlayerInteractor.isPlaying()) {
+            pausePlayer()
+        } else {
+            startPlayer()
         }
     }
 
+
     private fun startPlayer() {
-        mediaPlayer.start()
-        playerState = STATE_PLAYING
+        audioPlayerInteractor.startPlayer()
         play.setImageResource(R.drawable.pause_icon)
         handler.post(timer)
     }
 
     private fun pausePlayer() {
-        mediaPlayer.pause()
+        audioPlayerInteractor.pausePlayer()
         play.setImageResource(R.drawable.play_icon)
-        playerState = STATE_PAUSED
         handler.removeCallbacks(timer)
     }
-    private fun playbackControl() {
-        when(playerState) {
-            STATE_PLAYING -> {
-                pausePlayer()
-            }
-            STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer()
-            }
-        }
-    }
+
+
+
     override fun onPause() {
         super.onPause()
         pausePlayer()
@@ -148,7 +136,6 @@ companion object{
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
         handler.removeCallbacks(timer)
     }
 

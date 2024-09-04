@@ -1,4 +1,4 @@
-package com.practicum.playlist5.presentation.search
+package com.practicum.playlist5.ui.search
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView

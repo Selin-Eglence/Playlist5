@@ -1,4 +1,4 @@
-package com.practicum.playlist5.presentation.media
+package com.practicum.playlist5.ui.media
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

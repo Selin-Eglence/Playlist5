@@ -1,4 +1,4 @@
-package com.practicum.playlist5.presentation.search
+package com.practicum.playlist5.ui.search
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlist5.R
 import com.practicum.playlist5.domain.models.Track
-import com.practicum.playlist5.presentation.search.TrackViewHolder
 
 class TrackAdapter(private val itemClickListener: ItemClickListener) : RecyclerView.Adapter<TrackViewHolder> () {
 

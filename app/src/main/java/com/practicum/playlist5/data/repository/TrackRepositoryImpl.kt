@@ -1,9 +1,8 @@
-package com.practicum.playlist5.data.network
+package com.practicum.playlist5.data.repository
 
-import com.practicum.playlist5.data.NetworkClient
 import com.practicum.playlist5.data.dto.TrackRequest
 import com.practicum.playlist5.data.dto.TrackResponse
-import com.practicum.playlist5.domain.api.TrackRepository
+import com.practicum.playlist5.domain.repository.TrackRepository
 import com.practicum.playlist5.domain.models.Track
 import java.io.IOException
 

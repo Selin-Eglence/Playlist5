@@ -1,4 +1,4 @@
-package com.practicum.playlist5.data
+package com.practicum.playlist5.data.repository
 
 import com.practicum.playlist5.data.dto.Response
 

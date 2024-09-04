@@ -1,6 +1,6 @@
 package com.practicum.playlist5.data.network
 
-import com.practicum.playlist5.data.NetworkClient
+import com.practicum.playlist5.data.repository.NetworkClient
 import com.practicum.playlist5.data.dto.Response
 import com.practicum.playlist5.data.dto.TrackRequest
 import retrofit2.Retrofit

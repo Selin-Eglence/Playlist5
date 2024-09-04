@@ -1,7 +1,7 @@
 package com.practicum.playlist5.domain.impi
 
 import com.practicum.playlist5.domain.api.TrackInteractor
-import com.practicum.playlist5.domain.api.TrackRepository
+import com.practicum.playlist5.domain.repository.TrackRepository
 import java.util.concurrent.Executors
 
 class TrackInteractorImpl (private val repository: TrackRepository) : TrackInteractor {
