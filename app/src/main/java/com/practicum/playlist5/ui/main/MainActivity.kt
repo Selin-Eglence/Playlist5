@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val searchButton = findViewById<Button>(R.id.lupa1)
-        val searchButtonClickListener = object: View.OnClickListener {
+        val searchButtonClickListener = object : View.OnClickListener {
             override fun onClick(v: View?) {
                 val intent = Intent(this@MainActivity, SearchActivity::class.java)
                 startActivity(intent)
@@ -35,9 +35,10 @@ class MainActivity : AppCompatActivity() {
         val settingsButton = findViewById<Button>(R.id.settings)
         settingsButton.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                val intent = Intent(this@MainActivity,SettingsActivity::class.java)
+                val intent = Intent(this@MainActivity, SettingsActivity::class.java)
                 startActivity(intent)
-            }})
+            }
+        })
     }
 }
 

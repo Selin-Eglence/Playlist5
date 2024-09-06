@@ -1,4 +1,5 @@
 package com.practicum.playlist5.ui.search
+
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,7 +12,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 
-class TrackViewHolder (itemView:View) : RecyclerView.ViewHolder(itemView) {
+class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val trackName: TextView = itemView.findViewById(R.id.trackName)
     private val artistName: TextView = itemView.findViewById(R.id.artistName)
     private val trackTime: TextView = itemView.findViewById(R.id.trackTime)
@@ -19,7 +20,8 @@ class TrackViewHolder (itemView:View) : RecyclerView.ViewHolder(itemView) {
     fun bind(model: Track) {
         trackName.text = model.trackName
         artistName.text = model.artistName
-        trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis)
+        trackTime.text =
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis)
 
 
         Glide.with(itemView)

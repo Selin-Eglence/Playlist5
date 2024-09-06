@@ -5,9 +5,9 @@ import android.media.MediaPlayer
 import com.practicum.playlist5.domain.repository.AudioPlayerRepository
 import com.practicum.playlist5.domain.models.Track
 
-class AudioPlayerRepositoryImpl: AudioPlayerRepository {
+class AudioPlayerRepositoryImpl : AudioPlayerRepository {
 
-    companion object{
+    companion object {
         private const val STATE_DEFAULT = 0
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
@@ -16,12 +16,8 @@ class AudioPlayerRepositoryImpl: AudioPlayerRepository {
     }
 
 
-
-
     private var mediaPlayer = MediaPlayer()
     private var playerState = STATE_DEFAULT
-
-
 
 
     @SuppressLint("ResourceType")
@@ -50,16 +46,19 @@ class AudioPlayerRepositoryImpl: AudioPlayerRepository {
         mediaPlayer.pause()
         playerState = STATE_PAUSED
     }
-   override fun playbackControl() {
-        when(playerState) {
+
+    override fun playbackControl() {
+        when (playerState) {
             STATE_PLAYING -> {
                 pausePlayer()
             }
-            STATE_PREPARED,STATE_PAUSED -> {
+
+            STATE_PREPARED, STATE_PAUSED -> {
                 startPlayer()
             }
         }
     }
+
     override fun onPause() {
         pausePlayer()
     }
@@ -71,7 +70,6 @@ class AudioPlayerRepositoryImpl: AudioPlayerRepository {
     override fun getCurrentPosition(): Int {
         return mediaPlayer.currentPosition
     }
-
 
 
 }

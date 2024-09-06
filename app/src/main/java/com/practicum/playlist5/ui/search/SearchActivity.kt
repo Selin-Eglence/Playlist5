@@ -106,7 +106,9 @@ class SearchActivity : AppCompatActivity() {
         }
 
         inputEditText.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus && inputEditText.text.isEmpty() && searchHistoryInteractor.getTrackHistory().isNotEmpty()) {
+            if (hasFocus && inputEditText.text.isEmpty() && searchHistoryInteractor.getTrackHistory()
+                    .isNotEmpty()
+            ) {
                 historyMessage()
             } else {
                 trackset.isVisible = true
@@ -164,9 +166,6 @@ class SearchActivity : AppCompatActivity() {
         historyList.adapter = historyAdapter
 
 
-
-
-
         val onItemClickListener = TrackAdapter.ItemClickListener { track ->
             searchHistoryInteractor.addTrack(track)
             searchHistoryLayout.isVisible = false
@@ -205,38 +204,40 @@ class SearchActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
 
 
-        Creator.provideTrackInteractor().search(inputEditText.text.toString(), object : TrackInteractor.TracksConsumer {
-            override fun consume(foundTrack: List<Track>) {
-                runOnUiThread {
-                    progressBar.visibility = View.GONE
-                    tracklist.clear()
-                    if (foundTrack.isNotEmpty()) {
-                        refreshButton.isVisible = false
-                        errorMessage.isVisible = false
-                        searchHistoryLayout.isVisible = false
-                        tracklist.addAll(foundTrack)
-                        searchAdapter.notifyDataSetChanged()
-                    } else {
-                        errorMessage.isVisible = true
-                        errorText.text = getString(R.string.nothing_found)
-                        searchHistoryLayout.isVisible = false
-                        errorImage.setImageResource(R.drawable.emodji_error)
-                        refreshButton.isVisible = false
+        Creator.provideTrackInteractor()
+            .search(inputEditText.text.toString(), object : TrackInteractor.TracksConsumer {
+                override fun consume(foundTrack: List<Track>) {
+                    runOnUiThread {
+                        progressBar.visibility = View.GONE
+                        tracklist.clear()
+                        if (foundTrack.isNotEmpty()) {
+                            refreshButton.isVisible = false
+                            errorMessage.isVisible = false
+                            searchHistoryLayout.isVisible = false
+                            tracklist.addAll(foundTrack)
+                            searchAdapter.notifyDataSetChanged()
+                        } else {
+                            errorMessage.isVisible = true
+                            errorText.text = getString(R.string.nothing_found)
+                            searchHistoryLayout.isVisible = false
+                            errorImage.setImageResource(R.drawable.emodji_error)
+                            refreshButton.isVisible = false
+                        }
                     }
                 }
-            }
 
-            override fun onFailure(t: Throwable) {
-                runOnUiThread {
-                    progressBar.visibility = View.GONE
-                    handleNetworkError()
+                override fun onFailure(t: Throwable) {
+                    runOnUiThread {
+                        progressBar.visibility = View.GONE
+                        handleNetworkError()
+                    }
                 }
-            }
-        })
+            })
     }
 
     private fun isNetworkAvailable(): Boolean {
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo
         return networkInfo != null && networkInfo.isConnected
     }
@@ -268,9 +269,9 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun PlayerActivity(track: Track) {
-        Log.e("piss","piss")
+        Log.e("piss", "piss")
         if (clickDebounce()) {
-            val intent = Intent(this@SearchActivity,AudioPlayerActivity::class.java)
+            val intent = Intent(this@SearchActivity, AudioPlayerActivity::class.java)
             intent.putExtra(TRACK_KEY, track)
             startActivity(intent)
         }

@@ -1,35 +1,24 @@
 package com.practicum.playlist5.presentation
 
 import android.app.Application
-import androidx.appcompat.app.AppCompatDelegate
 import com.practicum.playlist5.creator.Creator
+import com.practicum.playlist5.domain.api.SettingsInteractor
 
-
-const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
-const val THEME_KEY = "switch_theme"
 
 class APP : Application() {
 
+    private lateinit var settingsInteractor: SettingsInteractor
     var darkTheme = false
         private set
 
     override fun onCreate() {
         super.onCreate()
-        val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
-        darkTheme = sharedPrefs.getBoolean(THEME_KEY, false)
-        switchTheme(darkTheme)
 
         Creator.initApplication(this)
+        settingsInteractor = Creator.provideSettingsInteractor()
+
+        darkTheme = settingsInteractor.darkThemeEnabled()
+        settingsInteractor.switchTheme(darkTheme)
     }
 
-    fun switchTheme(darkThemeEnabled: Boolean) {
-        darkTheme = darkThemeEnabled
-        AppCompatDelegate.setDefaultNightMode(
-            if (darkThemeEnabled) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_NO
-            }
-        )
-    }
 }

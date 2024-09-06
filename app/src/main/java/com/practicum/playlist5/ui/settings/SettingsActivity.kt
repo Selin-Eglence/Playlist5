@@ -24,7 +24,7 @@ class SettingsActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        settingsInteractor = Creator.provideSettingsInteractor(application as APP)
+        settingsInteractor = Creator.provideSettingsInteractor()
         val switch = findViewById<Switch>(R.id.switchBtn)
        switch.isChecked = settingsInteractor.darkThemeEnabled()
         switch.setOnCheckedChangeListener { _, isChecked ->

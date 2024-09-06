@@ -25,13 +25,9 @@ class AudioPlayerInteractorImpl(
     }
 
 
-
     override fun getCurrentPosition(): Int {
         return audioPlayerRepository.getCurrentPosition()
     }
-
-
-
 
 
 }

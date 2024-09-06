@@ -55,8 +55,8 @@ object Creator {
         return SettingsRepositoryImpl(provideSharedPreferences())
     }
 
-    fun provideSettingsInteractor(app: APP): SettingsInteractor {
-        return SettingsInteractorImpl(getSettingsRepository(),app)
+    fun provideSettingsInteractor(): SettingsInteractor {
+        return SettingsInteractorImpl(getSettingsRepository())
     }
 
     private fun provideAudioPlayerRepository(): AudioPlayerRepository {

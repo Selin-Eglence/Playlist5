@@ -21,27 +21,30 @@ import java.util.Locale
 @Suppress("DEPRECATION")
 class AudioPlayerActivity : AppCompatActivity() {
 
-    companion object{
-        private const val TIMER_UPDATE_DELAY = 250L}
+    companion object {
+        private const val TIMER_UPDATE_DELAY = 250L
+    }
 
 
     private lateinit var track: Track
-    private lateinit var play:ImageView
+    private lateinit var play: ImageView
     private lateinit var progressTextView: TextView
     private lateinit var audioPlayerInteractor: AudioPlayerInteractor
 
     private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
     private val handler = Handler(Looper.getMainLooper())
 
-    private val timer by lazy { object: Runnable{
-        override fun run() {
-            if (audioPlayerInteractor.isPlaying()){
-                progressTextView?.text = dateFormat.format(audioPlayerInteractor.getCurrentPosition())
-                handler.postDelayed(this, TIMER_UPDATE_DELAY)
+    private val timer by lazy {
+        object : Runnable {
+            override fun run() {
+                if (audioPlayerInteractor.isPlaying()) {
+                    progressTextView?.text =
+                        dateFormat.format(audioPlayerInteractor.getCurrentPosition())
+                    handler.postDelayed(this, TIMER_UPDATE_DELAY)
+                }
             }
         }
-    } }
-
+    }
 
 
     @SuppressLint("ResourceType", "SuspiciousIndentation")
@@ -66,7 +69,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         val artworkUrl = findViewById<ImageView>(R.id.albumImage)
         track = intent.getSerializableExtra(SearchActivity.TRACK_KEY) as Track
         play = findViewById(R.id.play)
-        progressTextView= findViewById(R.id.playtracker)
+        progressTextView = findViewById(R.id.playtracker)
 
 
 
@@ -83,11 +86,11 @@ class AudioPlayerActivity : AppCompatActivity() {
 
 
         trackName.text = track.trackName
-        artistName.text=track.artistName
-        album.text=track.collectionName
-        year.text=track.releaseDate.substring(0, 4)
-        genre.text=track.primaryGenreName
-        country.text=track.country
+        artistName.text = track.artistName
+        album.text = track.collectionName
+        year.text = track.releaseDate.substring(0, 4)
+        genre.text = track.primaryGenreName
+        country.text = track.country
         duration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
 
 
@@ -103,7 +106,8 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        finish() }
+        finish()
+    }
 
 
     private fun playbackControl() {
@@ -126,7 +130,6 @@ class AudioPlayerActivity : AppCompatActivity() {
         play.setImageResource(R.drawable.play_icon)
         handler.removeCallbacks(timer)
     }
-
 
 
     override fun onPause() {

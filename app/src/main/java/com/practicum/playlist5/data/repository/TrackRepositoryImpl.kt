@@ -9,9 +9,10 @@ import java.io.IOException
 class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepository {
     override fun search(expression: String): List<Track> {
         val response = networkClient.doRequest(TrackRequest(expression))
-        if (response.resultCode==200) {
+        if (response.resultCode == 200) {
             return (response as TrackResponse).results.map {
-                Track(it.trackId,
+                Track(
+                    it.trackId,
                     it.trackName,
                     it.artistName,
                     it.trackTimeMillis,
@@ -20,10 +21,10 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
                     it.releaseDate,
                     it.primaryGenreName,
                     it.country,
-                    it.previewUrl)
+                    it.previewUrl
+                )
             }
-        }
-        else {
+        } else {
             throw IOException("Network error with code: ${response.resultCode}")
         }
     }

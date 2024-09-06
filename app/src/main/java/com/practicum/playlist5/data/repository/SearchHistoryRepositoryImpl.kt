@@ -7,7 +7,8 @@ import com.google.gson.reflect.TypeToken
 import com.practicum.playlist5.domain.models.Track
 import com.practicum.playlist5.domain.repository.SearchHistoryRepository
 
-class SearchHistoryRepositoryImpl( private val searchHistPref: SharedPreferences) : SearchHistoryRepository {
+class SearchHistoryRepositoryImpl(private val searchHistPref: SharedPreferences) :
+    SearchHistoryRepository {
 
     override fun updateHistory() {
         val trackJson = searchHistPref.getString(KEY, null)
@@ -43,7 +44,6 @@ class SearchHistoryRepositoryImpl( private val searchHistPref: SharedPreferences
         searchHistPref.edit().remove(KEY).apply()
 
     }
-
 
 
     companion object {
