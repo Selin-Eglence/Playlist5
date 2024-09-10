@@ -1,34 +1,24 @@
-package com.practicum.playlist5
+package com.practicum.playlist5.data.repository
 
-import android.content.Context
-import com.google.gson.Gson
+
 import android.content.SharedPreferences
+import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.practicum.playlist5.domain.models.Track
+import com.practicum.playlist5.domain.repository.SearchHistoryRepository
 
-class SearchHistory(private val context: Context, private val adapter: TrackAdapter) {
-    private val searchHistPref: SharedPreferences =
-        context.getSharedPreferences(KEY, Context.MODE_PRIVATE)
+class SearchHistoryRepositoryImpl(private val searchHistPref: SharedPreferences) :
+    SearchHistoryRepository {
 
-    init {
-        updateHistory()
-        searchHistPref.registerOnSharedPreferenceChangeListener { sharedPreferences, s ->
-            if (s == KEY) {
-                updateHistory()
-            }
-        }
-    }
-
-    fun updateHistory() {
+    override fun updateHistory() {
         val trackJson = searchHistPref.getString(KEY, null)
         if (trackJson != null) {
-            val trackNew = getTrackHistory()
-            adapter.tracks.clear()
-            adapter.tracks.addAll(trackNew)
-            adapter.notifyDataSetChanged()
+            getTrackHistory()
+
         }
     }
 
-    fun getTrackHistory(): List<Track> {
+    override fun getTrackHistory(): List<Track> {
         val trackJson = searchHistPref.getString(KEY, null)
         return if (trackJson != null) {
             val typeToken = object : TypeToken<ArrayList<Track>>() {}.type
@@ -38,7 +28,7 @@ class SearchHistory(private val context: Context, private val adapter: TrackAdap
         }
     }
 
-    fun addTrack(track: Track) {
+    override fun addTrack(track: Track) {
         val tracks = getTrackHistory().toMutableList()
         tracks.removeAll { it.trackId == track.trackId }
         tracks.add(0, track)
@@ -50,11 +40,11 @@ class SearchHistory(private val context: Context, private val adapter: TrackAdap
         updateHistory()
     }
 
-    fun clearTrackHistory() {
+    override fun clearTrackHistory() {
         searchHistPref.edit().remove(KEY).apply()
-        adapter.tracks.clear()
-        adapter.notifyDataSetChanged()
+
     }
+
 
     companion object {
         const val KEY = "tracks"

@@ -1,4 +1,4 @@
-package com.practicum.playlist5
+package com.practicum.playlist5.ui.settings
 
 import android.content.Intent
 import android.net.Uri
@@ -6,27 +6,29 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Switch
 import android.widget.Button
-import androidx.appcompat.app.AppCompatDelegate
+import com.practicum.playlist5.presentation.APP
+import com.practicum.playlist5.creator.Creator
+import com.practicum.playlist5.R
+import com.practicum.playlist5.domain.api.SettingsInteractor
 
 
 class SettingsActivity : AppCompatActivity() {
+    private lateinit var settingsInteractor: SettingsInteractor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
 
         val arrow = findViewById<Button>(R.id.light_mode)
         arrow.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
+        settingsInteractor = Creator.provideSettingsInteractor()
         val switch = findViewById<Switch>(R.id.switchBtn)
-        switch.isChecked = (applicationContext as APP).darkTheme
-        val sharedPreferences = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
-        switch.setOnCheckedChangeListener { _, checked ->
-            (applicationContext as APP).switchTheme(checked)
-            sharedPreferences.edit()
-                .putBoolean(THEME_KEY,checked)
-                .apply()
+       switch.isChecked = settingsInteractor.darkThemeEnabled()
+        switch.setOnCheckedChangeListener { _, isChecked ->
+            settingsInteractor.switchTheme(isChecked)
         }
 
 
