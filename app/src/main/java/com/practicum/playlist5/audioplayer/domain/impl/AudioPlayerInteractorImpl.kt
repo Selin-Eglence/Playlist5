@@ -3,6 +3,7 @@ package com.practicum.playlist5.audioplayer.domain.impl
 
 import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerInteractor
 import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerRepository
+import com.practicum.playlist5.audioplayer.domain.models.PlayerState
 import com.practicum.playlist5.search.domain.models.Track
 
 class AudioPlayerInteractorImpl(
@@ -22,6 +23,10 @@ class AudioPlayerInteractorImpl(
 
     override fun isPlaying(): Boolean {
         return audioPlayerRepository.isPlaying()
+    }
+
+    override fun getPlayerState(): PlayerState {
+        return audioPlayerRepository.getPlayerState()
     }
 
 
