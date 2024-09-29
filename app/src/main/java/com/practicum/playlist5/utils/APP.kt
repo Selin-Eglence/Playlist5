@@ -1,42 +1,39 @@
 package com.practicum.playlist5.utils
 
 import android.app.Application
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
-import com.practicum.playlist5.settings.domain.api.SettingsInteractor
-import com.practicum.playlist5.utils.Creator.initApplication
-import com.practicum.playlist5.utils.Creator.provideSharedPreferences
+import com.practicum.playlist5.di.dataModule
+import com.practicum.playlist5.di.interactorModule
+import com.practicum.playlist5.di.repositoryModule
+import com.practicum.playlist5.di.viewModelModule
+import com.practicum.playlist5.settings.data.ThemeStorage
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.GlobalContext.startKoin
 
 
 class APP : Application() {
 
-    private lateinit var settingsInteractor: SettingsInteractor
-    var darkTheme = false
-        private set
-
-    private lateinit var sharedPrefs: SharedPreferences
 
     override fun onCreate() {
         super.onCreate()
-        initApplication(this)
-        sharedPrefs = provideSharedPreferences()
-        switchTheme(sharedPrefs.getBoolean(DarkTheme, darkTheme))
-    }
+        startKoin{
+           androidLogger()
+           androidContext(this@APP)
+           modules(listOf(dataModule, interactorModule, repositoryModule, viewModelModule))
+       }
 
-    fun switchTheme(darkThemeEnabled: Boolean) {
-        darkTheme = darkThemeEnabled
+        val themeSwitch: ThemeStorage by inject()
+        val switcher= themeSwitch.getTheme()
+
+
         AppCompatDelegate.setDefaultNightMode(
-            if (darkThemeEnabled) {
+            if (switcher.darkTheme) {
                 AppCompatDelegate.MODE_NIGHT_YES
             } else {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
-    }
+    }}
 
-    companion object {
-        const val DarkTheme = "darktheme_enabled"
-    }
-
-
-}
