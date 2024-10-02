@@ -34,19 +34,19 @@ import org.koin.dsl.module
 
 
 val repositoryModule = module {
-    factory <TrackRepository>{
+    single <TrackRepository>{
         TrackRepositoryImpl(get())
     }
-    factory <SearchHistoryRepository> {
+    single <SearchHistoryRepository> {
         SearchHistoryRepositoryImpl(get(),get())
     }
-    factory<SettingsRepository>{
+    factory <SettingsRepository>{
         SettingsRepositoryImpl(get())
     }
-    factory<AudioPlayerRepository>{
+    single <AudioPlayerRepository>{
         AudioPlayerRepositoryImpl(get())
     }
-    factory<SharingRepository>{
+    single <SharingRepository>{
         SharingRepositoryImpl(androidContext())
     }
 

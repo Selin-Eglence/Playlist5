@@ -22,7 +22,7 @@ val interactorModule = module {
         SearchHistoryInteractorImpl(get())
     }
 
-    single<SettingsInteractor> {
+    factory <SettingsInteractor> {
         SettingsInteractorImpl(get())
     }
     single <AudioPlayerInteractor>{

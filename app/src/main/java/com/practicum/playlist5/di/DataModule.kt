@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.media.MediaPlayer
 
 import com.google.gson.Gson
+import com.practicum.playlist5.media.MediaActivity
 import com.practicum.playlist5.search.data.network.NetworkClient
 import com.practicum.playlist5.search.data.network.RetrofitNetworkClient
 import com.practicum.playlist5.search.data.network.TrackAPI
@@ -43,12 +44,14 @@ val dataModule = module {
         SharedPrefStorage(get())
 
     }
+
     single<ExternalNavigator> {
         ExternalNavigatorImpl(androidContext())
     }
 
     factory { MediaPlayer() }
 
+    factory{ MediaActivity()}
     }
 
 

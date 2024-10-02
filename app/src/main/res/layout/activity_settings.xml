@@ -47,7 +47,7 @@
         android:layout_marginTop="@dimen/button_margin"
         >
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchBtn"
             style="@style/Switch"
             android:text="@string/darkmode"
