@@ -52,7 +52,9 @@
             style="@style/Switch"
             android:text="@string/darkmode"
             android:thumbTint="?attr/colorControlActivated"
-            tools:ignore="TouchTargetSizeCheck" />
+            tools:ignore="TouchTargetSizeCheck"
+            android:checked="true"
+            />
 
     </LinearLayout>
 
