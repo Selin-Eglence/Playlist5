@@ -7,7 +7,8 @@ import com.google.gson.reflect.TypeToken
 import com.practicum.playlist5.search.domain.models.Track
 import com.practicum.playlist5.search.domain.api.SearchHistoryRepository
 
-class SearchHistoryRepositoryImpl(private val searchHistPref: SharedPreferences) :
+class SearchHistoryRepositoryImpl(private val searchHistPref: SharedPreferences,
+    private val gson: Gson) :
     SearchHistoryRepository {
 
     override fun updateHistory() {
@@ -22,7 +23,7 @@ class SearchHistoryRepositoryImpl(private val searchHistPref: SharedPreferences)
         val trackJson = searchHistPref.getString(KEY, null)
         return if (trackJson != null) {
             val typeToken = object : TypeToken<ArrayList<Track>>() {}.type
-            Gson().fromJson(trackJson, typeToken)
+            gson.fromJson(trackJson, typeToken)
         } else {
             emptyList()
         }
@@ -35,7 +36,7 @@ class SearchHistoryRepositoryImpl(private val searchHistPref: SharedPreferences)
         if (tracks.size > 10) {
             tracks.removeAt(tracks.size - 1)
         }
-        val trackJson = Gson().toJson(tracks)
+        val trackJson = gson.toJson(tracks)
         searchHistPref.edit().putString(KEY, trackJson).apply()
         updateHistory()
     }

@@ -19,6 +19,7 @@ import com.practicum.playlist5.R
 import com.practicum.playlist5.audioplayer.ui.AudioPlayerActivity
 import com.practicum.playlist5.databinding.ActivitySearchBinding
 import com.practicum.playlist5.search.domain.models.Track
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
@@ -26,9 +27,9 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
 
-    private val viewModel: SearchViewModel by viewModels {
-        SearchViewModel.getViewModelFactory()
-    }
+    private val viewModel by viewModel <SearchViewModel>()
+
+
 
     private var isClickAllowed = true
 

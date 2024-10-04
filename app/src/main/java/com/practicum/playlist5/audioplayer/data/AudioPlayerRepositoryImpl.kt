@@ -6,11 +6,10 @@ import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerRepository
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
 import com.practicum.playlist5.search.domain.models.Track
 
-class AudioPlayerRepositoryImpl : AudioPlayerRepository {
+class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPlayerRepository {
 
 
 
-    private var mediaPlayer = MediaPlayer()
     private var playerState: PlayerState = PlayerState.STATE_DEFAULT
 
 
