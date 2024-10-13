@@ -30,6 +30,9 @@
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
     <string name="album">Альбом</string>
+    <string name="favourites">Ваша медиатека пуста</string>
+    <string name="empty_library">Вы не создали ни одного плейлиста</string>
+    <string name="new_playlist">Новый плейлист</string>
 
 
 

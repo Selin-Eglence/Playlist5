@@ -38,5 +38,24 @@
             android:textSize="@dimen/size22"
             tools:ignore="InefficientWeight,RtlHardcoded" />
     </LinearLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabTextColor="?attr/colorOnPrimary"
+        app:tabIndicatorColor="?attr/colorOnPrimary"
+        android:background="?attr/colorPrimaryVariant"
+        app:tabMode="fixed"
+        android:textSize="@dimen/size14"
+        android:fontFamily="@font/ys_display_medium"
+        />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
 </LinearLayout>
 
