@@ -34,6 +34,7 @@
             android:backgroundTint="@color/white"
             android:padding="@dimen/button_margin"
             android:text="Медиатека"
+            android:fontFamily="@font/ys_display_medium"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="@dimen/size22"
             tools:ignore="InefficientWeight,RtlHardcoded" />
@@ -43,19 +44,18 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabTextColor="?attr/colorOnPrimary"
-        app:tabIndicatorColor="?attr/colorOnPrimary"
+        style="@style/TabLayout"
         android:background="?attr/colorPrimaryVariant"
+        android:textAllCaps="false"
+        app:tabIndicatorColor="?attr/colorOnPrimary"
         app:tabMode="fixed"
-        android:textSize="@dimen/size14"
-        android:fontFamily="@font/ys_display_medium"
-        />
+        app:tabTextColor="?attr/colorOnPrimary"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+        android:layout_height="match_parent"/>
 
 </LinearLayout>
 

@@ -1,6 +1,9 @@
 package com.practicum.playlist5.media
 
+import android.graphics.Typeface
 import android.os.Bundle
+import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayoutMediator
 import com.practicum.playlist5.R
@@ -26,11 +29,17 @@ class MediaActivity : AppCompatActivity() {
         tabMediator= TabLayoutMediator(binding.tabLayout,binding.viewPager) {
             tab,position ->
             when (position) {
-                0 -> tab.text = getString(R.string.favourites)
-                1 -> tab.text = getString(R.string.empty_library)
+                0 -> tab.text = getString(R.string.favourite_tracks)
+                1 -> tab.text = getString(R.string.playlist)
             }
+            for (i in 0 until binding.tabLayout.tabCount) {
+                val tab = (binding.tabLayout.getTabAt(i)?.view as? ViewGroup)?.getChildAt(1) as? TextView
+                tab?.setTypeface(null, Typeface.BOLD)}
+
         }
         tabMediator.attach()
+
+
 
         binding.lightMode.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
