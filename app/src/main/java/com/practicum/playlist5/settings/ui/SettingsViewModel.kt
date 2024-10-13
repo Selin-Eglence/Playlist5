@@ -3,13 +3,9 @@ package com.practicum.playlist5.settings.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.practicum.playlist5.settings.domain.api.SettingsInteractor
 import com.practicum.playlist5.settings.domain.models.Theme
 import com.practicum.playlist5.sharing.domain.SharingInteractor
-import com.practicum.playlist5.utils.Creator
 
 class SettingsViewModel  (private val settingsInteractor: SettingsInteractor,
                           private val sharingInteractor: SharingInteractor
@@ -42,17 +38,5 @@ class SettingsViewModel  (private val settingsInteractor: SettingsInteractor,
         sharingInteractor.openSupport()
     }
 
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory {
-            return viewModelFactory {
-                initializer {
-                    SettingsViewModel(
-                        settingsInteractor = Creator.provideSettingsInteractor(),
-                        sharingInteractor = Creator.provideSharingRepositoryInteractor()
-                    )
-                }
-            }
-        }
-    }
 
 }

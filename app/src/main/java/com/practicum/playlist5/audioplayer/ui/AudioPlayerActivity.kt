@@ -11,6 +11,7 @@ import com.practicum.playlist5.audioplayer.domain.models.PlayerState
 import com.practicum.playlist5.databinding.AudioplayerActivityBinding
 import com.practicum.playlist5.search.ui.SearchActivity
 import com.practicum.playlist5.search.domain.models.Track
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -28,9 +29,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        val viewModel by viewModels<AudioPlayerViewModel> {
-            AudioPlayerViewModel.getViewModelFactory()
-        }
+        val viewModel by viewModel<AudioPlayerViewModel>()
 
 
         track = intent.getSerializableExtra(SearchActivity.TRACK_KEY) as Track

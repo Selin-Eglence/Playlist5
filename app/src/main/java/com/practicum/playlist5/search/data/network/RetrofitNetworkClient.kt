@@ -6,13 +6,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 
-class RetrofitNetworkClient : NetworkClient {
-    private val ItunesBaseUrl = "https://itunes.apple.com/"
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(ItunesBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    private val trackService = retrofit.create(TrackAPI::class.java)
+class RetrofitNetworkClient(private val trackService: TrackAPI) : NetworkClient {
+
     override fun doRequest(dto: Any): Response {
         return  try {
         if (dto is TrackRequest) {

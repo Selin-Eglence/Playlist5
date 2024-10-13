@@ -1,26 +1,14 @@
 package com.practicum.playlist5.search.ui
 
-import android.app.Application
-import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.View
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlist5.R
 import com.practicum.playlist5.search.domain.api.SearchHistoryInteractor
-import com.practicum.playlist5.search.domain.api.SearchHistoryRepository
 import com.practicum.playlist5.search.domain.api.TrackInteractor
 import com.practicum.playlist5.search.domain.models.Track
-import com.practicum.playlist5.utils.Creator
 
 class SearchViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor,
@@ -121,15 +109,6 @@ class SearchViewModel(
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
-
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                SearchViewModel(
-                    searchHistoryInteractor = Creator.provideSearchHistoryInteractor(),
-                    trackInteractor = Creator.provideTrackInteractor()
-                )
-            }
-        }
     }
 }
 
