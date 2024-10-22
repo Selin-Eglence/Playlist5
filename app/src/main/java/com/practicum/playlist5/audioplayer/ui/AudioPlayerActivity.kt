@@ -74,19 +74,18 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         binding.lightMode.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
+            viewModel.onDestroy()
         }
+
+
     }
+
+
 
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
     }
 
-    override fun onPause() {
-        super.onPause()
-    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 }
