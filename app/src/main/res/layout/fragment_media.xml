@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="?attr/colorPrimaryVariant"
     android:orientation="vertical"
-    tools:ignore="ExtraText">
+    tools:ignore="ExtraText"
+    tools:context=".media.MediaFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,17 +15,6 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <Button
-
-            android:id="@+id/light_mode"
-            android:layout_width="@dimen/button_width"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:backgroundTint="?attr/colorPrimaryVariant"
-            android:outlineProvider="none"
-            app:icon="@drawable/light_mode"
-            app:iconTint="?attr/colorOnPrimary"
-            tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
             android:layout_width="match_parent"
