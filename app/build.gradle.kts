@@ -49,7 +49,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation ("com.google.android.material:material:1.6.1")
+    implementation ("com.google.android.material:material:1.8.0")
     implementation ("com.github.bumptech.glide:glide:4.14.2")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.14.2")
     testImplementation("junit:junit:4.13.2")
@@ -63,7 +63,9 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.9.1")
     implementation("androidx.databinding:viewbinding:8.6.0")
     implementation("io.insert-koin:koin-android:3.3.0")
-    implementation("androidx.fragment:fragment-ktx:1.5.5")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
+    implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
+    implementation("androidx.fragment:fragment-ktx:1.8.3")
 
 
 

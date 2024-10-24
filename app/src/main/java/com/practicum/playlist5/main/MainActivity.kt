@@ -3,43 +3,26 @@ package com.practicum.playlist5.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import com.practicum.playlist5.audioplayer.ui.AudioPlayerActivity
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.practicum.playlist5.R
-import com.practicum.playlist5.media.MediaActivity
-import com.practicum.playlist5.search.ui.SearchActivity
-import com.practicum.playlist5.settings.ui.SettingsActivity
+import com.practicum.playlist5.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
+    private  var _binding: ActivityMainBinding?=null
+    private val binding get()= _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        _binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val searchButton = findViewById<Button>(R.id.lupa1)
-        val searchButtonClickListener = object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                val intent = Intent(this@MainActivity, SearchActivity::class.java)
-                startActivity(intent)
-            }
-        }
-        searchButton.setOnClickListener(searchButtonClickListener)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
+        val navController = navHostFragment.navController
 
-
-        val mediaButton = findViewById<Button>(R.id.music)
-        mediaButton.setOnClickListener {
-            val intent = Intent(this@MainActivity, MediaActivity::class.java)
-            startActivity(intent)
-        }
-
-        val settingsButton = findViewById<Button>(R.id.settings)
-        settingsButton.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                val intent = Intent(this@MainActivity, SettingsActivity::class.java)
-                startActivity(intent)
-            }
-        })
+        binding.bottomNavigationView.setupWithNavController(navController)
     }
 }
 

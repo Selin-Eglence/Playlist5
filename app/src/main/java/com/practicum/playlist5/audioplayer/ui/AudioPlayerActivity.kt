@@ -3,13 +3,12 @@ package com.practicum.playlist5.audioplayer.ui
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.viewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlist5.R
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
 import com.practicum.playlist5.databinding.AudioplayerActivityBinding
-import com.practicum.playlist5.search.ui.SearchActivity
+import com.practicum.playlist5.search.ui.SearchFragment
 import com.practicum.playlist5.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
@@ -32,7 +31,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         val viewModel by viewModel<AudioPlayerViewModel>()
 
 
-        track = intent.getSerializableExtra(SearchActivity.TRACK_KEY) as Track
+        track = intent.getSerializableExtra(SearchFragment.TRACK_KEY) as Track
 
 
         Glide.with(this)
@@ -70,7 +69,6 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding.play.setOnClickListener {
             viewModel.playbackControl()
         }
-
 
         binding.lightMode.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()

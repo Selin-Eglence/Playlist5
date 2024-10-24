@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import android.media.MediaPlayer
 
 import com.google.gson.Gson
-import com.practicum.playlist5.media.MediaActivity
+import com.practicum.playlist5.media.MediaFragment
 import com.practicum.playlist5.search.data.network.NetworkClient
 import com.practicum.playlist5.search.data.network.RetrofitNetworkClient
 import com.practicum.playlist5.search.data.network.TrackAPI
@@ -51,7 +51,7 @@ val dataModule = module {
 
     factory { MediaPlayer() }
 
-    factory{ MediaActivity()}
+    factory{ MediaFragment() }
     }
 
 
