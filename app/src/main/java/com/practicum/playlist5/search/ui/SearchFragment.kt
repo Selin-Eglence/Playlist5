@@ -1,29 +1,32 @@
 package com.practicum.playlist5.search.ui
 
-import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.getSystemService
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlist5.R
 import com.practicum.playlist5.audioplayer.ui.AudioPlayerActivity
-import com.practicum.playlist5.databinding.ActivitySearchBinding
+import com.practicum.playlist5.databinding.FragmentSearchBinding
 import com.practicum.playlist5.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
 
-    private lateinit var binding: ActivitySearchBinding
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
     private lateinit var searchAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
 
@@ -33,11 +36,18 @@ class SearchActivity : AppCompatActivity() {
 
     private var isClickAllowed = true
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
 
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         setupAdapters()
 
@@ -47,23 +57,31 @@ class SearchActivity : AppCompatActivity() {
 
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+
+
+
     private fun setupAdapters() {
 
         searchAdapter = TrackAdapter { track -> PlayerActivity(track) }
         binding.recyclerview.apply {
-            layoutManager = LinearLayoutManager(this@SearchActivity)
+            layoutManager = LinearLayoutManager(requireContext())
             adapter = searchAdapter
         }
 
         historyAdapter = TrackAdapter { track -> PlayerActivity(track) }
         binding.historyList.apply {
-            layoutManager = LinearLayoutManager(this@SearchActivity)
+            layoutManager = LinearLayoutManager(context)
             adapter = historyAdapter
         }
     }
 
     private fun observeViewModel() {
-        viewModel.state.observe(this) { state ->
+        viewModel.state.observe(viewLifecycleOwner) { state ->
             renderState(state)
         }
     }
@@ -83,13 +101,10 @@ class SearchActivity : AppCompatActivity() {
     private fun setupListeners() {
 
 
-        binding.lightMode.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
 
         binding.clearIcon.setOnClickListener {
             binding.inputEditText.text.clear()
-            hideKeyboard(binding.inputEditText)
+            hideKeyboard()
             binding.recyclerview.isVisible=false
             binding.historyList.isVisible = true
             binding.clearIcon.visibility = View.GONE
@@ -112,7 +127,7 @@ class SearchActivity : AppCompatActivity() {
         binding.inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 viewModel.search(binding.inputEditText.text.toString())
-                hideKeyboard(binding.inputEditText)
+                hideKeyboard()
             }
             false
         }
@@ -153,7 +168,7 @@ class SearchActivity : AppCompatActivity() {
         binding.ErrorMessage.isVisible = false
         binding.searchHistoryLayout.isVisible = true
         binding.recyclerview.isVisible = false
-        binding.historyList.layoutManager = LinearLayoutManager(this)
+        binding.historyList.layoutManager = LinearLayoutManager(requireContext())
         binding.historyList.adapter = historyAdapter
         binding.buttonClearHistory.isVisible=true
         historyAdapter.tracks = tracks.toMutableList() as ArrayList<Track>
@@ -178,6 +193,7 @@ class SearchActivity : AppCompatActivity() {
         binding.recyclerview.isVisible = false
         binding.RefreshButton.isVisible=true
         binding.ErrorImage.setImageResource(R.drawable.noconnection_error)
+        parentFragmentManager.popBackStack()
     }
 
 
@@ -188,17 +204,19 @@ class SearchActivity : AppCompatActivity() {
     private fun PlayerActivity(track: Track) {
         if (clickDebounce()) {
             viewModel.addTrack(track)
-            val intent = Intent(this@SearchActivity, AudioPlayerActivity::class.java)
+            val intent = Intent(requireContext(), AudioPlayerActivity::class.java)
             intent.putExtra(TRACK_KEY, track)
             startActivity(intent)
         }
     }
 
 
-    private fun hideKeyboard(view: View) {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    private fun hideKeyboard() {
+        val view = requireActivity().currentFocus
+        if(view!=null){
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
-    }
+    }}
 
 
     private fun clickDebounce(): Boolean {
@@ -209,6 +227,7 @@ class SearchActivity : AppCompatActivity() {
         }
         return current
     }
+
 
     companion object {
         const val TRACK_KEY = "track"

@@ -1,33 +1,40 @@
 package com.practicum.playlist5.settings.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
-import com.practicum.playlist5.databinding.ActivitySettingsBinding
+import androidx.fragment.app.Fragment
+import com.practicum.playlist5.databinding.FragmentSettingsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsFragment : Fragment() {
 
-    private lateinit var binding: ActivitySettingsBinding
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding
+        get() = _binding!!
 
     private val viewModel by viewModel<SettingsViewModel>()
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding =  FragmentSettingsBinding.inflate(inflater,container,false)
+        return binding.root
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySettingsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
 
-        binding.lightMode.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
-        viewModel.themeSettings.observe(this) {settings ->
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.themeSettings.observe(viewLifecycleOwner) {settings ->
             binding.switchBtn.isChecked = settings.darkTheme
         }
-
-
 
         binding.switchBtn.setOnCheckedChangeListener{_,
         isChecked ->
