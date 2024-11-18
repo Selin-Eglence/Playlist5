@@ -16,11 +16,15 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.getSystemService
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlist5.R
 import com.practicum.playlist5.audioplayer.ui.AudioPlayerActivity
 import com.practicum.playlist5.databinding.FragmentSearchBinding
 import com.practicum.playlist5.search.domain.models.Track
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -43,7 +47,6 @@ class SearchFragment : Fragment() {
     ): View? {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -193,7 +196,6 @@ class SearchFragment : Fragment() {
         binding.recyclerview.isVisible = false
         binding.RefreshButton.isVisible=true
         binding.ErrorImage.setImageResource(R.drawable.noconnection_error)
-        parentFragmentManager.popBackStack()
     }
 
 
@@ -223,10 +225,14 @@ class SearchFragment : Fragment() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            binding.root.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            viewLifecycleOwner.lifecycleScope.launch{
+                delay(CLICK_DEBOUNCE_DELAY)
+                        isClickAllowed= true
+            }
         }
         return current
     }
+
 
 
     companion object {

@@ -7,7 +7,6 @@ import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerRepository
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
 import com.practicum.playlist5.search.domain.models.Track
 import java.io.IOException
-import kotlin.concurrent.timer
 
 class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPlayerRepository {
 

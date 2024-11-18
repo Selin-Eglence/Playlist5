@@ -6,17 +6,20 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.practicum.playlist5.search.domain.api.SearchHistoryInteractor
 import com.practicum.playlist5.search.domain.api.TrackInteractor
 import com.practicum.playlist5.search.domain.models.Track
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor,
     private val trackInteractor: TrackInteractor
 ) : ViewModel() {
 
-    private val handler = Handler(Looper.getMainLooper())
-    private val searchRunnable = Runnable { latestSearchText?.let { search(it) } }
 
     private val tracklist = mutableListOf<Track>()
 
@@ -29,6 +32,8 @@ class SearchViewModel(
 
     private var latestSearchText: String? = null
 
+    private var searchJob: Job? = null
+
     init {
         Log.d("TEST", "ViewModel initialized!")
     }
@@ -40,47 +45,54 @@ class SearchViewModel(
 
 
     fun searchDebounce(changedText: String) {
+        if (latestSearchText == changedText) {
+            return
+        }
         latestSearchText = changedText
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY)
+            search(changedText)
+        }
+
+
     }
-
-
-
-
-
-
 
     fun search(newSearchText: String) {
         Log.d("mistake", "search")
         if (newSearchText.isNotEmpty()) {
             renderState(SearchState.Loading)
+            viewModelScope.launch {
+                trackInteractor.search(newSearchText)
+                    .collect { (foundTracks, errorMessage) ->
+                        tracklist.clear()
+                            if (foundTracks != null) {
+                                tracklist.addAll(foundTracks)
+                            }
 
+                        when {
+                            errorMessage != null -> {
+                                Log.e("mistake", "error")
+                                renderState(SearchState.Error(errorMessage = "Something went wrong. Please try again."))
 
+                            }
 
-            trackInteractor.search(newSearchText, object : TrackInteractor.TracksConsumer {
-                override fun consume(foundTracks: List<Track>) {
-                    tracklist.clear()
-                    if (foundTracks.isNotEmpty()) {
-                        Log.d("mistake", "result")
-                        tracklist.addAll(foundTracks)
-                        renderState(SearchState.SearchList(tracklist))
-                    } else {
-                        Log.e("mistake", "empty")
-                        renderState(SearchState.NothingFound(emptyMessage = "Nothing was Found"))
+                            tracklist.isEmpty() -> {
+                                Log.e("mistake", "empty")
+                                renderState(SearchState.NothingFound(emptyMessage = "Nothing was Found"))
+                            }
+                            else -> {
+                                Log.d("mistake", "result")
+                                renderState(SearchState.SearchList(tracklist))
+                            }
+
+                        }
                     }
-                }
+            }
 
-                override fun onFailure(t: Throwable) {
-                    Log.e("mistake", "error", t)
-                    renderState(SearchState.Error(errorMessage = "Something went wrong. Please try again."))
-                }
-            })
+
         }
     }
-
-
-
 
 
     fun addTrack(track: Track) {
@@ -100,17 +112,16 @@ class SearchViewModel(
     }
 
 
-
     override fun onCleared() {
         super.onCleared()
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+        searchJob?.cancel()
     }
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private val SEARCH_REQUEST_TOKEN = Any()
     }
 }
+
 
 
 

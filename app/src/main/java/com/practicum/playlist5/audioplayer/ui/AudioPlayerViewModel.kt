@@ -1,13 +1,15 @@
 package com.practicum.playlist5.audioplayer.ui
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerInteractor
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
 import com.practicum.playlist5.search.domain.models.Track
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -15,7 +17,8 @@ class AudioPlayerViewModel(
     private val audioPlayerInteractor: AudioPlayerInteractor
 ) : ViewModel() {
 
-    private val handler = Handler(Looper.getMainLooper())
+    private var timerJob: Job?= null
+
 
     private val _trackData = MutableLiveData<Track>()
 
@@ -48,7 +51,7 @@ class AudioPlayerViewModel(
             progressText = dateFormat.format(audioPlayerInteractor.getCurrentPosition()),
             playerState = PlayerState.STATE_PLAYING
         )
-        handler.post(timer)
+        startTimer()
     }
 
 
@@ -58,7 +61,7 @@ class AudioPlayerViewModel(
             progressText = dateFormat.format(audioPlayerInteractor.getCurrentPosition()),
             playerState = PlayerState.STATE_PAUSED
         )
-        handler.removeCallbacks(timer)
+        timerJob?.cancel()
     }
 
 
@@ -67,27 +70,29 @@ class AudioPlayerViewModel(
             progressText = dateFormat.format(audioPlayerInteractor.getCurrentPosition()),
             playerState = PlayerState.STATE_COMPLETED
         )
-        handler.removeCallbacks(timer)
+        timerJob?.cancel()
+        timerJob = null
     }
 
-
-    private val timer = object : Runnable {
-        override fun run() {
-            if (audioPlayerInteractor.getPlayerState() == PlayerState.STATE_PLAYING) {
+    private fun startTimer() {
+        timerJob?.cancel()
+        timerJob = null
+        timerJob=viewModelScope.launch {
+            while  (audioPlayerInteractor.getPlayerState() == PlayerState.STATE_PLAYING) {
                 val currentTime = dateFormat.format(audioPlayerInteractor.getCurrentPosition())
                 _playbackState.value = ScreenState(
                     progressText = currentTime,
                     playerState = PlayerState.STATE_PLAYING
                 )
-                handler.postDelayed(this, TIMER_UPDATE_DELAY)
-            }
+                delay(TIMER_UPDATE_DELAY)
+
         }
-    }
+    }}
 
 
 
     companion object {
-        private const val TIMER_UPDATE_DELAY = 250L
+        private const val TIMER_UPDATE_DELAY = 300L
 
 
     }
