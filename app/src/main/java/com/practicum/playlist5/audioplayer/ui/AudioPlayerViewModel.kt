@@ -19,7 +19,6 @@ class AudioPlayerViewModel(
 
     private var timerJob: Job?= null
 
-
     private val _trackData = MutableLiveData<Track>()
 
     private val dateFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
@@ -45,6 +44,7 @@ class AudioPlayerViewModel(
     }
 
 
+
     private fun startPlayer() {
         audioPlayerInteractor.startPlayer()
         _playbackState.value = ScreenState(
@@ -55,7 +55,7 @@ class AudioPlayerViewModel(
     }
 
 
-    fun pausePlayer() {
+    private fun pausePlayer() {
         audioPlayerInteractor.pausePlayer()
         _playbackState.value = ScreenState(
             progressText = dateFormat.format(audioPlayerInteractor.getCurrentPosition()),
@@ -65,16 +65,24 @@ class AudioPlayerViewModel(
     }
 
 
+
+
     fun onDestroy() {
-        _playbackState.value = ScreenState(
-            progressText = dateFormat.format(audioPlayerInteractor.getCurrentPosition()),
-            playerState = PlayerState.STATE_COMPLETED
-        )
+        audioPlayerInteractor.pausePlayer()
         timerJob?.cancel()
         timerJob = null
+        _playbackState.value = ScreenState(
+            progressText = dateFormat.format(0),
+            playerState = PlayerState.STATE_DEFAULT
+        )
     }
 
+
     private fun startTimer() {
+        _playbackState.value = ScreenState(
+            progressText = dateFormat.format(0),
+            playerState = PlayerState.STATE_DEFAULT
+        )
         timerJob?.cancel()
         timerJob = null
         timerJob=viewModelScope.launch {
@@ -91,10 +99,10 @@ class AudioPlayerViewModel(
 
 
 
+
+
     companion object {
         private const val TIMER_UPDATE_DELAY = 300L
-
-
     }
 }
 

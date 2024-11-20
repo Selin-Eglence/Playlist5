@@ -30,10 +30,10 @@ class AudioPlayerInteractorImpl(
         return audioPlayerRepository.getPlayerState()
     }
 
-
     override fun getCurrentPosition(): Int {
         return audioPlayerRepository.getCurrentPosition()
     }
+
 
 
 }

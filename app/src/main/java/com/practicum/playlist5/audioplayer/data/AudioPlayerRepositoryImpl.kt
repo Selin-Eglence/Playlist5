@@ -17,6 +17,7 @@ class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPla
 
     @SuppressLint("ResourceType")
     override fun preparePlayer(track: Track) {
+
         try {
             if (mediaPlayer!= null) {
                 mediaPlayer!!.reset()
@@ -66,6 +67,7 @@ class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPla
 
             else -> {}
         }
+
     }
 
 
@@ -73,9 +75,14 @@ class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPla
         mediaPlayer.pause()
     }
 
+
     override fun onDestroy() {
         mediaPlayer.release()
+        mediaPlayer.reset()
+        playerState = PlayerState.STATE_COMPLETED
+
     }
+
 
     override fun getCurrentPosition(): Int {
         return mediaPlayer.currentPosition
