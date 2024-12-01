@@ -3,6 +3,7 @@ package com.practicum.playlist5.audioplayer.ui
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlist5.R
@@ -13,6 +14,7 @@ import com.practicum.playlist5.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlin.concurrent.timer
 
 @Suppress("DEPRECATION")
 class AudioPlayerActivity : AppCompatActivity() {
@@ -71,11 +73,11 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
 
         binding.lightMode.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
             viewModel.onDestroy()
+            PlayerState.STATE_COMPLETED
+            onBackPressedDispatcher.onBackPressed()
+            Log.e("back","music")
         }
-
-
     }
 
 

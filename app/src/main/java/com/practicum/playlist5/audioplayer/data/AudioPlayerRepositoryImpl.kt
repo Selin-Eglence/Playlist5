@@ -7,7 +7,6 @@ import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerRepository
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
 import com.practicum.playlist5.search.domain.models.Track
 import java.io.IOException
-import kotlin.concurrent.timer
 
 class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPlayerRepository {
 
@@ -18,6 +17,7 @@ class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPla
 
     @SuppressLint("ResourceType")
     override fun preparePlayer(track: Track) {
+
         try {
             if (mediaPlayer!= null) {
                 mediaPlayer!!.reset()
@@ -67,6 +67,7 @@ class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPla
 
             else -> {}
         }
+
     }
 
 
@@ -74,9 +75,14 @@ class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPla
         mediaPlayer.pause()
     }
 
+
     override fun onDestroy() {
         mediaPlayer.release()
+        mediaPlayer.reset()
+        playerState = PlayerState.STATE_COMPLETED
+
     }
+
 
     override fun getCurrentPosition(): Int {
         return mediaPlayer.currentPosition

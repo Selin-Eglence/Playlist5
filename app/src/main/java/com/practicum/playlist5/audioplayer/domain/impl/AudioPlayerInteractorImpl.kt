@@ -11,6 +11,7 @@ class AudioPlayerInteractorImpl(
 ) : AudioPlayerInteractor {
     override fun preparePlayer(track: Track) {
         audioPlayerRepository.preparePlayer(track)
+
     }
 
     override fun startPlayer() {
@@ -29,10 +30,10 @@ class AudioPlayerInteractorImpl(
         return audioPlayerRepository.getPlayerState()
     }
 
-
     override fun getCurrentPosition(): Int {
         return audioPlayerRepository.getCurrentPosition()
     }
+
 
 
 }
