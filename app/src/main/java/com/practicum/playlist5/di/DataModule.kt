@@ -3,9 +3,11 @@ package com.practicum.playlist5.di
 import android.content.Context
 import android.content.SharedPreferences
 import android.media.MediaPlayer
+import androidx.room.Room
 
 import com.google.gson.Gson
 import com.practicum.playlist5.media.MediaFragment
+import com.practicum.playlist5.media.data.db.AppDatabase
 import com.practicum.playlist5.search.data.network.NetworkClient
 import com.practicum.playlist5.search.data.network.RetrofitNetworkClient
 import com.practicum.playlist5.search.data.network.TrackAPI
@@ -47,6 +49,10 @@ val dataModule = module {
 
     single<ExternalNavigator> {
         ExternalNavigatorImpl(androidContext())
+    }
+
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java,"database.db").build()
     }
 
     factory { MediaPlayer() }

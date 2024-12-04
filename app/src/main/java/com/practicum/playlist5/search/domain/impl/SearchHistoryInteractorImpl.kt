@@ -7,7 +7,7 @@ import com.practicum.playlist5.search.domain.api.SearchHistoryRepository
 class SearchHistoryInteractorImpl(private val repository: SearchHistoryRepository) :
     SearchHistoryInteractor {
 
-    override fun getTrackHistory(): List<Track> {
+    override fun getTrackHistory(): MutableList<Track> {
         return repository.getTrackHistory()
     }
 

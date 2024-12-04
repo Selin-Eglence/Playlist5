@@ -102,7 +102,7 @@ class SearchViewModel(
 
     fun clearHistory() {
         searchHistoryInteractor.clearTrackHistory()
-        renderState(SearchState.HistoryList(emptyList()))
+        renderState(SearchState.HistoryList(mutableListOf()))
     }
 
     fun loadSearchHistory() {

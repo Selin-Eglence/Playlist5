@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerInteractor
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
+import com.practicum.playlist5.media.domain.FavouriteInteractor
 import com.practicum.playlist5.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -14,7 +15,8 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class AudioPlayerViewModel(
-    private val audioPlayerInteractor: AudioPlayerInteractor
+    private val audioPlayerInteractor: AudioPlayerInteractor,
+    private val favouriteTrackInteractor: FavouriteInteractor
 ) : ViewModel() {
 
     private var timerJob: Job?= null
@@ -28,6 +30,34 @@ class AudioPlayerViewModel(
             playerState = audioPlayerInteractor.getPlayerState())
     )
     val playbackState: LiveData<ScreenState> = _playbackState
+
+    private val _isFavourite = MutableLiveData<Boolean>()
+    val isFavourite: LiveData<Boolean>get() = _isFavourite
+
+
+    fun onFavouriteClicked(track: Track) {
+
+        val newIsFavorite = !track.isFavorite
+        _isFavourite.value = newIsFavorite
+        viewModelScope.launch {
+            if (_isFavourite.value == true) {
+                favouriteTrackInteractor.removeTrackFromFavorites(track)
+                _isFavourite.postValue(false)
+            } else {
+                favouriteTrackInteractor.addTrackToFavorites(track)
+                _isFavourite.postValue(true)
+            }
+            updateIsFavourite(track.trackId)
+        }
+    }
+
+    private fun updateIsFavourite(trackId: Int) {
+        viewModelScope.launch {
+            val isFavourite = favouriteTrackInteractor.isFavourite(trackId)
+            _isFavourite.postValue(isFavourite)
+        }
+    }
+
 
     fun setTrack(track: Track) {
         _trackData.value = track
