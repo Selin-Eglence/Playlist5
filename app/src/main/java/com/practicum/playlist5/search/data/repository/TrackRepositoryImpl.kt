@@ -21,30 +21,30 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient,
             -1 -> {emit(Resource.Error("Network Error"))}
             200 -> {
                 with (response as TrackResponse){
-                val data = response.results.map{
-                    Track(
-                        it.trackId,
-                        it.trackName,
-                        it.artistName,
-                        it.trackTimeMillis,
-                        it.artworkUrl100,
-                        it.collectionName,
-                        it.releaseDate,
-                        it.primaryGenreName,
-                        it.country,
-                        it.previewUrl,
-                        isFavorite = appDatabase.trackDao().isFavourite(it.trackId)
-                    )}
+                    val data = response.results.map{
+                        Track(
+                            it.trackId,
+                            it.trackName,
+                            it.artistName,
+                            it.trackTimeMillis,
+                            it.artworkUrl100,
+                            it.collectionName,
+                            it.releaseDate,
+                            it.primaryGenreName,
+                            it.country,
+                            it.previewUrl,
+                            it.isFavorite
+                        )}
 
                     emit(Resource.Success(data))
                 }
             }
 
-        else -> {
-            emit(Resource.Error("Network error with code: ${response.resultCode}"))
+            else -> {
+                emit(Resource.Error("Network error with code: ${response.resultCode}"))
+            }
         }
     }
-}
 
 
 

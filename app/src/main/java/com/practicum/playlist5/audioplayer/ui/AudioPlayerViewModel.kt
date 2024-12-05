@@ -8,6 +8,7 @@ import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerInteractor
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
 import com.practicum.playlist5.media.domain.FavouriteInteractor
 import com.practicum.playlist5.search.domain.models.Track
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -37,17 +38,14 @@ class AudioPlayerViewModel(
 
     fun onFavouriteClicked(track: Track) {
 
-        val newIsFavorite = !track.isFavorite
-        _isFavourite.value = newIsFavorite
         viewModelScope.launch {
-            if (_isFavourite.value == true) {
-                favouriteTrackInteractor.removeTrackFromFavorites(track)
-                _isFavourite.postValue(false)
-            } else {
+            if (track.isFavorite) {
                 favouriteTrackInteractor.addTrackToFavorites(track)
-                _isFavourite.postValue(true)
+            } else {
+                favouriteTrackInteractor.removeTrackFromFavorites(track)
+
             }
-            updateIsFavourite(track.trackId)
+            _isFavourite.postValue(track.isFavorite)
         }
     }
 
@@ -62,6 +60,7 @@ class AudioPlayerViewModel(
     fun setTrack(track: Track) {
         _trackData.value = track
         audioPlayerInteractor.preparePlayer(track)
+        updateIsFavourite(track.trackId)
     }
 
 
@@ -124,8 +123,8 @@ class AudioPlayerViewModel(
                 )
                 delay(TIMER_UPDATE_DELAY)
 
-        }
-    }}
+            }
+        }}
 
 
 
@@ -135,4 +134,5 @@ class AudioPlayerViewModel(
         private const val TIMER_UPDATE_DELAY = 300L
     }
 }
+
 

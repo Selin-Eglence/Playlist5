@@ -3,6 +3,7 @@ package com.practicum.playlist5.media
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import compackage.FavouriteFragment
 
 class MediaAdapter(
     fragmentManager: FragmentManager,

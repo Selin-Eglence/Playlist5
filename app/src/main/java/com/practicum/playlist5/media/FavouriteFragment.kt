@@ -1,5 +1,7 @@
-package com.practicum.playlist5.media
+package compackage
 
+import com.practicum.playlist5.media.FavouriteState
+import com.practicum.playlist5.media.FavouriteViewModel
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -26,8 +28,8 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavouriteFragment: Fragment() {
- private val favouriteViewModel:FavouriteViewModel by viewModel()
- private  var _binding: FragmentFavoriteBinding?= null
+    private val favouriteViewModel: FavouriteViewModel by viewModel()
+    private  var _binding: FragmentFavoriteBinding?= null
     private val binding get()= _binding!!
 
     private  var adapter: TrackAdapter?=null
@@ -55,16 +57,17 @@ class FavouriteFragment: Fragment() {
 
 
 
-        adapter = TrackAdapter { track -> openPlayer(track) }
-        binding.favoriteList.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        binding.favoriteList.adapter = adapter
+        adapter = TrackAdapter { track -> PlayerActivity(track) }
+        binding.favoriteList.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            binding.favoriteList.adapter = adapter
+        }
 
         audioPlayerLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                favouriteViewModel.updateFavorites()  // Перезагрузка списка избранных
+                favouriteViewModel.updateFavorites()
             }
         }
 
@@ -78,11 +81,11 @@ class FavouriteFragment: Fragment() {
 
 
 
-    private fun openPlayer(track: Track) {
+    private fun PlayerActivity(track: Track) {
         if (clickDebounce()) {
             val intent = Intent(requireContext(), AudioPlayerActivity::class.java)
-            intent.putExtra(TRACK_KEY, track)
-            audioPlayerLauncher?.launch(intent)
+            intent.putExtra(SearchFragment.TRACK_KEY, track)
+            startActivity(intent)
         }
     }
 
@@ -102,10 +105,12 @@ class FavouriteFragment: Fragment() {
     }
 
     private fun showContent(tracks: List<Track>) {
+        binding.placeholderImage.visibility = View.GONE
+        binding.placeholderText.visibility = View.GONE
         binding.progressBar.visibility = View.GONE
         if (tracks.isNotEmpty()) {
             binding.favoriteList.visibility = View.VISIBLE
-            adapter?.tracks?.addAll(tracks)
+            updateFavoriteState(tracks)
         }
     }
 
@@ -119,6 +124,11 @@ class FavouriteFragment: Fragment() {
         adapter?.tracks?.clear()
         adapter?.notifyDataSetChanged()
 
+    }
+
+    private fun updateFavoriteState(data: List<Track>) {
+        adapter?.tracks = data.toMutableList().asReversed()
+        binding.favoriteList.adapter = adapter
     }
 
 

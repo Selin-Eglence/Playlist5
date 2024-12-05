@@ -65,7 +65,8 @@ class AudioPlayerActivity : AppCompatActivity() {
 
             viewModel.onFavouriteClicked(track)
         }
-        viewModel.isFavourite.observe(this, Observer { isFavourite->updateLikeButton(isFavourite) })
+        viewModel.isFavourite.observe(this, Observer { track=track.copy(isFavorite = it)
+            updateLikeButton(it)})
 
 
 
@@ -94,12 +95,13 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
     }
     private fun updateLikeButton(isFavorite: Boolean) {
-        if (isFavorite) {
-            binding.ivLike.setImageResource(R.drawable.like)
+        val image = if (isFavorite) {
+            R.drawable.not_like
         }
         else {
-            binding.ivLike.setImageResource(R.drawable.not_like)
+            R.drawable.like
         }
+        binding.ivLike.setImageResource(image)
     }
 
 
@@ -112,3 +114,4 @@ class AudioPlayerActivity : AppCompatActivity() {
 
 
 }
+

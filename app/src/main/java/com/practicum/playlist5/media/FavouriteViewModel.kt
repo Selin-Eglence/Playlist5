@@ -7,8 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlist5.R
 import com.practicum.playlist5.media.domain.FavouriteInteractor
-import com.practicum.playlist5.search.domain.models.Track
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class FavouriteViewModel(private val context: Context,
@@ -39,4 +37,4 @@ class FavouriteViewModel(private val context: Context,
         stateLiveData.postValue(state)
     }
 
-                         }
+}

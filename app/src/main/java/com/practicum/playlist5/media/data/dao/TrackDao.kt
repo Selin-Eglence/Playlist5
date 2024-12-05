@@ -11,7 +11,7 @@ import com.practicum.playlist5.media.data.entity.TrackEntity
 @Dao
 interface TrackDao {
     @Insert(entity = TrackEntity::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTracks(track:List<TrackEntity>)
+    suspend fun insertTracks(track:TrackEntity)
 
     @Delete(entity=TrackEntity::class)
     suspend fun deleteTracks(track:TrackEntity)

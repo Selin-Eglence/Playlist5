@@ -21,7 +21,7 @@ class FavouriteRepositoryImpl(private val appDatabase: AppDatabase,
 
     override suspend fun addTrackToFavorites(track: Track) {
         val trackEntity = tracksDbConverter.map(track)
-        appDatabase.trackDao().insertTracks(listOf(trackEntity))
+        appDatabase.trackDao().insertTracks(trackEntity)
     }
     override suspend fun removeTrackFromFavorites(track: Track) {
         appDatabase.trackDao().deleteTracks(tracksDbConverter.map(track))
