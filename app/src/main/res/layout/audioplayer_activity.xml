@@ -176,7 +176,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/play"
         app:layout_constraintEnd_toStartOf="@+id/rightBorder"
         app:layout_constraintTop_toTopOf="@+id/play"
-        app:srcCompat="@drawable/like" />
+        app:srcCompat="@drawable/like"/>
 
 
     <TextView
