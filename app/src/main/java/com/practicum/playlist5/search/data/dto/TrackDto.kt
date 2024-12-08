@@ -12,4 +12,5 @@ data class TrackDto (
     val country: String,
     val previewUrl:String,
     var isFavorite: Boolean = false,
+    val addedAt: Long = System.currentTimeMillis()
 )

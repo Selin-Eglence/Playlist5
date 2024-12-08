@@ -127,7 +127,7 @@ class FavouriteFragment: Fragment() {
     }
 
     private fun updateFavoriteState(data: List<Track>) {
-        adapter?.tracks = data.toMutableList().asReversed()
+        adapter?.tracks = data.toMutableList()
         binding.favoriteList.adapter = adapter
     }
 
