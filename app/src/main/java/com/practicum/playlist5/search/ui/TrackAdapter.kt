@@ -10,7 +10,7 @@ import com.practicum.playlist5.search.domain.models.Track
 class TrackAdapter(private val itemClickListener: ItemClickListener) :
     RecyclerView.Adapter<TrackViewHolder>() {
 
-    var tracks = ArrayList<Track>()
+    var tracks = mutableListOf<Track>()
 
     @SuppressLint("SuspiciousIndentation")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {

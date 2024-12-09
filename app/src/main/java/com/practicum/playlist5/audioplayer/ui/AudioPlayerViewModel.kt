@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerInteractor
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
+import com.practicum.playlist5.media.domain.FavouriteInteractor
 import com.practicum.playlist5.search.domain.models.Track
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -14,7 +16,8 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class AudioPlayerViewModel(
-    private val audioPlayerInteractor: AudioPlayerInteractor
+    private val audioPlayerInteractor: AudioPlayerInteractor,
+    private val favouriteTrackInteractor: FavouriteInteractor
 ) : ViewModel() {
 
     private var timerJob: Job?= null
@@ -29,9 +32,35 @@ class AudioPlayerViewModel(
     )
     val playbackState: LiveData<ScreenState> = _playbackState
 
+    private val _isFavourite = MutableLiveData<Boolean>()
+    val isFavourite: LiveData<Boolean>get() = _isFavourite
+
+
+    fun onFavouriteClicked(track: Track) {
+
+        viewModelScope.launch {
+            if (track.isFavorite) {
+                favouriteTrackInteractor.addTrackToFavorites(track)
+            } else {
+                favouriteTrackInteractor.removeTrackFromFavorites(track)
+
+            }
+            _isFavourite.postValue(track.isFavorite)
+        }
+    }
+
+    private fun updateIsFavourite(trackId: Int) {
+        viewModelScope.launch {
+            val isFavourite = favouriteTrackInteractor.isFavourite(trackId)
+            _isFavourite.postValue(isFavourite)
+        }
+    }
+
+
     fun setTrack(track: Track) {
         _trackData.value = track
         audioPlayerInteractor.preparePlayer(track)
+        updateIsFavourite(track.trackId)
     }
 
 
@@ -94,8 +123,8 @@ class AudioPlayerViewModel(
                 )
                 delay(TIMER_UPDATE_DELAY)
 
-        }
-    }}
+            }
+        }}
 
 
 
@@ -105,4 +134,5 @@ class AudioPlayerViewModel(
         private const val TIMER_UPDATE_DELAY = 300L
     }
 }
+
 

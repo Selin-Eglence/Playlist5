@@ -1,6 +1,12 @@
-package com.practicum.playlist5.search.data.dto
+package com.practicum.playlist5.media.data.entity
 
-data class TrackDto (
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+
+@Entity(tableName = "track_table")
+data class TrackEntity (
+    @PrimaryKey
     val trackId : Int,
     val trackName: String,
     val artistName: String,
@@ -11,6 +17,6 @@ data class TrackDto (
     val primaryGenreName: String,
     val country: String,
     val previewUrl:String,
-    var isFavorite: Boolean = false,
-    val addedAt: Long = System.currentTimeMillis()
+    var isFavourite:Boolean,
+    var addedAt: Long = System.currentTimeMillis()
 )
