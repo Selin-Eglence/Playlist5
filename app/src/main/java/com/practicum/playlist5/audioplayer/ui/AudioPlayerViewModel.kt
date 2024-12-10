@@ -47,6 +47,8 @@ class AudioPlayerViewModel(
             }
             _isFavourite.postValue(track.isFavorite)
         }
+        updateIsFavourite(track.trackId)
+
     }
 
     private fun updateIsFavourite(trackId: Int) {
@@ -96,7 +98,7 @@ class AudioPlayerViewModel(
 
 
 
-    fun onDestroy() {
+    fun onDestroy(track: Track) {
         audioPlayerInteractor.pausePlayer()
         timerJob?.cancel()
         timerJob = null
@@ -104,6 +106,8 @@ class AudioPlayerViewModel(
             progressText = dateFormat.format(0),
             playerState = PlayerState.STATE_DEFAULT
         )
+        updateIsFavourite(track.trackId)
+
     }
 
 

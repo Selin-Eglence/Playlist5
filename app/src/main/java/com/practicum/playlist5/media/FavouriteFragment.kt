@@ -73,7 +73,7 @@ class FavouriteFragment: Fragment() {
 
         favouriteViewModel.updateFavorites()
 
-        favouriteViewModel.observeState().observe(viewLifecycleOwner) { state ->
+        favouriteViewModel.observeState().observe(viewLifecycleOwner) {state ->
             render(state)
         }
     }
@@ -110,6 +110,7 @@ class FavouriteFragment: Fragment() {
         binding.progressBar.visibility = View.GONE
         if (tracks.isNotEmpty()) {
             binding.favoriteList.visibility = View.VISIBLE
+            adapter?.notifyDataSetChanged()
             updateFavoriteState(tracks)
         }
     }
@@ -120,7 +121,6 @@ class FavouriteFragment: Fragment() {
         binding.placeholderText.visibility = View.VISIBLE
         binding.placeholderText.text = message
         binding.favoriteList.visibility = View.GONE
-
         adapter?.tracks?.clear()
         adapter?.notifyDataSetChanged()
 
@@ -146,6 +146,13 @@ class FavouriteFragment: Fragment() {
             }
         }
         return current
+        favouriteViewModel.updateFavorites()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        favouriteViewModel.updateFavorites()
 
     }
 

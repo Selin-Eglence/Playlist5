@@ -88,7 +88,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
 
         binding.lightMode.setOnClickListener {
-            viewModel.onDestroy()
+            viewModel.onDestroy(track)
             PlayerState.STATE_COMPLETED
             onBackPressedDispatcher.onBackPressed()
             Log.e("back","music")

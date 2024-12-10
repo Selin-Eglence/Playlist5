@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlist5.R
 import com.practicum.playlist5.media.domain.FavouriteInteractor
+import com.practicum.playlist5.search.domain.models.Track
 import kotlinx.coroutines.launch
 
 class FavouriteViewModel(private val context: Context,
@@ -14,24 +15,26 @@ class FavouriteViewModel(private val context: Context,
     private val stateLiveData = MutableLiveData<FavouriteState>()
     fun observeState(): LiveData<FavouriteState> = stateLiveData
 
-
-    private fun fillData() {
+    fun updateFavorites() {
         viewModelScope.launch {
             renderState(FavouriteState.Loading)
-            favouriteInteractor.getFavoriteTracks().collect { tracks ->
-                if (tracks.isEmpty()) {
-                    renderState(FavouriteState.Empty(context.getString(R.string.nothing_found)))
-                } else {
-                    renderState(FavouriteState.Content(tracks))
-                }
-            }
+            favouriteInteractor.getFavoriteTracks().collect { processResult(it)
+        }
+    }}
+
+    private fun processResult(tracks: List<Track>) {
+        if (tracks.isEmpty()) {
+            renderState(FavouriteState.Empty(context.getString(R.string.nothing_found)))
+        } else {
+            renderState(FavouriteState.Content(tracks))
         }
     }
 
 
-    fun updateFavorites() {
-        fillData()
-    }
+
+    init {updateFavorites()}
+
+
 
     private fun renderState(state: FavouriteState) {
         stateLiveData.postValue(state)
