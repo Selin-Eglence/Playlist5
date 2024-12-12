@@ -97,6 +97,7 @@ class SearchFragment : Fragment() {
             is SearchState.Error -> showErrorMessage()
             is SearchState.Loading -> showLoading()
             is SearchState.NothingFound -> showEmptyView()
+            is SearchState.NoHistory ->showHistoryMessage()
         }
     }
 
@@ -154,7 +155,7 @@ class SearchFragment : Fragment() {
         binding.ErrorMessage.isVisible = false
     }
 
-    private fun showTracks(tracks: List<Track>) {
+    private fun showTracks(tracks: MutableList<Track>) {
         binding.progressBar.isVisible = false
         binding.recyclerview.isVisible = true
         binding.searchHistoryLayout.isVisible = false
@@ -165,7 +166,7 @@ class SearchFragment : Fragment() {
 
     }
 
-    private fun showHistoryList(tracks: List<Track>) {
+    private fun showHistoryList(tracks: MutableList<Track>) {
         binding.progressBar.isVisible = false
         binding.RefreshButton.isVisible = false
         binding.ErrorMessage.isVisible = false
@@ -199,7 +200,12 @@ class SearchFragment : Fragment() {
     }
 
 
-
+    private fun showHistoryMessage(){
+        binding.recyclerview.isVisible = false
+        binding.ErrorMessage.isVisible = false
+        binding.searchHistoryLayout.isVisible = false
+        binding.progressBar.isVisible = false
+    }
 
 
 

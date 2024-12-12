@@ -2,6 +2,8 @@ package com.practicum.playlist5.di
 
 import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerInteractor
 import com.practicum.playlist5.audioplayer.domain.impl.AudioPlayerInteractorImpl
+import com.practicum.playlist5.media.domain.FavouriteInteractor
+import com.practicum.playlist5.media.domain.FavouriteInteractorImpl
 
 import com.practicum.playlist5.search.domain.api.SearchHistoryInteractor
 import com.practicum.playlist5.search.domain.api.TrackInteractor
@@ -30,6 +32,11 @@ val interactorModule = module {
     }
     single<SharingInteractor>{
         SharingInteractorImpl(get(),get())
-    }}
+    }
+
+    single<FavouriteInteractor> {
+        FavouriteInteractorImpl(get())
+    }
+}
 
 

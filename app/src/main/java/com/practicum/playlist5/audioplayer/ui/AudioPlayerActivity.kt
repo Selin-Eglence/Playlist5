@@ -1,9 +1,11 @@
 package com.practicum.playlist5.audioplayer.ui
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlist5.R
@@ -55,6 +57,19 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         viewModel.setTrack(track)
 
+        binding.ivLike.setOnClickListener {
+            val newIsFavorite = !track.isFavorite
+            track = track.copy(isFavorite = newIsFavorite)
+
+            updateLikeButton(newIsFavorite)
+
+            viewModel.onFavouriteClicked(track)
+        }
+        viewModel.isFavourite.observe(this, Observer { track=track.copy(isFavorite = it)
+            updateLikeButton(it)})
+
+
+
 
         viewModel.playbackState.observe(this) { state ->
 
@@ -73,12 +88,22 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
 
         binding.lightMode.setOnClickListener {
-            viewModel.onDestroy()
+            viewModel.onDestroy(track)
             PlayerState.STATE_COMPLETED
             onBackPressedDispatcher.onBackPressed()
             Log.e("back","music")
         }
     }
+    private fun updateLikeButton(isFavorite: Boolean) {
+        val image = if (isFavorite) {
+            R.drawable.not_like
+        }
+        else {
+            R.drawable.like
+        }
+        binding.ivLike.setImageResource(image)
+    }
+
 
 
 
@@ -89,3 +114,4 @@ class AudioPlayerActivity : AppCompatActivity() {
 
 
 }
+
