@@ -1,9 +1,9 @@
-package com.practicum.playlist5.media.data
+package com.practicum.playlist5.media.data.repository
 
 import com.practicum.playlist5.media.data.converter.TracksDbConverter
 import com.practicum.playlist5.media.data.db.AppDatabase
 import com.practicum.playlist5.media.data.entity.TrackEntity
-import com.practicum.playlist5.media.domain.FavouriteRepository
+import com.practicum.playlist5.media.domain.api.FavouriteRepository
 import com.practicum.playlist5.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

@@ -16,8 +16,23 @@
         android:id="@+id/mediaFragment"
         android:name="com.practicum.playlist5.media.MediaFragment"
         android:label="fragment_media"
-        tools:layout="@layout/fragment_media" >
+        tools:layout="@layout/fragment_media">
+        <action
+            android:id="@+id/media_to_playlist"
+            app:destination="@id/audiPlayerActivity"/>
+        <action
+            android:id="@+id/media_newPlaylist"
+            app:destination="@id/new_playlist_fragment" />
     </fragment>
+
+    <activity
+        android:id="@+id/audiPlayerActivity"
+        android:name="com.practicum.playlist5.audioplayer.ui.AudioPlayerActivity"
+        android:label="AudioPlayer"
+        tools:layout="@layout/audioplayer_activity">
+
+</activity>
+
 
     <fragment
         android:id="@+id/settingsFragment"
@@ -25,5 +40,12 @@
         android:label="SettingsFragment"
         tools:layout="@layout/fragment_settings"
         />
+
+    <fragment
+        android:id="@+id/new_playlist_fragment"
+        android:name="com.practicum.playlist5.media.ui.model.NewPlaylistFragment"
+        android:label="fragment_newplaylist"
+        tools:layout="@layout/fragment_new_playlist"/>
+
 
 </navigation>

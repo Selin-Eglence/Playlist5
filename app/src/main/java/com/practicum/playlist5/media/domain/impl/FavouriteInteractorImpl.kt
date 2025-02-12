@@ -1,9 +1,12 @@
-package com.practicum.playlist5.media.domain
+package com.practicum.playlist5.media.domain.impl
 
+import com.practicum.playlist5.media.domain.api.FavouriteInteractor
+import com.practicum.playlist5.media.domain.api.FavouriteRepository
 import com.practicum.playlist5.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
-class FavouriteInteractorImpl(private val favouriteRepository: FavouriteRepository): FavouriteInteractor {
+class FavouriteInteractorImpl(private val favouriteRepository: FavouriteRepository):
+    FavouriteInteractor {
     override suspend fun addTrackToFavorites(track: Track) {
         return favouriteRepository.addTrackToFavorites(track)
     }

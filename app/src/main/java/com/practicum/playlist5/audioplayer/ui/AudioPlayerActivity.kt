@@ -1,28 +1,35 @@
 package com.practicum.playlist5.audioplayer.ui
 
 import android.annotation.SuppressLint
-import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.practicum.playlist5.R
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
 import com.practicum.playlist5.databinding.AudioplayerActivityBinding
+import com.practicum.playlist5.media.ui.model.NewPlaylistFragment
 import com.practicum.playlist5.search.ui.SearchFragment
 import com.practicum.playlist5.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
-import kotlin.concurrent.timer
 
 @Suppress("DEPRECATION")
 class AudioPlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: AudioplayerActivityBinding
     private lateinit var track: Track
+    private var playlistAdapter: SheetViewAdapter? = null
+    val navController = findNavController(R.id.nav_host_fragment)
 
     @SuppressLint("ResourceType", "SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +40,48 @@ class AudioPlayerActivity : AppCompatActivity() {
 
 
         val viewModel by viewModel<AudioPlayerViewModel>()
+
+
+        viewModel.loadPlaylists()
+
+
+        val bottomSheetContainer = findViewById<View>(R.id.bottom_sheet)
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        binding.bottomSheetRecyclerView.adapter = playlistAdapter
+
+        playlistAdapter = SheetViewAdapter(viewModel.playlists.value ?: emptyList()) { playlist ->
+            viewModel.addTrackToPlaylist(playlist, track)
+        }
+
+
+        binding.bottomSheetRecyclerView.adapter = playlistAdapter
+        viewModel.observePlaylistState().observe(this) { result ->
+            when (result.isAdded) {
+                true -> {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                    Toast.makeText(
+                        this,
+                        "Трек успешно добавлен в плейлист ${result.playlist.name}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                false -> {
+                    Toast.makeText(
+                        this,
+                        "Трек уже добавлен в плейлист ${result.playlist.name}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+            }
+        }
+
+
 
 
         track = intent.getSerializableExtra(SearchFragment.TRACK_KEY) as Track
@@ -52,10 +101,13 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding.yearName.text = track.releaseDate.substring(0, 4)
         binding.genreName.text = track.primaryGenreName
         binding.countryName.text = track.country
-        binding.timing.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
+        binding.timing.text =
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
 
 
         viewModel.setTrack(track)
+
+
 
         binding.ivLike.setOnClickListener {
             val newIsFavorite = !track.isFavorite
@@ -65,8 +117,10 @@ class AudioPlayerActivity : AppCompatActivity() {
 
             viewModel.onFavouriteClicked(track)
         }
-        viewModel.isFavourite.observe(this, Observer { track=track.copy(isFavorite = it)
-            updateLikeButton(it)})
+        viewModel.isFavourite.observe(this, Observer {
+            track = track.copy(isFavorite = it)
+            updateLikeButton(it)
+        })
 
 
 
@@ -91,9 +145,55 @@ class AudioPlayerActivity : AppCompatActivity() {
             viewModel.onDestroy(track)
             PlayerState.STATE_COMPLETED
             onBackPressedDispatcher.onBackPressed()
-            Log.e("back","music")
+            Log.e("back", "music")
         }
+
+
+
+        binding.add.setOnClickListener {
+            Log.d("add", "success")
+            viewModel.loadPlaylists()
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        }
+
+
+
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.overlay.visibility = View.GONE
+                    }
+
+                    else -> {
+                        binding.overlay.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                binding.overlay.alpha = (slideOffset + 1f) / 2f
+            }
+        })
+
+        binding.RefreshButton.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            navController.navigate(R.id.new_playlist_fragment)
+        }
+
+
+
+
     }
+
+
+
+
+
     private fun updateLikeButton(isFavorite: Boolean) {
         val image = if (isFavorite) {
             R.drawable.not_like
@@ -103,8 +203,6 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
         binding.ivLike.setImageResource(image)
     }
-
-
 
 
     override fun onBackPressed() {

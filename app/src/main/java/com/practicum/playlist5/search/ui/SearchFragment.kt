@@ -12,8 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.getSystemService
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -22,7 +20,6 @@ import com.practicum.playlist5.R
 import com.practicum.playlist5.audioplayer.ui.AudioPlayerActivity
 import com.practicum.playlist5.databinding.FragmentSearchBinding
 import com.practicum.playlist5.search.domain.models.Track
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
