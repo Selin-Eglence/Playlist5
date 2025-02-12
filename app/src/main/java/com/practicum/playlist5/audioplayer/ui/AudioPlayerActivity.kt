@@ -29,15 +29,12 @@ class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var binding: AudioplayerActivityBinding
     private lateinit var track: Track
     private var playlistAdapter: SheetViewAdapter? = null
-    val navController = findNavController(R.id.nav_host_fragment)
 
     @SuppressLint("ResourceType", "SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = AudioplayerActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         val viewModel by viewModel<AudioPlayerViewModel>()
 
@@ -182,7 +179,6 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         binding.RefreshButton.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            navController.navigate(R.id.new_playlist_fragment)
         }
 
 

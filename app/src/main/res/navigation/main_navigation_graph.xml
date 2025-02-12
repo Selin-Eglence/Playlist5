@@ -25,14 +25,6 @@
             app:destination="@id/new_playlist_fragment" />
     </fragment>
 
-    <activity
-        android:id="@+id/audiPlayerActivity"
-        android:name="com.practicum.playlist5.audioplayer.ui.AudioPlayerActivity"
-        android:label="AudioPlayer"
-        tools:layout="@layout/audioplayer_activity">
-
-</activity>
-
 
     <fragment
         android:id="@+id/settingsFragment"

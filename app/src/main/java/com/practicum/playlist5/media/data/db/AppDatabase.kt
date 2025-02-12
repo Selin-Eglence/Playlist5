@@ -18,5 +18,4 @@ abstract class AppDatabase : RoomDatabase(){
     abstract fun playlistDao(): PlaylistDao
 
 
-
 }
