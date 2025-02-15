@@ -327,8 +327,9 @@
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/size_24dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/tracklist"
-            android:visibility="gone">
+            tools:listitem="@layout/item_playlist_bottom_sheet"
+            android:visibility="visible"
+            >
         </androidx.recyclerview.widget.RecyclerView>
 
 

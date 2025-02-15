@@ -6,8 +6,9 @@
        android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".media.ui.model.NewPlaylistFragment"
+    tools:context=".media.ui.newplaylist.NewPlaylistFragment"
     android:id="@+id/new_playlist_fragment">
+
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">

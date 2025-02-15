@@ -4,7 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlist5.R
-import com.practicum.playlist5.media.ui.model.Playlist
+import com.practicum.playlist5.media.ui.playlist.Playlist
+import com.practicum.playlist5.media.ui.playlist.PlaylistViewHolder
 
 class PlaylistAdapter() : RecyclerView.Adapter<PlaylistViewHolder>() {
 

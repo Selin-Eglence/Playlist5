@@ -1,4 +1,4 @@
-package com.practicum.playlist5.media
+package com.practicum.playlist5.media.ui.playlist
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.practicum.playlist5.R
 import com.practicum.playlist5.databinding.FragmentPlaylistBinding
-import com.practicum.playlist5.media.ui.model.Playlist
+import com.practicum.playlist5.media.PlaylistAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistFragment: Fragment() {
@@ -18,7 +18,7 @@ class PlaylistFragment: Fragment() {
     private val playlistViewModel: PlaylistViewModel by viewModel()
     private var _binding: FragmentPlaylistBinding? = null
     private val binding get()= _binding!!
-    private lateinit var playlistAdapter:PlaylistAdapter
+    private lateinit var playlistAdapter: PlaylistAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,

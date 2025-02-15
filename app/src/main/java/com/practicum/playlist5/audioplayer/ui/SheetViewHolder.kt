@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlist5.R
-import com.practicum.playlist5.media.ui.model.Playlist
+import com.practicum.playlist5.media.ui.playlist.Playlist
 import java.io.File
 
 class SheetViewHolder (view: View) : RecyclerView.ViewHolder(view) {

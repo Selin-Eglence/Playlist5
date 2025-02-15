@@ -1,13 +1,13 @@
-package com.practicum.playlist5.media
+package com.practicum.playlist5.media.ui.playlist
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlist5.R
 import com.practicum.playlist5.media.domain.api.PlaylistInteractor
-import com.practicum.playlist5.media.ui.model.Playlist
 import kotlinx.coroutines.launch
 
 class PlaylistViewModel(
@@ -23,6 +23,7 @@ class PlaylistViewModel(
         viewModelScope.launch {
             playlistInteractor.getPlaylists()
                 .collect { playlists ->
+                    Log.d("PlaylistViewModel", "Получено ${playlists.size} плейлистов")
                     processResult(playlists)
                 }
         }
@@ -30,6 +31,9 @@ class PlaylistViewModel(
 
 
     private fun processResult(playlists: List<Playlist>) {
+        Log.d("PlaylistViewModel", "Пришло плейлистов: ${playlists.size}")
+        playlists.forEach { Log.d("PlaylistViewModel", "Плейлист: ${it.name}") }
+
         if (playlists.isEmpty()) {
             renderState(PlaylistState.Empty(context.getString(R.string.no_playlist)))
         } else {

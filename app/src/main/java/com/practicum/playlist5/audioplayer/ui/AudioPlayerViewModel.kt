@@ -8,12 +8,11 @@ import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerInteractor
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
 import com.practicum.playlist5.media.domain.api.FavouriteInteractor
 import com.practicum.playlist5.media.domain.api.PlaylistInteractor
-import com.practicum.playlist5.media.ui.model.Playlist
+import com.practicum.playlist5.media.ui.playlist.Playlist
 import com.practicum.playlist5.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.core.component.getScopeId
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -66,7 +65,7 @@ class AudioPlayerViewModel(
 
     }
 
-    private fun updateIsFavourite(trackId: Int) {
+    private fun updateIsFavourite(trackId: Long) {
         viewModelScope.launch {
             val isFavourite = favouriteTrackInteractor.isFavourite(trackId)
             _isFavourite.postValue(isFavourite)
@@ -156,7 +155,7 @@ class AudioPlayerViewModel(
             try {
                 if (!isInPlaylist) {
                     val updatedPlaylist = playlist.copy(
-                        tracks = playlist.tracks + listOf(track.trackId.toString()),
+                        tracks = playlist.tracks + listOf(track.trackId),
                         trackNum = playlist.tracks.size + 1
                     )
                     playlistInteractor.addTrackToPlaylist(updatedPlaylist, track)
@@ -171,7 +170,7 @@ class AudioPlayerViewModel(
     }
 
     private fun isTrackInPlaylist(playlist: Playlist, track: Track): Boolean {
-        return playlist.tracks.contains(track.trackId.toString())
+        return playlist.tracks.contains(track.trackId)
     }
 
 

@@ -1,7 +1,7 @@
 package com.practicum.playlist5.search.data.dto
 
 data class TrackDto (
-    val trackId : Int,
+    val trackId : Long,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Long,

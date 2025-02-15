@@ -1,6 +1,4 @@
-package com.practicum.playlist5.media
-
-import com.practicum.playlist5.media.ui.model.Playlist
+package com.practicum.playlist5.media.ui.playlist
 
 sealed interface PlaylistState{
 

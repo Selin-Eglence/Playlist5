@@ -8,15 +8,13 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.practicum.playlist5.R
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
 import com.practicum.playlist5.databinding.AudioplayerActivityBinding
-import com.practicum.playlist5.media.ui.model.NewPlaylistFragment
+import com.practicum.playlist5.main.MainActivity
 import com.practicum.playlist5.search.ui.SearchFragment
 import com.practicum.playlist5.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -29,6 +27,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var binding: AudioplayerActivityBinding
     private lateinit var track: Track
     private var playlistAdapter: SheetViewAdapter? = null
+    val viewModel by viewModel<AudioPlayerViewModel>()
 
     @SuppressLint("ResourceType", "SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,10 +35,6 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding = AudioplayerActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val viewModel by viewModel<AudioPlayerViewModel>()
-
-
-        viewModel.loadPlaylists()
 
 
         val bottomSheetContainer = findViewById<View>(R.id.bottom_sheet)
@@ -48,14 +43,14 @@ class AudioPlayerActivity : AppCompatActivity() {
             state = BottomSheetBehavior.STATE_HIDDEN
         }
 
-        binding.bottomSheetRecyclerView.adapter = playlistAdapter
-
-        playlistAdapter = SheetViewAdapter(viewModel.playlists.value ?: emptyList()) { playlist ->
+        playlistAdapter = SheetViewAdapter { playlist ->
             viewModel.addTrackToPlaylist(playlist, track)
         }
-
-
         binding.bottomSheetRecyclerView.adapter = playlistAdapter
+
+
+        viewModel.loadPlaylists()
+
         viewModel.observePlaylistState().observe(this) { result ->
             when (result.isAdded) {
                 true -> {
@@ -179,6 +174,12 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         binding.RefreshButton.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            val intent = Intent(this, MainActivity::class.java).apply {
+                putExtra("navigate_to", "new_playlist")
+            }
+            startActivity(intent)
+
+            Log.d("transfer", "new_playlist")
         }
 
 

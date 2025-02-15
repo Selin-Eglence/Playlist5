@@ -3,7 +3,7 @@ package com.practicum.playlist5.search.domain.models
 import java.io.Serializable
 
 data class Track(
-    val trackId : Int,
+    val trackId : Long,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Long,

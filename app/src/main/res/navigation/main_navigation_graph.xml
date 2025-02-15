@@ -35,7 +35,7 @@
 
     <fragment
         android:id="@+id/new_playlist_fragment"
-        android:name="com.practicum.playlist5.media.ui.model.NewPlaylistFragment"
+        android:name="com.practicum.playlist5.media.ui.newplaylist.NewPlaylistFragment"
         android:label="fragment_newplaylist"
         tools:layout="@layout/fragment_new_playlist"/>
 

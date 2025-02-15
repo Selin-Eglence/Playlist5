@@ -6,7 +6,7 @@ import com.practicum.playlist5.media.data.converter.PlaylistTrackDbConverter
 import com.practicum.playlist5.media.data.db.AppDatabase
 import com.practicum.playlist5.media.data.entity.PlaylistEntity
 import com.practicum.playlist5.media.domain.api.PlaylistRepository
-import com.practicum.playlist5.media.ui.model.Playlist
+import com.practicum.playlist5.media.ui.playlist.Playlist
 import com.practicum.playlist5.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

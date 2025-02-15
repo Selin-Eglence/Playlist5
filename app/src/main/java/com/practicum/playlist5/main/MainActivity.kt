@@ -20,11 +20,17 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
         val navController = navHostFragment.navController
 
         binding.bottomNavigationView.setupWithNavController(navController)
-    }
-}
+
+        val destination = intent.getStringExtra("navigate_to")
+        if (destination == "new_playlist") {
+            navController.navigate(R.id.new_playlist_fragment)
+        }
+    }}
+
 
 

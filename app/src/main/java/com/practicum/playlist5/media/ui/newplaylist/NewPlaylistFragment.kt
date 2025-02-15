@@ -1,4 +1,4 @@
-package com.practicum.playlist5.media.ui.model
+package com.practicum.playlist5.media.ui.newplaylist
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
@@ -77,9 +76,9 @@ class NewPlaylistFragment: Fragment() {
 
         binding.buttonCreate.setOnClickListener{
             Log.e("pressed", "создание плейлиста")
-            val name = binding.nameInputText.toString()
+            val name = binding.nameInputText.text.toString()
             newPlaylistViewModel.setPlaylistName(name)
-            val description = binding.descriptionInputText.toString()
+            val description = binding.descriptionInputText.text.toString()
             newPlaylistViewModel.setPlaylistDescription(description)
             val cover = image
             if (cover != null) {

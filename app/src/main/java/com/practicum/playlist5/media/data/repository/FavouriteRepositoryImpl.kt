@@ -32,7 +32,7 @@ class FavouriteRepositoryImpl(private val appDatabase: AppDatabase,
             emit(tracksDbConverter.map(track))
         }
 
-    override suspend fun isFavourite(trackId: Int): Boolean {
+    override suspend fun isFavourite(trackId: Long): Boolean {
        return appDatabase.trackDao().isFavourite(trackId)
     }
 }

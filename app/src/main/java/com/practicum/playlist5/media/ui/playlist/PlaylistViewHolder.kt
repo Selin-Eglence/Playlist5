@@ -1,4 +1,4 @@
-package com.practicum.playlist5.media
+package com.practicum.playlist5.media.ui.playlist
 
 import android.content.Context
 import android.net.Uri
@@ -7,7 +7,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlist5.R
-import com.practicum.playlist5.media.ui.model.Playlist
 
 class PlaylistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val cover: ImageView = itemView.findViewById(R.id.playlist_cover)

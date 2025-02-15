@@ -12,6 +12,6 @@ interface FavouriteInteractor {
 
     fun getID(trackId:Int): Flow<Track>
 
-    suspend fun isFavourite(trackId: Int): Boolean
+    suspend fun isFavourite(trackId: Long): Boolean
 
 }
