@@ -35,7 +35,7 @@
             tools:text="Playlist_name" />
 
         <TextView
-            android:id="@+id/number_tracks"
+            android:id="@+id/playlist_tracks"
             style="@style/playlist_added"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

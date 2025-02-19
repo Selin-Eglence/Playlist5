@@ -12,4 +12,4 @@ data class PlaylistEntity(
     val description: String,
     val imagePath: String?,
     val tracks: String = Gson().toJson(emptyList<Long>()),
-    val tracksCount: Int)
+    val tracksCount: Int = 0)

@@ -34,7 +34,7 @@ class PlaylistDbConverter {
 
     fun createTracksFromJson(json: String): List<Long> {
         if (json == "") return ArrayList()
-        val trackListType = object : TypeToken<List<String>>() {}.type
+        val trackListType = object : TypeToken<List<Long>>() {}.type
         return Gson().fromJson(json, trackListType)
     }
 }

@@ -26,10 +26,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
-        val destination = intent.getStringExtra("navigate_to")
-        if (destination == "new_playlist") {
-            navController.navigate(R.id.new_playlist_fragment)
-        }
     }}
 
 

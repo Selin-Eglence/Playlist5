@@ -10,6 +10,9 @@
         android:name="com.practicum.playlist5.search.ui.SearchFragment"
         android:label="SearchFragment"
         tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_searchFragment_to_audioPlayerFragment"
+            app:destination="@id/audioPlayerFragment" />
     </fragment>
 
     <fragment
@@ -19,10 +22,8 @@
         tools:layout="@layout/fragment_media">
         <action
             android:id="@+id/media_to_playlist"
-            app:destination="@id/audiPlayerActivity"/>
-        <action
-            android:id="@+id/media_newPlaylist"
-            app:destination="@id/new_playlist_fragment" />
+            app:destination="@id/audioPlayerFragment"/>
+
     </fragment>
 
 
@@ -32,9 +33,20 @@
         android:label="SettingsFragment"
         tools:layout="@layout/fragment_settings"
         />
+    <fragment
+        android:id="@+id/audioPlayerFragment"
+        android:name="com.practicum.playlist5.audioplayer.ui.AudioPlayerFragment"
+        android:label="AudioPlayerFragment"
+        tools:layout="@layout/fragment_audioplayer">
+        <action
+            android:id="@+id/action_audioPlayerFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
+    </fragment>
+
+
 
     <fragment
-        android:id="@+id/new_playlist_fragment"
+        android:id="@+id/newPlaylistFragment"
         android:name="com.practicum.playlist5.media.ui.newplaylist.NewPlaylistFragment"
         android:label="fragment_newplaylist"
         tools:layout="@layout/fragment_new_playlist"/>

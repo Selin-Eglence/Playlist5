@@ -1,11 +1,13 @@
 package com.practicum.playlist5.audioplayer.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerInteractor
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
+import com.practicum.playlist5.di.repositoryModule
 import com.practicum.playlist5.media.domain.api.FavouriteInteractor
 import com.practicum.playlist5.media.domain.api.PlaylistInteractor
 import com.practicum.playlist5.media.ui.playlist.Playlist
@@ -13,8 +15,10 @@ import com.practicum.playlist5.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.dsl.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlin.math.log
 
 class AudioPlayerViewModel(
     private val audioPlayerInteractor: AudioPlayerInteractor,
@@ -44,8 +48,8 @@ class AudioPlayerViewModel(
     private val _currentPlaylistName = MutableLiveData<String?>()
     val currentPlaylistName: LiveData<String?> = _currentPlaylistName
 
-    private val addedToPlaylistState = MutableLiveData<AddToPlaylist>()
-    fun observePlaylistState(): LiveData<AddToPlaylist> = addedToPlaylistState
+    private val _addedToPlaylistState = MutableLiveData<AddToPlaylist>()
+    val addedToPlaylistState: LiveData<AddToPlaylist> = _addedToPlaylistState
 
 
 
@@ -159,9 +163,12 @@ class AudioPlayerViewModel(
                         trackNum = playlist.tracks.size + 1
                     )
                     playlistInteractor.addTrackToPlaylist(updatedPlaylist, track)
-                    addedToPlaylistState.value= AddToPlaylist(true,playlist= playlist)
+                    playlistInteractor.getPlaylists()
+                    Log.d("track", "добавлен в плейлист")
+                    _addedToPlaylistState.value= AddToPlaylist(true,playlist)
+                    loadPlaylists()
                 } else {
-                    addedToPlaylistState.value =AddToPlaylist(true,playlist= playlist)
+                    _addedToPlaylistState.value =AddToPlaylist(true,playlist)
                 }
             } catch (e: Exception) {
                 throw e
@@ -171,14 +178,18 @@ class AudioPlayerViewModel(
 
     private fun isTrackInPlaylist(playlist: Playlist, track: Track): Boolean {
         return playlist.tracks.contains(track.trackId)
+
     }
 
 
     fun loadPlaylists() {
+        Log.d("playlist", "загружен")
         viewModelScope.launch {
+            playlistInteractor.getPlaylists()
             try {
-                playlistInteractor.getPlaylistsFlow().collect { playlists ->
+                playlistInteractor.getPlaylists().collect { playlists ->
                     _playlists.postValue(playlists)
+                    Log.d("playlist", "Список плейлистов: ${playlists.map { it.name }}")
                 }
             } catch (e: Exception) {
                 throw e

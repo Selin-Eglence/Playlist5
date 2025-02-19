@@ -1,5 +1,6 @@
 package com.practicum.playlist5.search.domain.models
 
+
 import java.io.Serializable
 
 data class Track(
