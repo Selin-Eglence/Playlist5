@@ -21,6 +21,9 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import androidx.appcompat.app.AlertDialog
+import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.request.RequestOptions
 import com.practicum.playlist5.R
 import com.practicum.playlist5.databinding.FragmentNewPlaylistBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -156,9 +159,8 @@ class NewPlaylistFragment: Fragment() {
     private fun convertImageIntoView(image: Uri) {
         Glide.with(requireContext())
             .load(image)
-            .placeholder(R.drawable.placeholder)
-            .centerCrop()
-            .transform(RoundedCorners(requireContext().resources.getDimensionPixelSize(R.dimen.radius_8dp)))
+            .apply(RequestOptions().transform(MultiTransformation(CenterCrop(),RoundedCorners(requireContext().resources.getDimensionPixelSize(R.dimen.radius_8dp)))))
+            .placeholder(R.drawable.placeholder_image)
             .into(binding.playlistImage)
     }
 
