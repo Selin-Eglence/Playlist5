@@ -47,7 +47,7 @@
         android:id="@+id/placeholder_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="106dp"
+        android:layout_marginTop="46dp"
         android:src="@drawable/emodji_error"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
