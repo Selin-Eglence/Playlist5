@@ -224,16 +224,15 @@ class SearchFragment : Fragment() {
     }}
 
 
+
     private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            viewLifecycleOwner.lifecycleScope.launch{
-                delay(CLICK_DEBOUNCE_DELAY)
-                        isClickAllowed= true
-            }
+        if (!isClickAllowed) return false
+        isClickAllowed = false
+        viewLifecycleOwner.lifecycleScope.launch {
+            delay(CLICK_DEBOUNCE_DELAY)
+            isClickAllowed = true
         }
-        return current
+        return true
     }
 
 

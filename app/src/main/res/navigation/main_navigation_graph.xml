@@ -23,6 +23,9 @@
         <action
             android:id="@+id/media_to_playlist"
             app:destination="@id/audioPlayerFragment"/>
+        <action
+        android:id="@+id/action_media_to_newPlaylistFragment"
+        app:destination="@id/newPlaylistFragment" />
 
     </fragment>
 

@@ -129,7 +129,7 @@ class AudioPlayerFragment : Fragment() {
         binding.lightMode.setOnClickListener {
             viewModel.onDestroy(track)
             PlayerState.STATE_COMPLETED
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            findNavController().navigateUp()
             Log.e("back", "music")
         }
 

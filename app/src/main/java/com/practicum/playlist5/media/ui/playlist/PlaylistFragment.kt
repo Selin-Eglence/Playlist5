@@ -39,7 +39,7 @@ class PlaylistFragment: Fragment() {
         }
 
         binding.RefreshButton.setOnClickListener {
-            findNavController().navigate(R.id.new_playlist_fragment)
+            findNavController().navigate(R.id.action_media_to_newPlaylistFragment)
         }
 
     }
@@ -69,6 +69,7 @@ class PlaylistFragment: Fragment() {
     private fun showContent(playlists: List<Playlist>) {
         binding.playlistView.isVisible = true
         binding.placeholderImage.isVisible = false
+        binding.placeholderText.isVisible=false
 
         binding.playlistView.layoutManager = GridLayoutManager(requireContext(), 2)
         playlistAdapter = PlaylistAdapter()

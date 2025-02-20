@@ -36,6 +36,7 @@ class PlaylistViewModel(
 
         if (playlists.isEmpty()) {
             renderState(PlaylistState.Empty(context.getString(R.string.no_playlist)))
+
         } else {
             renderState(PlaylistState.Content(playlists))
         }

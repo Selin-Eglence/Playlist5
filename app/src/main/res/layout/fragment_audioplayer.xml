@@ -220,23 +220,23 @@
 
     </TextView>
 
-    <Button
-        android:id="@+id/light_mode"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@null"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="4dp"
-        android:backgroundTint="?attr/colorPrimaryVariant"
-        android:outlineProvider="none"
-        app:icon="@drawable/light_mode"
-        app:iconTint="?attr/colorOnPrimary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SpeakableTextPresentCheck" />
 
+        <Button
+            android:id="@+id/light_mode"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@null"
+            android:backgroundTint="?attr/colorPrimaryVariant"
+            android:outlineProvider="none"
+            app:icon="@drawable/light_mode"
+            app:iconTint="?attr/colorOnPrimary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpeakableTextPresentCheck" />
 
-    <ImageView
+        <ImageView
         android:id="@+id/albumImage"
         android:layout_width="0dp"
         android:layout_height="0dp"

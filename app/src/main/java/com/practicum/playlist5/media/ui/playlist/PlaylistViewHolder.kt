@@ -2,6 +2,7 @@ package com.practicum.playlist5.media.ui.playlist
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -19,6 +20,7 @@ class PlaylistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
         playlistName.text = playlist.name
         val count = itemView.context.getFormattedCount(playlist.trackNum)
+        Log.d("PlaylistViewHolder", "bind: playlist=${playlist.name}, trackNum=${playlist.trackNum}")
         trackCount.text = count
 
     }

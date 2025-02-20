@@ -8,8 +8,10 @@ import com.practicum.playlist5.media.data.entity.PlaylistEntity
 import com.practicum.playlist5.media.domain.api.PlaylistRepository
 import com.practicum.playlist5.media.ui.playlist.Playlist
 import com.practicum.playlist5.search.domain.models.Track
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 
 class PlaylistRepositoryImpl(
     private val appDatabase: AppDatabase,
@@ -45,12 +47,15 @@ class PlaylistRepositoryImpl(
     }
 
     override suspend fun addTrackToPlaylist(playlist: Playlist, track: Track) {
+        withContext(Dispatchers.IO) {
+            val updatedTracks = playlist.tracks + track.trackId
+            val updatedPlaylist = playlist.copy(tracks = updatedTracks, trackNum = updatedTracks.size)
 
-        try {
-            val playlistTrackEntity = playlistTrackDbConverter.map(track)
-            appDatabase.playlistDao().insertPlaylist(playlistDbConverter.map(playlist))
-            appDatabase.playlistDao().insertPlaylistTrack(playlistTrackEntity)
+            try {
+
+            appDatabase.playlistDao().updatePlaylist(playlistDbConverter.map(updatedPlaylist))
+            appDatabase.playlistDao().insertPlaylistTrack(playlistTrackDbConverter.map(track))
         } catch (e: Exception) {
             throw e
         }
-    }}
+    }}}

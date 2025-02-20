@@ -160,13 +160,11 @@ class AudioPlayerViewModel(
                 if (!isInPlaylist) {
                     val updatedPlaylist = playlist.copy(
                         tracks = playlist.tracks + listOf(track.trackId),
-                        trackNum = playlist.tracks.size + 1
+                        trackNum = playlist.tracks.size+1
                     )
                     playlistInteractor.addTrackToPlaylist(updatedPlaylist, track)
-                    playlistInteractor.getPlaylists()
                     Log.d("track", "добавлен в плейлист")
                     _addedToPlaylistState.value= AddToPlaylist(true,playlist)
-                    loadPlaylists()
                 } else {
                     _addedToPlaylistState.value =AddToPlaylist(true,playlist)
                 }
@@ -189,7 +187,7 @@ class AudioPlayerViewModel(
             try {
                 playlistInteractor.getPlaylists().collect { playlists ->
                     _playlists.postValue(playlists)
-                    Log.d("playlist", "Список плейлистов: ${playlists.map { it.name }}")
+
                 }
             } catch (e: Exception) {
                 throw e

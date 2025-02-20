@@ -7,24 +7,27 @@ import com.practicum.playlist5.media.ui.playlist.Playlist
 
 
 class PlaylistDbConverter {
+    private val gson = Gson()
     fun map(playlist: Playlist): PlaylistEntity {
         return PlaylistEntity(
             id = playlist.id,
             name = playlist.name,
             description = playlist.description,
             imagePath = playlist.imagePath,
-            tracks = createJsonFromTracks(playlist.tracks),
-            tracksCount = playlist.tracks.size,
+            tracks = gson.toJson(playlist.tracks),
+            tracksCount = playlist.trackNum,
         )
     }
 
-    fun map(playlist: PlaylistEntity): Playlist {
+    fun map(entity: PlaylistEntity): Playlist {
+        val trackListType = object : TypeToken<List<Long>>() {}.type
         return Playlist(
-            id = playlist.id,
-            name = playlist.name,
-            description = playlist.description,
-            imagePath = playlist.imagePath,
-            tracks = createTracksFromJson(playlist.tracks)
+            id = entity.id,
+            name = entity.name,
+            description = entity.description,
+            imagePath = entity.imagePath,
+            tracks = gson.fromJson(entity.tracks, trackListType),
+            trackNum = entity.tracksCount
         )
     }
 
@@ -32,9 +35,4 @@ class PlaylistDbConverter {
         return Gson().toJson(tracks)
     }
 
-    fun createTracksFromJson(json: String): List<Long> {
-        if (json == "") return ArrayList()
-        val trackListType = object : TypeToken<List<Long>>() {}.type
-        return Gson().fromJson(json, trackListType)
-    }
 }
