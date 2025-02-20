@@ -157,6 +157,7 @@ class AudioPlayerViewModel(
         viewModelScope.launch {
             val isInPlaylist = isTrackInPlaylist(playlist, track)
             try {
+                Log.d("PlaylistViewModel", "Трек ${track.trackId} уже в плейлисте? $isInPlaylist")
                 if (!isInPlaylist) {
                     val updatedPlaylist = playlist.copy(
                         tracks = playlist.tracks + listOf(track.trackId),
@@ -166,7 +167,7 @@ class AudioPlayerViewModel(
                     Log.d("track", "добавлен в плейлист")
                     _addedToPlaylistState.value= AddToPlaylist(true,playlist)
                 } else {
-                    _addedToPlaylistState.value =AddToPlaylist(true,playlist)
+                    _addedToPlaylistState.value =AddToPlaylist(false,playlist)
                 }
             } catch (e: Exception) {
                 throw e

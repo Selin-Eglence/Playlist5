@@ -48,7 +48,7 @@ class PlaylistRepositoryImpl(
 
     override suspend fun addTrackToPlaylist(playlist: Playlist, track: Track) {
         withContext(Dispatchers.IO) {
-            val updatedTracks = playlist.tracks + track.trackId
+            val updatedTracks = (playlist.tracks + track.trackId).distinct()
             val updatedPlaylist = playlist.copy(tracks = updatedTracks, trackNum = updatedTracks.size)
 
             try {

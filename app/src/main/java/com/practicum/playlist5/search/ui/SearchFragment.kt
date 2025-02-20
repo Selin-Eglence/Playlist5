@@ -235,6 +235,11 @@ class SearchFragment : Fragment() {
         return true
     }
 
+    override fun onResume() {
+        super.onResume()
+        isClickAllowed = true
+    }
+
 
 
     companion object {
