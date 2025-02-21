@@ -6,12 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlist5.R
-import com.practicum.playlist5.media.domain.FavouriteInteractor
+import com.practicum.playlist5.media.domain.api.FavouriteInteractor
 import com.practicum.playlist5.search.domain.models.Track
 import kotlinx.coroutines.launch
 
 class FavouriteViewModel(private val context: Context,
-                         private val favouriteInteractor: FavouriteInteractor): ViewModel() {
+                         private val favouriteInteractor: FavouriteInteractor
+): ViewModel() {
     private val stateLiveData = MutableLiveData<FavouriteState>()
     fun observeState(): LiveData<FavouriteState> = stateLiveData
 

@@ -11,15 +11,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.practicum.playlist5.audioplayer.ui.AudioPlayerActivity
+import com.practicum.playlist5.R
 import com.practicum.playlist5.databinding.FragmentFavoriteBinding
 import com.practicum.playlist5.media.data.db.AppDatabase
 import com.practicum.playlist5.search.domain.models.Track
 import com.practicum.playlist5.search.ui.SearchFragment
+import com.practicum.playlist5.search.ui.SearchFragment.Companion
 import com.practicum.playlist5.search.ui.SearchFragment.Companion.CLICK_DEBOUNCE_DELAY
 import com.practicum.playlist5.search.ui.TrackAdapter
 import com.practicum.playlist5.search.ui.TrackViewHolder
@@ -83,9 +86,10 @@ class FavouriteFragment: Fragment() {
 
     private fun PlayerActivity(track: Track) {
         if (clickDebounce()) {
-            val intent = Intent(requireContext(), AudioPlayerActivity::class.java)
-            intent.putExtra(SearchFragment.TRACK_KEY, track)
-            startActivity(intent)
+            val bundle = bundleOf(TRACK_KEY to track)
+            findNavController().navigate(
+                R.id.media_to_playlist, bundle
+            )
         }
     }
 

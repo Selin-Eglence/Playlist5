@@ -1,9 +1,9 @@
-package com.practicum.playlist5.media.domain
+package com.practicum.playlist5.media.domain.api
 
 import com.practicum.playlist5.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
-interface FavouriteRepository {
+interface FavouriteInteractor {
     suspend fun addTrackToFavorites(track: Track)
 
     suspend fun removeTrackFromFavorites(track: Track)
@@ -12,5 +12,6 @@ interface FavouriteRepository {
 
     fun getID(trackId:Int): Flow<Track>
 
-    suspend fun isFavourite(trackId: Int):Boolean
+    suspend fun isFavourite(trackId: Long): Boolean
+
 }

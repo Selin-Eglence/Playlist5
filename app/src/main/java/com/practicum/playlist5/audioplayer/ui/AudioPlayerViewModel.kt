@@ -1,23 +1,29 @@
 package com.practicum.playlist5.audioplayer.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerInteractor
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
-import com.practicum.playlist5.media.domain.FavouriteInteractor
+import com.practicum.playlist5.di.repositoryModule
+import com.practicum.playlist5.media.domain.api.FavouriteInteractor
+import com.practicum.playlist5.media.domain.api.PlaylistInteractor
+import com.practicum.playlist5.media.ui.playlist.Playlist
 import com.practicum.playlist5.search.domain.models.Track
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.dsl.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlin.math.log
 
 class AudioPlayerViewModel(
     private val audioPlayerInteractor: AudioPlayerInteractor,
-    private val favouriteTrackInteractor: FavouriteInteractor
+    private val favouriteTrackInteractor: FavouriteInteractor,
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
     private var timerJob: Job?= null
@@ -35,6 +41,18 @@ class AudioPlayerViewModel(
     private val _isFavourite = MutableLiveData<Boolean>()
     val isFavourite: LiveData<Boolean>get() = _isFavourite
 
+    private val _playlists = MutableLiveData<List<Playlist>>()
+    val playlists: LiveData<List<Playlist>> = _playlists
+
+
+    private val _currentPlaylistName = MutableLiveData<String?>()
+    val currentPlaylistName: LiveData<String?> = _currentPlaylistName
+
+    private val _addedToPlaylistState = MutableLiveData<AddToPlaylist>()
+    val addedToPlaylistState: LiveData<AddToPlaylist> = _addedToPlaylistState
+
+
+
 
     fun onFavouriteClicked(track: Track) {
 
@@ -51,7 +69,7 @@ class AudioPlayerViewModel(
 
     }
 
-    private fun updateIsFavourite(trackId: Int) {
+    private fun updateIsFavourite(trackId: Long) {
         viewModelScope.launch {
             val isFavourite = favouriteTrackInteractor.isFavourite(trackId)
             _isFavourite.postValue(isFavourite)
@@ -129,6 +147,55 @@ class AudioPlayerViewModel(
 
             }
         }}
+
+
+
+
+
+
+    fun addTrackToPlaylist(playlist: Playlist, track: Track) {
+        viewModelScope.launch {
+            val isInPlaylist = isTrackInPlaylist(playlist, track)
+            try {
+                Log.d("PlaylistViewModel", "Трек ${track.trackId} уже в плейлисте? $isInPlaylist")
+                if (!isInPlaylist) {
+                    val updatedPlaylist = playlist.copy(
+                        tracks = playlist.tracks + listOf(track.trackId),
+                        trackNum = playlist.tracks.size+1
+                    )
+                    playlistInteractor.addTrackToPlaylist(updatedPlaylist, track)
+                    Log.d("track", "добавлен в плейлист")
+                    _addedToPlaylistState.value= AddToPlaylist(true,playlist)
+                } else {
+                    _addedToPlaylistState.value =AddToPlaylist(false,playlist)
+                }
+            } catch (e: Exception) {
+                throw e
+            }
+        }
+    }
+
+    private fun isTrackInPlaylist(playlist: Playlist, track: Track): Boolean {
+        return playlist.tracks.contains(track.trackId)
+
+    }
+
+
+    fun loadPlaylists() {
+        Log.d("playlist", "загружен")
+        viewModelScope.launch {
+            playlistInteractor.getPlaylists()
+            try {
+                playlistInteractor.getPlaylists().collect { playlists ->
+                    _playlists.postValue(playlists)
+
+                }
+            } catch (e: Exception) {
+                throw e
+            }
+        }
+    }
+
 
 
 

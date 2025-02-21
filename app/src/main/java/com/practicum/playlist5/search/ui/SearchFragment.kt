@@ -12,17 +12,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.getSystemService
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlist5.R
-import com.practicum.playlist5.audioplayer.ui.AudioPlayerActivity
 import com.practicum.playlist5.databinding.FragmentSearchBinding
 import com.practicum.playlist5.search.domain.models.Track
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -212,9 +210,8 @@ class SearchFragment : Fragment() {
     private fun PlayerActivity(track: Track) {
         if (clickDebounce()) {
             viewModel.addTrack(track)
-            val intent = Intent(requireContext(), AudioPlayerActivity::class.java)
-            intent.putExtra(TRACK_KEY, track)
-            startActivity(intent)
+            val bundle = bundleOf(TRACK_KEY to track)
+            findNavController().navigate(R.id.action_searchFragment_to_audioPlayerFragment, bundle)
         }
     }
 
@@ -227,16 +224,20 @@ class SearchFragment : Fragment() {
     }}
 
 
+
     private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            viewLifecycleOwner.lifecycleScope.launch{
-                delay(CLICK_DEBOUNCE_DELAY)
-                        isClickAllowed= true
-            }
+        if (!isClickAllowed) return false
+        isClickAllowed = false
+        viewLifecycleOwner.lifecycleScope.launch {
+            delay(CLICK_DEBOUNCE_DELAY)
+            isClickAllowed = true
         }
-        return current
+        return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        isClickAllowed = true
     }
 
 

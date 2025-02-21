@@ -24,6 +24,6 @@ interface TrackDao {
     suspend fun getId(trackId:Int):TrackEntity
 
     @Query("SELECT COUNT(*) > 0 FROM track_table WHERE trackId = :trackId")
-    suspend fun isFavourite(trackId: Int): Boolean
+    suspend fun isFavourite(trackId: Long): Boolean
 
 }

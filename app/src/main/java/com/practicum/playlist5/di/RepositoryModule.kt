@@ -2,9 +2,13 @@ package com.practicum.playlist5.di
 
 import com.practicum.playlist5.audioplayer.data.AudioPlayerRepositoryImpl
 import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerRepository
-import com.practicum.playlist5.media.data.FavouriteRepositoryImpl
+import com.practicum.playlist5.media.data.converter.PlaylistDbConverter
+import com.practicum.playlist5.media.data.converter.PlaylistTrackDbConverter
+import com.practicum.playlist5.media.data.repository.FavouriteRepositoryImpl
 import com.practicum.playlist5.media.data.converter.TracksDbConverter
-import com.practicum.playlist5.media.domain.FavouriteRepository
+import com.practicum.playlist5.media.data.repository.PlaylistRepositoryImpl
+import com.practicum.playlist5.media.domain.api.FavouriteRepository
+import com.practicum.playlist5.media.domain.api.PlaylistRepository
 import com.practicum.playlist5.search.data.repository.SearchHistoryRepositoryImpl
 import com.practicum.playlist5.search.data.repository.TrackRepositoryImpl
 import com.practicum.playlist5.search.domain.api.SearchHistoryRepository
@@ -39,5 +43,15 @@ val repositoryModule = module {
     single<FavouriteRepository> {
         FavouriteRepositoryImpl(get(),get())
     }
+
+    single<PlaylistRepository> {
+        PlaylistRepositoryImpl(get(), get(), get())
+    }
+
+    factory { PlaylistDbConverter() }
+
+    factory { PlaylistTrackDbConverter() }
+
+
 
 }

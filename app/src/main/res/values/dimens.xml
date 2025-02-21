@@ -20,5 +20,8 @@
     <dimen name="history_search">52dp</dimen>
     <dimen name="radius_8dp">8dp</dimen>
     <dimen name="size_24dp">24dp</dimen>
+    <dimen name="add_playlist">52dp</dimen>
+    <dimen name="playlist_tracks">12sp</dimen>
+    <dimen name="cover_size">45dp</dimen>
 
 </resources>
