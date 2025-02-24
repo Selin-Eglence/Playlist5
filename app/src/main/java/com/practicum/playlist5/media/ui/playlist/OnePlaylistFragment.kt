@@ -315,6 +315,11 @@ class OnePlaylistFragment:Fragment() {
         return current
     }
 
+    override fun onResume() {
+        super.onResume()
+        isClickAllowed = true
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
