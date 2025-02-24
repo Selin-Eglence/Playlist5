@@ -50,6 +50,8 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        searchAdapter = TrackAdapter()
+        historyAdapter=TrackAdapter()
         setupAdapters()
 
         observeViewModel()
@@ -68,13 +70,13 @@ class SearchFragment : Fragment() {
 
     private fun setupAdapters() {
 
-        searchAdapter = TrackAdapter { track -> PlayerActivity(track) }
+        searchAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track -> PlayerActivity(track) }
         binding.recyclerview.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = searchAdapter
         }
 
-        historyAdapter = TrackAdapter { track -> PlayerActivity(track) }
+        historyAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track -> PlayerActivity(track) }
         binding.historyList.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = historyAdapter

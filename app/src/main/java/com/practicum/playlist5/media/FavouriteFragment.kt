@@ -57,10 +57,11 @@ class FavouriteFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        adapter = TrackAdapter()
 
 
 
-        adapter = TrackAdapter { track -> PlayerActivity(track) }
+        adapter!!.onItemClickListener = TrackViewHolder.OnItemClickListener { track -> PlayerActivity(track) }
         binding.favoriteList.apply {
             layoutManager = LinearLayoutManager(requireContext())
             binding.favoriteList.adapter = adapter

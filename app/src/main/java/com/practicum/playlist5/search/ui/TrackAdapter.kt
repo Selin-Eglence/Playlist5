@@ -7,9 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlist5.R
 import com.practicum.playlist5.search.domain.models.Track
 
-class TrackAdapter(private val itemClickListener: ItemClickListener) :
+class TrackAdapter() :
     RecyclerView.Adapter<TrackViewHolder>() {
-
+    var onItemClickListener: TrackViewHolder.OnItemClickListener? = null
+    var onItemLongClickListener: TrackViewHolder.OnItemLongClickListener? = null
     var tracks = mutableListOf<Track>()
 
     @SuppressLint("SuspiciousIndentation")
@@ -19,18 +20,11 @@ class TrackAdapter(private val itemClickListener: ItemClickListener) :
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(tracks[position])
-        holder.itemView.setOnClickListener {
-            itemClickListener.onItemClick(tracks[position])
-        }
+        holder.bind(tracks[position],onItemClickListener = onItemClickListener, onItemLongClickListener = onItemLongClickListener)
     }
 
     override fun getItemCount(): Int {
         return tracks.size
-    }
-
-    fun interface ItemClickListener {
-        fun onItemClick(track: Track)
     }
 
 
