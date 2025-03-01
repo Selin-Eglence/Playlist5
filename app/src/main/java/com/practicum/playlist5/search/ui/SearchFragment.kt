@@ -50,6 +50,8 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        searchAdapter = TrackAdapter()
+        historyAdapter=TrackAdapter()
         setupAdapters()
 
         observeViewModel()
@@ -57,6 +59,13 @@ class SearchFragment : Fragment() {
         setupListeners()
 
     }
+
+    override fun onResume() {
+        super.onResume()
+        isClickAllowed = true
+    }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -68,13 +77,13 @@ class SearchFragment : Fragment() {
 
     private fun setupAdapters() {
 
-        searchAdapter = TrackAdapter { track -> PlayerActivity(track) }
+        searchAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track -> PlayerActivity(track) }
         binding.recyclerview.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = searchAdapter
         }
 
-        historyAdapter = TrackAdapter { track -> PlayerActivity(track) }
+        historyAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track -> PlayerActivity(track) }
         binding.historyList.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = historyAdapter
@@ -128,7 +137,6 @@ class SearchFragment : Fragment() {
 
         binding.inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                viewModel.search(binding.inputEditText.text.toString())
                 hideKeyboard()
             }
             false
@@ -151,6 +159,8 @@ class SearchFragment : Fragment() {
         binding.recyclerview.isVisible = false
         binding.historyList.isVisible = false
         binding.ErrorMessage.isVisible = false
+        binding.buttonClearHistory.isVisible=false
+        binding.hintMessage.isVisible=false
     }
 
     private fun showTracks(tracks: MutableList<Track>) {
@@ -165,6 +175,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun showHistoryList(tracks: MutableList<Track>) {
+        binding.hintMessage.isVisible=true
         binding.progressBar.isVisible = false
         binding.RefreshButton.isVisible = false
         binding.ErrorMessage.isVisible = false
@@ -233,11 +244,6 @@ class SearchFragment : Fragment() {
             isClickAllowed = true
         }
         return true
-    }
-
-    override fun onResume() {
-        super.onResume()
-        isClickAllowed = true
     }
 
 

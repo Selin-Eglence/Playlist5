@@ -17,7 +17,11 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val artistName: TextView = itemView.findViewById(R.id.artistName)
     private val trackTime: TextView = itemView.findViewById(R.id.trackTime)
     private val image: ImageView = itemView.findViewById(R.id.albumImage)
-    fun bind(model: Track) {
+
+
+    fun bind(model: Track,
+             onItemClickListener: OnItemClickListener?,
+             onItemLongClickListener: OnItemLongClickListener?) {
         trackName.text = model.trackName
         artistName.text = model.artistName
         trackTime.text =
@@ -30,6 +34,23 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .centerCrop()
             .transform(RoundedCorners(10))
             .into(image)
+
+        itemView.setOnClickListener {
+            onItemClickListener?.onItemClick(model)
+        }
+
+        itemView.setOnLongClickListener {
+            (onItemLongClickListener?.onItemLongClick(model) ?: false)
+
+        }
+    }
+
+    fun interface OnItemClickListener {
+        fun onItemClick(item: Track)
+    }
+
+    fun interface OnItemLongClickListener {
+        fun onItemLongClick(item: Track): Boolean
     }
 
 }
