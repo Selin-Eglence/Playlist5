@@ -1,15 +1,22 @@
 package com.practicum.playlist5.media.ui.playlist
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -55,6 +62,7 @@ class OnePlaylistFragment:Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         trackAdapter = TrackAdapter()
+
 
 
         binding.main.viewTreeObserver.addOnPreDrawListener(listener)
@@ -169,10 +177,12 @@ class OnePlaylistFragment:Fragment() {
         binding.bottomSheetRecyclerViewTrack.adapter = trackAdapter
 
         binding.playlistShare.setOnClickListener {
+            binding.menuBottomSheet.isVisible=false
             sharePlaylist()
         }
 
         binding.playlistDelete.setOnClickListener {
+            binding.menuBottomSheet.isVisible=false
             showDeleteConfirmationDialogPlaylist()
         }
 
@@ -248,9 +258,28 @@ class OnePlaylistFragment:Fragment() {
 
 
     private fun showDeleteConfirmationDialogPlaylist() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Удалить плейлист")
-            .setMessage("Хотите удалить плейлист?")
+        val context = ContextThemeWrapper(requireContext(), R.style.MyAlertDialogStyle)
+        val layout = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(50, 20, 50, 20) // Добавляем отступы
+
+            val message1 = TextView(context).apply {
+                text = "Удалить плейлист"
+                setTextColor(ContextCompat.getColor(context, R.color.black))
+                textSize = 16f
+            }
+
+            val message2 = TextView(context).apply {
+                text = "Хотите удалить плейлист?"
+                setTextColor(ContextCompat.getColor(context, R.color.black))
+                textSize = 14f
+            }
+
+            addView(message1)
+            addView(message2)
+        }
+        val dialog = MaterialAlertDialogBuilder(context)
+            .setView(layout)
             .setPositiveButton("ДА") { dialog, _ ->
                 playlist?.let {
 
@@ -263,12 +292,34 @@ class OnePlaylistFragment:Fragment() {
                 dialog.dismiss()
             }
             .show()
+        dialog.findViewById<TextView>(android.R.id.message)?.setTextColor(Color.BLACK)
+        dialog.findViewById<TextView>(android.R.id.button1)?.setTextColor(Color.BLUE)
+        dialog.findViewById<TextView>(android.R.id.button2)?.setTextColor(Color.BLUE)
     }
 
     private fun showDeleteConfirmationDialogTrack(track: Track) {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Удалить трек")
-            .setMessage("Хотите удалить трек?")
+        val context = ContextThemeWrapper(requireContext(), R.style.MyAlertDialogStyle)
+        val layout = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(50, 20, 50, 20) // Добавляем отступы
+
+            val message1 = TextView(context).apply {
+                text = "Удалить трек"
+                setTextColor(ContextCompat.getColor(context, R.color.black))
+                textSize = 16f
+            }
+
+            val message2 = TextView(context).apply {
+                text = "Хотите удалить трек?"
+                setTextColor(ContextCompat.getColor(context, R.color.black))
+                textSize = 14f
+            }
+
+            addView(message1)
+            addView(message2)
+        }
+        val dialog= MaterialAlertDialogBuilder(context)
+            .setView(layout)
             .setPositiveButton("ДА") { dialog, _ ->
                 playlist?.let { onePlaylistViewModel.removeTrack(track.trackId, it.id) }
                 dialog.dismiss()
@@ -276,6 +327,10 @@ class OnePlaylistFragment:Fragment() {
             .setNegativeButton("НЕТ") { dialog, _ ->
             }
             .show()
+
+        dialog.findViewById<TextView>(android.R.id.message)?.setTextColor(Color.BLACK)
+        dialog.findViewById<TextView>(android.R.id.button1)?.setTextColor(Color.BLUE)
+        dialog.findViewById<TextView>(android.R.id.button2)?.setTextColor(Color.BLUE)
     }
 
     private fun setupUI(playlist: Playlist) {

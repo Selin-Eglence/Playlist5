@@ -23,6 +23,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.navigateUp
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
@@ -94,18 +95,17 @@ class NewPlaylistFragment: Fragment() {
 
 
         binding.newPlaylist.setNavigationOnClickListener{
-           if(editablePlaylist==null) {
-               if ( image != null && binding.nameInput.toString().isNotEmpty() && binding.descriptionInput.toString().isNotEmpty()) {
-                confirmDialog.show()
-            }
-               else {
+           if(editablePlaylist!=null) {
                findNavController().navigateUp()
            }
+               else {
+                   if ( image != null || binding.nameInput.toString().isNotEmpty() || binding.descriptionInput.toString().isNotEmpty()){
+                       showConfirmationDialogPlaylist()}
+                   else{
+                           findNavController().navigateUp()
+                   }
+               }
            }
-            else{
-                findNavController().navigateUp()
-            }
-        }
 
 
        val textWatcher = object : TextWatcher {
@@ -183,34 +183,42 @@ class NewPlaylistFragment: Fragment() {
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    if (
-                        image != null || binding.nameInputText.toString().isNotEmpty()
-                        || binding.descriptionInputText.toString().isNotEmpty()
-                    ) {
-                        confirmDialog.show()
-                    } else {
+                    if(editablePlaylist!=null) {
                         findNavController().navigateUp()
+                    }
+                    else {
+                        if ( image != null || binding.nameInput.toString().isNotEmpty() || binding.descriptionInput.toString().isNotEmpty()){
+
+                            showConfirmationDialogPlaylist()}
+                        else{
+                            findNavController().navigateUp()
+                        }
                     }
                 }
             })
 
-        confirmDialog = DialogMaterialAlertDialogBuilder(requireActivity())
+
+
+
+
+
+
+
+
+    }
+
+    private fun showConfirmationDialogPlaylist() {
+        DialogMaterialAlertDialogBuilder(requireContext())
             .setTitle("Завершить создание плейлиста?")
             .setMessage("Все несохраненные данные будут потеряны")
-            .setNegativeButton("Отмена") { dialog, which ->
+            .setPositiveButton("Завершить") { dialog, _ ->
+                findNavController().navigateUp()
                 dialog.dismiss()
             }
-            .setPositiveButton("Завершить") { dialog, which ->
-                requireActivity().supportFragmentManager.popBackStack()
+            .setNegativeButton("Отмена") {dialog, which ->
+                dialog.dismiss()
             }
-            .create()
-
-
-
-
-
-
-
+            .show()
     }
 
     private fun saveNewPlaylist(name: String, description: String) {

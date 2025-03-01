@@ -60,6 +60,13 @@ class SearchFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        isClickAllowed = true
+    }
+
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -130,7 +137,6 @@ class SearchFragment : Fragment() {
 
         binding.inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                viewModel.search(binding.inputEditText.text.toString())
                 hideKeyboard()
             }
             false
@@ -153,6 +159,8 @@ class SearchFragment : Fragment() {
         binding.recyclerview.isVisible = false
         binding.historyList.isVisible = false
         binding.ErrorMessage.isVisible = false
+        binding.buttonClearHistory.isVisible=false
+        binding.hintMessage.isVisible=false
     }
 
     private fun showTracks(tracks: MutableList<Track>) {
@@ -167,6 +175,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun showHistoryList(tracks: MutableList<Track>) {
+        binding.hintMessage.isVisible=true
         binding.progressBar.isVisible = false
         binding.RefreshButton.isVisible = false
         binding.ErrorMessage.isVisible = false
@@ -235,11 +244,6 @@ class SearchFragment : Fragment() {
             isClickAllowed = true
         }
         return true
-    }
-
-    override fun onResume() {
-        super.onResume()
-        isClickAllowed = true
     }
 
 

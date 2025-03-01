@@ -41,7 +41,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/light_mode"
-            app:titleTextColor="?attr/colorOnPrimary" />
+            app:navigationIconTint="@color/graphit"
+            app:titleTextColor="@color/graphit"/>
 
         <TextView
             android:id="@+id/name_one_playlist"
@@ -54,7 +55,7 @@
             android:fontFamily="@font/ys_display_bold"
             android:singleLine="true"
             android:text="Без названия"
-            android:textColor="?attr/colorOnPrimary"
+            android:textColor="@color/graphit"
             android:textSize="@dimen/size22"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -73,6 +74,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:text="@string/description"
+            android:textColor="@color/graphit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name_one_playlist"
@@ -96,6 +98,7 @@
                 android:id="@+id/minutes_tv"
                 style="@style/playlist_added"
                 android:textSize="@dimen/one_playlist"
+                android:textColor="@color/graphit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/description" />
@@ -111,6 +114,7 @@
                 android:id="@+id/count_track_tv"
                 style="@style/playlist_added"
                 android:textSize="@dimen/one_playlist"
+                android:textColor="@color/graphit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/description" />

@@ -53,7 +53,6 @@ class AudioPlayerViewModel(
 
 
 
-
     fun onFavouriteClicked(track: Track) {
 
         viewModelScope.launch {
@@ -78,8 +77,17 @@ class AudioPlayerViewModel(
 
 
     fun setTrack(track: Track) {
+        timerJob?.cancel()
+        timerJob = null
         _trackData.value = track
         audioPlayerInteractor.preparePlayer(track)
+        _playbackState.value = ScreenState(
+            progressText = dateFormat.format(0),
+            playerState = PlayerState.STATE_DEFAULT
+        )
+        if (audioPlayerInteractor.getPlayerState() == PlayerState.STATE_PREPARED) {
+            startPlayer()
+        }
         updateIsFavourite(track.trackId)
     }
 
@@ -96,10 +104,12 @@ class AudioPlayerViewModel(
 
     private fun startPlayer() {
         audioPlayerInteractor.startPlayer()
+
         _playbackState.value = ScreenState(
             progressText = dateFormat.format(audioPlayerInteractor.getCurrentPosition()),
             playerState = PlayerState.STATE_PLAYING
         )
+
         startTimer()
     }
 
@@ -119,7 +129,6 @@ class AudioPlayerViewModel(
     fun onDestroy(track: Track) {
         audioPlayerInteractor.pausePlayer()
         timerJob?.cancel()
-        timerJob = null
         _playbackState.value = ScreenState(
             progressText = dateFormat.format(0),
             playerState = PlayerState.STATE_DEFAULT
@@ -130,10 +139,6 @@ class AudioPlayerViewModel(
 
 
     private fun startTimer() {
-        _playbackState.value = ScreenState(
-            progressText = dateFormat.format(0),
-            playerState = PlayerState.STATE_DEFAULT
-        )
         timerJob?.cancel()
         timerJob = null
         timerJob=viewModelScope.launch {
