@@ -79,7 +79,7 @@ class PlaylistFragment: Fragment() {
     private fun showEmpty(message: String) {
         binding.playlistView.isVisible = false
         binding.placeholderImage.isVisible = true
-        binding.placeholderText.text = message
+        binding.placeholderText.isVisible=true
     }
 
     private fun showContent(playlists: List<Playlist>) {

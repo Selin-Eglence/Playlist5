@@ -144,11 +144,11 @@ class AudioPlayerViewModel(
         timerJob=viewModelScope.launch {
             while  (audioPlayerInteractor.getPlayerState() == PlayerState.STATE_PLAYING) {
                 val currentTime = dateFormat.format(audioPlayerInteractor.getCurrentPosition())
+                delay(TIMER_UPDATE_DELAY)
                 _playbackState.value = ScreenState(
                     progressText = currentTime,
                     playerState = PlayerState.STATE_PLAYING
                 )
-                delay(TIMER_UPDATE_DELAY)
 
             }
         }}
