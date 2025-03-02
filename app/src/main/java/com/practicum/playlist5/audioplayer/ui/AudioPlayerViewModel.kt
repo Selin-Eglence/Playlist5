@@ -95,9 +95,11 @@ class AudioPlayerViewModel(
     fun playbackControl() {
         if (audioPlayerInteractor.getPlayerState() == PlayerState.STATE_PLAYING) {
             pausePlayer()
-        } else {
+        }
+        else if (audioPlayerInteractor.getPlayerState() == PlayerState.STATE_PREPARED || audioPlayerInteractor.getPlayerState() == PlayerState.STATE_PAUSED){
             startPlayer()
         }
+        else {}
     }
 
 

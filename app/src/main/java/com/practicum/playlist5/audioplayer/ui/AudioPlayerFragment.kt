@@ -60,6 +60,9 @@ class AudioPlayerFragment : Fragment() {
         }
 
 
+
+
+
         binding.bottomSheetRecyclerView.adapter = playlistAdapter
         binding.bottomSheetRecyclerView.isVisible = true
         viewModel.loadPlaylists()

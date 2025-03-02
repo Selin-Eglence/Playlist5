@@ -62,6 +62,7 @@ class FavouriteFragment: Fragment() {
 
 
         adapter!!.onItemClickListener = TrackViewHolder.OnItemClickListener { track -> PlayerActivity(track) }
+
         binding.favoriteList.apply {
             layoutManager = LinearLayoutManager(requireContext())
             binding.favoriteList.adapter = adapter
@@ -169,7 +170,7 @@ class FavouriteFragment: Fragment() {
 
 
     companion object {
-        const val TRACK_KEY = "track_key"
+        const val TRACK_KEY = "track"
         fun newInstance() = FavouriteFragment()
 
 
