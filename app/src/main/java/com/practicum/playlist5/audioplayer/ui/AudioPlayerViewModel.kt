@@ -53,7 +53,6 @@ class AudioPlayerViewModel(
 
 
 
-
     fun onFavouriteClicked(track: Track) {
 
         viewModelScope.launch {
@@ -78,19 +77,32 @@ class AudioPlayerViewModel(
 
 
     fun setTrack(track: Track) {
+        timerJob?.cancel()
+        timerJob = null
         _trackData.value = track
         audioPlayerInteractor.preparePlayer(track)
+        _playbackState.value = ScreenState(
+            progressText = dateFormat.format(0),
+            playerState = PlayerState.STATE_DEFAULT
+        )
         updateIsFavourite(track.trackId)
     }
 
 
     fun playbackControl() {
-        if (audioPlayerInteractor.getPlayerState() == PlayerState.STATE_PLAYING) {
-            pausePlayer()
-        } else {
-            startPlayer()
+        when (audioPlayerInteractor.getPlayerState()) {
+            PlayerState.STATE_PLAYING -> {
+                pausePlayer()
+            }
+
+            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED  -> {
+                startPlayer()
+            }
+
+            else -> {}
         }
     }
+
 
 
 
@@ -100,6 +112,7 @@ class AudioPlayerViewModel(
             progressText = dateFormat.format(audioPlayerInteractor.getCurrentPosition()),
             playerState = PlayerState.STATE_PLAYING
         )
+
         startTimer()
     }
 
@@ -119,7 +132,6 @@ class AudioPlayerViewModel(
     fun onDestroy(track: Track) {
         audioPlayerInteractor.pausePlayer()
         timerJob?.cancel()
-        timerJob = null
         _playbackState.value = ScreenState(
             progressText = dateFormat.format(0),
             playerState = PlayerState.STATE_DEFAULT
@@ -130,20 +142,13 @@ class AudioPlayerViewModel(
 
 
     private fun startTimer() {
-        _playbackState.value = ScreenState(
-            progressText = dateFormat.format(0),
-            playerState = PlayerState.STATE_DEFAULT
-        )
-        timerJob?.cancel()
-        timerJob = null
         timerJob=viewModelScope.launch {
             while  (audioPlayerInteractor.getPlayerState() == PlayerState.STATE_PLAYING) {
-                val currentTime = dateFormat.format(audioPlayerInteractor.getCurrentPosition())
+                delay(TIMER_UPDATE_DELAY)
                 _playbackState.value = ScreenState(
-                    progressText = currentTime,
+                    progressText = dateFormat.format(audioPlayerInteractor.getCurrentPosition()),
                     playerState = PlayerState.STATE_PLAYING
                 )
-                delay(TIMER_UPDATE_DELAY)
 
             }
         }}

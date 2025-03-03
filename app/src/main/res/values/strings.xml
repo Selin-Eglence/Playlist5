@@ -5,7 +5,7 @@
     <string name="settings" translatable="false">Настройки</string>
     <string name="media" translatable="false">Медиатека</string>
     <string name="darkmode" translatable="false">Темная тема</string>
-    <string name="share" translatable="false">Поделиться приложением</string>
+    <string name="share" translatable="false">Поделиться</string>
     <string name="support" translatable="false"> Написать в поддержку</string>
     <string name="documentation" translatable="false">Пользовательское соглашение</string>
     <string name="share_message" translatable="false">"https://practicum.yandex.ru/profile/android-developer/"</string>
@@ -30,6 +30,7 @@
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
     <string name="album">Альбом</string>
+    <string name="name">Название*</string>
     <string name="favourites">Ваша медиатека пуста</string>
     <string name="new_playlist">Новый плейлист</string>
     <string name="favourite_tracks">Избранные треки</string>
@@ -39,6 +40,16 @@
     <string name="even_track">%d трека</string>
     <string name="solo_track">%d трек</string>
     <string name="odd_track">%d треков</string>
+    <string name="edit_information">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
+    <string name="minutes">%d минут</string>
+    <string name="minute">%d минута</string>
+    <string name="minutes_s">%d минуты</string>
+    <string name="description">Описание</string>
+    <string name="edit_playlist">Редактировать плейлист</string>
+    <string name="save">Сохранить</string>
+    <string name="create">Создать</string>
+
 
 
 

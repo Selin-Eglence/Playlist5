@@ -14,8 +14,10 @@ class NewPlaylistViewModel(private val playlistInteractor: PlaylistInteractor): 
 
 
     private val _playlistName = MutableLiveData<String>()
+    val playlistName: LiveData<String> = _playlistName
 
     private val _playlistDescription = MutableLiveData<String?>()
+    val playlistDescription : MutableLiveData<String?> = _playlistDescription
 
     private var _coverImageUri: Uri? = null
     fun setCoverImageUri(uri: Uri?) {
@@ -25,29 +27,11 @@ class NewPlaylistViewModel(private val playlistInteractor: PlaylistInteractor): 
     private val _savePlaylistResult = MutableLiveData<Result<Unit>>()
     val savePlaylistResult: LiveData<Result<Unit>> = _savePlaylistResult
 
-    fun savePlaylist() {
-        val name = _playlistName.value ?: ""
-        Log.e("name", "insert")
-        val description = _playlistDescription.value
-
+    fun savePlaylist(playlist: Playlist) {
         viewModelScope.launch {
             try {
-                val playlist = description?.let {
-                    Playlist(
-                        name = name,
-                        description = it,
-                        imagePath = _coverImageUri?.toString() ?: "",
-                        tracks = emptyList(),
-                    )
-
-                }
-                if (playlist != null) {
-                    playlistInteractor.addNewPlaylist(playlist)
-                    Log.d("playlist", "был создан")
-                    playlistInteractor.getPlaylists()
-                }
+                playlistInteractor.addNewPlaylist(playlist)
                 _savePlaylistResult.value = Result.success(Unit)
-                Log.d("playlist","added")
             } catch (e: Exception) {
                 _savePlaylistResult.value = Result.failure(e)
             }
@@ -65,6 +49,12 @@ class NewPlaylistViewModel(private val playlistInteractor: PlaylistInteractor): 
 
     fun setPlaylistDescription(description: String?) {
         _playlistDescription.value = description
+    }
+
+    fun saveEditPlaylist(playlist: Playlist) {
+        viewModelScope.launch {
+            playlistInteractor.updatePlaylist(playlist)
+        }
     }
 
 

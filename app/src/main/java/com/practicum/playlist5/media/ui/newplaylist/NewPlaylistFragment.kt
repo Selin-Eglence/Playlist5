@@ -21,11 +21,18 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.navigateUp
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
 import com.practicum.playlist5.R
 import com.practicum.playlist5.databinding.FragmentNewPlaylistBinding
+import com.practicum.playlist5.media.ui.playlist.Playlist
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
@@ -38,6 +45,8 @@ class NewPlaylistFragment: Fragment() {
     private var image: Uri? = null
 
     private lateinit var confirmDialog:AlertDialog
+
+    private val args by navArgs<NewPlaylistFragmentArgs>()
 
 
     private val newPlaylistViewModel: NewPlaylistViewModel by viewModel()
@@ -54,15 +63,49 @@ class NewPlaylistFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.buttonCreate.isEnabled=false
-        binding.newPlaylist.setNavigationOnClickListener{
-            if ( image != null || binding.nameInput.toString().isNotEmpty() || binding.descriptionInput.toString().isNotEmpty()) {
-                confirmDialog.show()
-            }
-            else{
-                findNavController().navigateUp()
+
+
+        val editablePlaylist = args.playlist
+        if (editablePlaylist == null) {
+            binding.newPlaylist.title = getString(R.string.new_playlist)
+            binding.buttonCreate.text = getString(R.string.create)
+            binding.buttonCreate.isEnabled = false
+        } else {
+            binding.newPlaylist.title = getString(R.string.edit_playlist)
+            binding.buttonCreate.text = getString(R.string.save)
+            binding.nameInputText.setText(editablePlaylist.name)
+            binding.descriptionInputText.setText(editablePlaylist.description)
+            binding.buttonCreate.isEnabled = true
+
+            editablePlaylist.imagePath?.let { uri ->
+                convertImageIntoView(uri.toUri())
+                image = uri.toUri()
             }
         }
+
+        newPlaylistViewModel.playlistName.observe(viewLifecycleOwner) { name ->
+            if (binding.nameInputText.text.toString() != name) {
+                binding.nameInputText.setText(name)
+        }}
+
+        newPlaylistViewModel.playlistDescription.observe(viewLifecycleOwner) { description ->
+            if (binding.descriptionInputText.text.toString() != description) {
+                binding.descriptionInputText.setText(description)
+        }}
+
+
+        binding.newPlaylist.setNavigationOnClickListener{
+           if(editablePlaylist!=null) {
+               findNavController().navigateUp()
+           }
+               else {
+                   if ( image != null || binding.nameInput.toString().isNotEmpty() || binding.descriptionInput.toString().isNotEmpty()){
+                       showConfirmationDialogPlaylist()}
+                   else{
+                           findNavController().navigateUp()
+                   }
+               }
+           }
 
 
        val textWatcher = object : TextWatcher {
@@ -70,6 +113,7 @@ class NewPlaylistFragment: Fragment() {
            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
            override fun afterTextChanged(s: Editable?) {
                binding.buttonCreate.isEnabled = s?.isNotEmpty() ?: false
+               newPlaylistViewModel.setPlaylistName(s.toString())
            }
        }
 
@@ -83,12 +127,22 @@ class NewPlaylistFragment: Fragment() {
             newPlaylistViewModel.setPlaylistName(name)
             val description = binding.descriptionInputText.text.toString()
             newPlaylistViewModel.setPlaylistDescription(description)
-            val cover = image
-            if (cover != null) {
-                val privateStorageUri = saveImageToPrivateStorage(cover)
-                newPlaylistViewModel.setCoverImageUri(privateStorageUri)
+            lifecycleScope.launch {
+                image?.let { uri ->
+                    if (uri.toString() != args.playlist?.imagePath.toString()) {
+                        val privateStorageUri = saveImageToPrivateStorage(uri)
+                        image = privateStorageUri
+                        newPlaylistViewModel.setCoverImageUri(privateStorageUri)
+                    }
+                }}
+            if (editablePlaylist == null) {
+                saveNewPlaylist(name, description)
+            } else {
+                editExistingPlaylist(editablePlaylist, name, description)
             }
-            newPlaylistViewModel.savePlaylist()
+
+
+            findNavController().navigateUp()
         }
 
 
@@ -106,6 +160,8 @@ class NewPlaylistFragment: Fragment() {
                 }
             )
         }
+
+
 
 
 
@@ -127,27 +183,21 @@ class NewPlaylistFragment: Fragment() {
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    if (
-                        image != null || binding.nameInputText.toString().isNotEmpty()
-                        || binding.descriptionInputText.toString().isNotEmpty()
-                    ) {
-                        confirmDialog.show()
-                    } else {
+                    if(editablePlaylist!=null) {
                         findNavController().navigateUp()
+                    }
+                    else {
+                        if ( image != null || binding.nameInput.toString().isNotEmpty() || binding.descriptionInput.toString().isNotEmpty()){
+
+                            showConfirmationDialogPlaylist()}
+                        else{
+                            findNavController().navigateUp()
+                        }
                     }
                 }
             })
 
-        confirmDialog = DialogMaterialAlertDialogBuilder(requireActivity())
-            .setTitle("Завершить создание плейлиста?")
-            .setMessage("Все несохраненные данные будут потеряны")
-            .setNegativeButton("Отмена") { dialog, which ->
-                dialog.dismiss()
-            }
-            .setPositiveButton("Завершить") { dialog, which ->
-                requireActivity().supportFragmentManager.popBackStack()
-            }
-            .create()
+
 
 
 
@@ -156,6 +206,42 @@ class NewPlaylistFragment: Fragment() {
 
 
     }
+
+    private fun showConfirmationDialogPlaylist() {
+        DialogMaterialAlertDialogBuilder(requireContext())
+            .setTitle("Завершить создание плейлиста?")
+            .setMessage("Все несохраненные данные будут потеряны")
+            .setPositiveButton("Завершить") { dialog, _ ->
+                findNavController().navigateUp()
+                dialog.dismiss()
+            }
+            .setNegativeButton("Отмена") {dialog, which ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun saveNewPlaylist(name: String, description: String) {
+        val newPlaylist = Playlist(
+            0,
+            name,
+            description,
+            image?.toString(),
+            emptyList(),
+            0
+        )
+
+        newPlaylistViewModel.savePlaylist(newPlaylist)
+    }
+
+    private fun editExistingPlaylist(playlist: Playlist, name: String, description: String) {
+        val updatedPlaylist =
+            playlist.copy(name = name, description = description, imagePath =image?.toString())
+
+        newPlaylistViewModel.saveEditPlaylist(updatedPlaylist)
+    }
+
+
     private fun convertImageIntoView(image: Uri) {
         Glide.with(requireContext())
             .load(image)
@@ -165,7 +251,8 @@ class NewPlaylistFragment: Fragment() {
     }
 
 
-    private fun saveImageToPrivateStorage(uri: Uri): Uri {
+    private suspend fun saveImageToPrivateStorage(uri: Uri): Uri {
+        return withContext(Dispatchers.IO) {
         val filePath = File(
             requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
             "playlistsImages"
@@ -185,8 +272,8 @@ class NewPlaylistFragment: Fragment() {
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
 
-        return file.toUri()
-    }
+         file.toUri()
+    }}
 
 
 

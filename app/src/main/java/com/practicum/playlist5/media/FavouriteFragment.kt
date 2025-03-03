@@ -57,10 +57,12 @@ class FavouriteFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        adapter = TrackAdapter()
 
 
 
-        adapter = TrackAdapter { track -> PlayerActivity(track) }
+        adapter!!.onItemClickListener = TrackViewHolder.OnItemClickListener { track -> PlayerActivity(track) }
+
         binding.favoriteList.apply {
             layoutManager = LinearLayoutManager(requireContext())
             binding.favoriteList.adapter = adapter
@@ -157,6 +159,8 @@ class FavouriteFragment: Fragment() {
     override fun onResume() {
         super.onResume()
         favouriteViewModel.updateFavorites()
+        isClickAllowed = true
+
 
     }
 
@@ -168,7 +172,7 @@ class FavouriteFragment: Fragment() {
 
 
     companion object {
-        const val TRACK_KEY = "track_key"
+        const val TRACK_KEY = "track"
         fun newInstance() = FavouriteFragment()
 
 

@@ -14,7 +14,9 @@ class PlaylistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val playlistName: TextView = itemView.findViewById(R.id.playlist_name)
     private val trackCount: TextView = itemView.findViewById(R.id.playlist_tracks)
 
-    fun bind(playlist: Playlist){
+
+
+    fun bind(playlist: Playlist,onItemClickListener: OnItemClickListener?){
         if (playlist.imagePath?.isNotEmpty() == true) {
            cover.setImageURI(Uri.parse(playlist.imagePath))
         }
@@ -23,7 +25,18 @@ class PlaylistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         Log.d("PlaylistViewHolder", "bind: playlist=${playlist.name}, trackNum=${playlist.trackNum}")
         trackCount.text = count
 
+        itemView.setOnClickListener {
+            onItemClickListener?.onItemClick(playlist)
+        }
+
+
     }
+
+    fun interface OnItemClickListener {
+        fun onItemClick(item: Playlist)
+    }
+
+
 
     fun Context.getFormattedCount(trackNum: Int): String {
         val n = trackNum % 100
@@ -35,4 +48,6 @@ class PlaylistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             else -> String.format(getString(R.string.odd_track), trackNum)
         }
     }
+
+
 }
