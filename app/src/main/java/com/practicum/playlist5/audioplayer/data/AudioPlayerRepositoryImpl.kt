@@ -55,20 +55,6 @@ class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPla
         playerState = PlayerState.STATE_PAUSED
     }
 
-    override fun playbackControl() {
-        when (playerState) {
-            PlayerState.STATE_PLAYING -> {
-                pausePlayer()
-            }
-
-            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED  -> {
-                startPlayer()
-            }
-
-            else -> {}
-        }
-
-    }
 
 
     override fun onPause() {

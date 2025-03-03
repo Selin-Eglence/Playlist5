@@ -85,28 +85,29 @@ class AudioPlayerViewModel(
             progressText = dateFormat.format(0),
             playerState = PlayerState.STATE_DEFAULT
         )
-        if (audioPlayerInteractor.getPlayerState() == PlayerState.STATE_PREPARED) {
-            startPlayer()
-        }
         updateIsFavourite(track.trackId)
     }
 
 
     fun playbackControl() {
-        if (audioPlayerInteractor.getPlayerState() == PlayerState.STATE_PLAYING) {
-            pausePlayer()
+        when (audioPlayerInteractor.getPlayerState()) {
+            PlayerState.STATE_PLAYING -> {
+                pausePlayer()
+            }
+
+            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED  -> {
+                startPlayer()
+            }
+
+            else -> {}
         }
-        else if (audioPlayerInteractor.getPlayerState() == PlayerState.STATE_PREPARED || audioPlayerInteractor.getPlayerState() == PlayerState.STATE_PAUSED){
-            startPlayer()
-        }
-        else {}
     }
+
 
 
 
     private fun startPlayer() {
         audioPlayerInteractor.startPlayer()
-
         _playbackState.value = ScreenState(
             progressText = dateFormat.format(audioPlayerInteractor.getCurrentPosition()),
             playerState = PlayerState.STATE_PLAYING
@@ -141,14 +142,11 @@ class AudioPlayerViewModel(
 
 
     private fun startTimer() {
-        timerJob?.cancel()
-        timerJob = null
         timerJob=viewModelScope.launch {
             while  (audioPlayerInteractor.getPlayerState() == PlayerState.STATE_PLAYING) {
-                val currentTime = dateFormat.format(audioPlayerInteractor.getCurrentPosition())
                 delay(TIMER_UPDATE_DELAY)
                 _playbackState.value = ScreenState(
-                    progressText = currentTime,
+                    progressText = dateFormat.format(audioPlayerInteractor.getCurrentPosition()),
                     playerState = PlayerState.STATE_PLAYING
                 )
 

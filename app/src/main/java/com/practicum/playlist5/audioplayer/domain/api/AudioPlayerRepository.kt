@@ -8,7 +8,6 @@ interface AudioPlayerRepository {
     fun startPlayer()
     fun pausePlayer()
     fun onPause()
-    fun playbackControl()
     fun onDestroy()
     fun getCurrentPosition(): Int
     fun isPlaying(): Boolean

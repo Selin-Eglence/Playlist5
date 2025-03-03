@@ -159,6 +159,8 @@ class FavouriteFragment: Fragment() {
     override fun onResume() {
         super.onResume()
         favouriteViewModel.updateFavorites()
+        isClickAllowed = true
+
 
     }
 
