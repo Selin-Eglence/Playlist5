@@ -112,7 +112,6 @@ class AudioPlayerFragment : Fragment() {
                 PlayerState.STATE_COMPLETED-> binding.play.setImageResource(R.drawable.play_icon)
                 PlayerState.STATE_DEFAULT -> binding.play.setImageResource(R.drawable.play_icon)
             }
-            Log.d("state", "${state.playerState}")
             binding.playtracker.text = state.progressText
         }
 
