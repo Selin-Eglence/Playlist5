@@ -118,7 +118,6 @@ class AudioPlayerFragment : Fragment() {
         }
 
         binding.play.setOnClickListener {
-            Log.d("play", "button pressed")
                 viewModel.playbackControl()
         }
 
@@ -126,11 +125,9 @@ class AudioPlayerFragment : Fragment() {
             viewModel.onDestroy(track)
             PlayerState.STATE_COMPLETED
             findNavController().navigateUp()
-            Log.e("back", "music")
         }
 
         binding.add.setOnClickListener {
-            Log.d("add", "success")
             viewModel.loadPlaylists()
             binding.bottomSheetRecyclerView.isVisible = true
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED

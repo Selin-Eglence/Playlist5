@@ -21,10 +21,9 @@ class AudioPlayerRepositoryImpl : AudioPlayerRepository {
     }
 
     private fun initializeMediaPlayer() {
-        mediaPlayer?.release()  // Освобождаем старый экземпляр, если он есть
+        mediaPlayer?.release()
         mediaPlayer = MediaPlayer().apply {
             setOnPreparedListener {
-                Log.d("AudioPlayer", "✅ MediaPlayer готов!")
                 playerState = PlayerState.STATE_PREPARED
                 onPlayerPrepared?.invoke()
             }
@@ -60,9 +59,8 @@ class AudioPlayerRepositoryImpl : AudioPlayerRepository {
             if (!it.isPlaying) {
                 it.start()
                 playerState = PlayerState.STATE_PLAYING
-                Log.d("AudioPlayer", "▶ MediaPlayer запущен!")
             }
-        } ?: Log.e("AudioPlayer", "❌ MediaPlayer = null при попытке запуска!")
+        } ?: Log.e("AudioPlayer", " MediaPlayer = null при попытке запуска!")
     }
 
     override fun pausePlayer() {
@@ -70,7 +68,6 @@ class AudioPlayerRepositoryImpl : AudioPlayerRepository {
             if (it.isPlaying) {
                 it.pause()
                 playerState = PlayerState.STATE_PAUSED
-                Log.d("AudioPlayer", "⏸ Плеер на паузе")
             }
         }
     }
@@ -95,7 +92,6 @@ class AudioPlayerRepositoryImpl : AudioPlayerRepository {
         mediaPlayer?.release()
         mediaPlayer = null
         playerState = PlayerState.STATE_DEFAULT
-        Log.d("AudioPlayer", "🛑 MediaPlayer уничтожен!")
     }
 
     private fun resetMediaPlayer() {

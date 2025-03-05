@@ -107,9 +107,7 @@ class AudioPlayerViewModel(
 
             }
             PlayerState.STATE_DEFAULT -> {
-                Log.d("AudioPlayerViewModel", "Ждем, пока MediaPlayer будет готов...")
                 audioPlayerInteractor.onPlayerPrepared = {
-                    Log.d("AudioPlayerViewModel", "MediaPlayer стал готовым → запускаем!")
                     startPlayer() }
                 audioPlayerInteractor.preparePlayer(_trackData.value ?: return)
             }
@@ -182,14 +180,12 @@ class AudioPlayerViewModel(
         viewModelScope.launch {
             val isInPlaylist = isTrackInPlaylist(playlist, track)
             try {
-                Log.d("PlaylistViewModel", "Трек ${track.trackId} уже в плейлисте? $isInPlaylist")
                 if (!isInPlaylist) {
                     val updatedPlaylist = playlist.copy(
                         tracks = playlist.tracks + listOf(track.trackId),
                         trackNum = playlist.tracks.size+1
                     )
                     playlistInteractor.addTrackToPlaylist(updatedPlaylist, track)
-                    Log.d("track", "добавлен в плейлист")
                     _addedToPlaylistState.value= AddToPlaylist(true,playlist)
                 } else {
                     _addedToPlaylistState.value =AddToPlaylist(false,playlist)
@@ -207,7 +203,6 @@ class AudioPlayerViewModel(
 
 
     fun loadPlaylists() {
-        Log.d("playlist", "загружен")
         viewModelScope.launch {
             playlistInteractor.getPlaylists()
             try {
