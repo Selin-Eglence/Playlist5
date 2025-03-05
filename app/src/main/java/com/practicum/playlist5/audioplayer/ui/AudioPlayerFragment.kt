@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.navigation.NavArgs
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -18,8 +17,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.practicum.playlist5.R
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
 import com.practicum.playlist5.databinding.FragmentAudioplayerBinding
-import com.practicum.playlist5.search.ui.SearchFragment
 import com.practicum.playlist5.search.domain.models.Track
+import com.practicum.playlist5.search.ui.SearchFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale

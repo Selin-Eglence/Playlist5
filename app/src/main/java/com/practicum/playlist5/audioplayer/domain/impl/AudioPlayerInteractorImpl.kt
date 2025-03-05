@@ -1,7 +1,6 @@
 package com.practicum.playlist5.audioplayer.domain.impl
 
 
-import android.media.MediaPlayer
 import com.practicum.playlist5.audioplayer.data.AudioPlayerRepositoryImpl
 import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerInteractor
 import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerRepository

@@ -1,13 +1,11 @@
 package com.practicum.playlist5.audioplayer.ui
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerInteractor
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
-import com.practicum.playlist5.di.repositoryModule
 import com.practicum.playlist5.media.domain.api.FavouriteInteractor
 import com.practicum.playlist5.media.domain.api.PlaylistInteractor
 import com.practicum.playlist5.media.ui.playlist.Playlist
@@ -15,10 +13,8 @@ import com.practicum.playlist5.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.dsl.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
-import kotlin.math.log
 
 class AudioPlayerViewModel(
     private val audioPlayerInteractor: AudioPlayerInteractor,
