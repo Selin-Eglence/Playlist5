@@ -1,9 +1,11 @@
 package com.practicum.playlist5.audioplayer.domain.api
 
+import android.media.MediaPlayer
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
 import com.practicum.playlist5.search.domain.models.Track
 
 interface AudioPlayerRepository {
+
     fun preparePlayer(track: Track)
     fun startPlayer()
     fun pausePlayer()
@@ -12,5 +14,10 @@ interface AudioPlayerRepository {
     fun getCurrentPosition(): Int
     fun isPlaying(): Boolean
      fun getPlayerState():PlayerState
+
+  fun setOnPreparedListener(listener: MediaPlayer.OnPreparedListener) {
+
+    }
+
 
 }

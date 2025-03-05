@@ -33,6 +33,7 @@ class AudioPlayerFragment : Fragment() {
     private val viewModel by viewModel<AudioPlayerViewModel>()
 
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -85,24 +86,9 @@ class AudioPlayerFragment : Fragment() {
                 }
             }
         }
-
         track = arguments?.getSerializable(SearchFragment.TRACK_KEY) as Track
+        setupUI(track)
 
-        Glide.with(this)
-            .load(track.artworkUrl512)
-            .placeholder(R.drawable.placeholder)
-            .error(R.drawable.placeholder)
-            .centerCrop()
-            .transform(RoundedCorners(8))
-            .into(binding.albumImage)
-
-        binding.trackName.text = track.trackName
-        binding.artistName.text = track.artistName
-        binding.albumName.text = track.collectionName
-        binding.yearName.text = track.releaseDate.substring(0, 4)
-        binding.genreName.text = track.primaryGenreName
-        binding.countryName.text = track.country
-        binding.timing.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
 
         viewModel.setTrack(track)
 
@@ -120,15 +106,20 @@ class AudioPlayerFragment : Fragment() {
 
 
         viewModel.playbackState.observe(viewLifecycleOwner) { state ->
+            binding.play.isEnabled = state.isPlayButtonEnabled
             when (state.playerState) {
                 PlayerState.STATE_PLAYING -> binding.play.setImageResource(R.drawable.pause_icon)
-                else -> binding.play.setImageResource(R.drawable.play_icon)
+                PlayerState.STATE_PAUSED,PlayerState.STATE_PREPARED -> binding.play.setImageResource(R.drawable.play_icon)
+                PlayerState.STATE_COMPLETED-> binding.play.setImageResource(R.drawable.play_icon)
+                PlayerState.STATE_DEFAULT -> binding.play.setImageResource(R.drawable.play_icon)
             }
+            Log.d("state", "${state.playerState}")
             binding.playtracker.text = state.progressText
         }
 
         binding.play.setOnClickListener {
-            viewModel.playbackControl()
+            Log.d("play", "button pressed")
+                viewModel.playbackControl()
         }
 
         binding.lightMode.setOnClickListener {
@@ -164,6 +155,25 @@ class AudioPlayerFragment : Fragment() {
             findNavController().navigate(directions)
         }
     }
+
+    private fun setupUI(track: Track){
+
+
+        Glide.with(this)
+            .load(track.artworkUrl512)
+            .placeholder(R.drawable.placeholder)
+            .error(R.drawable.placeholder)
+            .centerCrop()
+            .transform(RoundedCorners(8))
+            .into(binding.albumImage)
+
+        binding.trackName.text = track.trackName
+        binding.artistName.text = track.artistName
+        binding.albumName.text = track.collectionName
+        binding.yearName.text = track.releaseDate.substring(0, 4)
+        binding.genreName.text = track.primaryGenreName
+        binding.countryName.text = track.country
+        binding.timing.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)}
 
     private fun updateLikeButton(isFavorite: Boolean) {
         val image = if (isFavorite) R.drawable.not_like else R.drawable.like

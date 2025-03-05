@@ -33,7 +33,7 @@ class AudioPlayerViewModel(
     private val dateFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
 
     private val _playbackState = MutableLiveData(
-        ScreenState(progressText = dateFormat.format(audioPlayerInteractor.getCurrentPosition()),
+        ScreenState(isPlayButtonEnabled = true,progressText = dateFormat.format(audioPlayerInteractor.getCurrentPosition()),
             playerState = audioPlayerInteractor.getPlayerState())
     )
     val playbackState: LiveData<ScreenState> = _playbackState
@@ -50,6 +50,7 @@ class AudioPlayerViewModel(
 
     private val _addedToPlaylistState = MutableLiveData<AddToPlaylist>()
     val addedToPlaylistState: LiveData<AddToPlaylist> = _addedToPlaylistState
+
 
 
 
@@ -80,35 +81,56 @@ class AudioPlayerViewModel(
         timerJob?.cancel()
         timerJob = null
         _trackData.value = track
-        audioPlayerInteractor.preparePlayer(track)
-        _playbackState.value = ScreenState(
-            progressText = dateFormat.format(0),
-            playerState = PlayerState.STATE_DEFAULT
-        )
+
+        audioPlayerInteractor.onPlayerPrepared = {
+            _playbackState.postValue(
+                ScreenState(true,
+                    progressText = dateFormat.format(0),
+                    playerState = PlayerState.STATE_PREPARED
+                )
+            )
+        }
+
+        preparePlayer(track)
         updateIsFavourite(track.trackId)
     }
 
 
     fun playbackControl() {
-        when (audioPlayerInteractor.getPlayerState()) {
+        val state = audioPlayerInteractor.getPlayerState()
+        when (state) {
             PlayerState.STATE_PLAYING -> {
                 pausePlayer()
             }
-
             PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED  -> {
                 startPlayer()
+
+            }
+            PlayerState.STATE_DEFAULT -> {
+                Log.d("AudioPlayerViewModel", "Ждем, пока MediaPlayer будет готов...")
+                audioPlayerInteractor.onPlayerPrepared = {
+                    Log.d("AudioPlayerViewModel", "MediaPlayer стал готовым → запускаем!")
+                    startPlayer() }
+                audioPlayerInteractor.preparePlayer(_trackData.value ?: return)
             }
 
-            else -> {}
+           else ->{}
         }
     }
+
+    private fun preparePlayer(track: Track) {
+        audioPlayerInteractor.preparePlayer(track)
+
+    }
+
+
 
 
 
 
     private fun startPlayer() {
         audioPlayerInteractor.startPlayer()
-        _playbackState.value = ScreenState(
+        _playbackState.value = ScreenState(isPlayButtonEnabled = true,
             progressText = dateFormat.format(audioPlayerInteractor.getCurrentPosition()),
             playerState = PlayerState.STATE_PLAYING
         )
@@ -119,7 +141,7 @@ class AudioPlayerViewModel(
 
     private fun pausePlayer() {
         audioPlayerInteractor.pausePlayer()
-        _playbackState.value = ScreenState(
+        _playbackState.value = ScreenState(true,
             progressText = dateFormat.format(audioPlayerInteractor.getCurrentPosition()),
             playerState = PlayerState.STATE_PAUSED
         )
@@ -130,22 +152,20 @@ class AudioPlayerViewModel(
 
 
     fun onDestroy(track: Track) {
-        audioPlayerInteractor.pausePlayer()
-        timerJob?.cancel()
-        _playbackState.value = ScreenState(
-            progressText = dateFormat.format(0),
-            playerState = PlayerState.STATE_DEFAULT
-        )
         updateIsFavourite(track.trackId)
+        audioPlayerInteractor.pausePlayer()
+        audioPlayerInteractor.onDestroy()
 
     }
 
 
+
     private fun startTimer() {
+
         timerJob=viewModelScope.launch {
             while  (audioPlayerInteractor.getPlayerState() == PlayerState.STATE_PLAYING) {
                 delay(TIMER_UPDATE_DELAY)
-                _playbackState.value = ScreenState(
+                _playbackState.value = ScreenState(true,
                     progressText = dateFormat.format(audioPlayerInteractor.getCurrentPosition()),
                     playerState = PlayerState.STATE_PLAYING
                 )

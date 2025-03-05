@@ -1,12 +1,17 @@
 package com.practicum.playlist5.audioplayer.domain.api
 
+import android.media.MediaPlayer
 import android.media.MediaPlayer.OnCompletionListener
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
 import com.practicum.playlist5.search.domain.models.Track
 
 interface AudioPlayerInteractor {
 
-    fun preparePlayer(track: Track )
+
+        var onPlayerPrepared: (() -> Unit)?
+
+
+    fun preparePlayer(track: Track)
 
     fun startPlayer()
     fun pausePlayer()
@@ -16,7 +21,7 @@ interface AudioPlayerInteractor {
 
     fun getPlayerState():PlayerState
 
-
+    fun onDestroy()
 
 
 
