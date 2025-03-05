@@ -33,7 +33,7 @@ val repositoryModule = module {
         SettingsRepositoryImpl(get())
     }
     single <AudioPlayerRepository>{
-        AudioPlayerRepositoryImpl(get())
+        AudioPlayerRepositoryImpl()
     }
     single <SharingRepository>{
         SharingRepositoryImpl(androidContext())

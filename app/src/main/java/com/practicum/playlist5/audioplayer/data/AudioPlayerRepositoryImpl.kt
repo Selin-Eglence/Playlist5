@@ -8,91 +8,100 @@ import com.practicum.playlist5.audioplayer.domain.models.PlayerState
 import com.practicum.playlist5.search.domain.models.Track
 import java.io.IOException
 
-class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPlayerRepository {
 
+class AudioPlayerRepositoryImpl : AudioPlayerRepository {
+
+    private var mediaPlayer: MediaPlayer? = null
     private var playerState: PlayerState = PlayerState.STATE_DEFAULT
 
     var onPlayerPrepared: (() -> Unit)? = null
 
-    override fun preparePlayer(track: Track) {
-        try {
-            if (mediaPlayer != null) {
-                mediaPlayer.reset()  // Reset player before reusing
-            }
-            mediaPlayer.setDataSource(track.previewUrl)
-            mediaPlayer.prepareAsync()
+    init {
+        initializeMediaPlayer()
+    }
 
-            mediaPlayer.setOnPreparedListener {
+    private fun initializeMediaPlayer() {
+        mediaPlayer?.release()  // Освобождаем старый экземпляр, если он есть
+        mediaPlayer = MediaPlayer().apply {
+            setOnPreparedListener {
                 Log.d("AudioPlayer", "✅ MediaPlayer готов!")
                 playerState = PlayerState.STATE_PREPARED
                 onPlayerPrepared?.invoke()
             }
-
-            mediaPlayer.setOnCompletionListener {
+            setOnCompletionListener {
                 playerState = PlayerState.STATE_COMPLETED
             }
+            setOnErrorListener { mp, what, extra ->
+                Log.e("AudioPlayer", "Ошибка MediaPlayer: what=$what, extra=$extra")
+                resetMediaPlayer()
+                true
+            }
+        }
+    }
 
+    override fun preparePlayer(track: Track) {
+        try {
+            resetMediaPlayer()
+            mediaPlayer?.apply {
+                setDataSource(track.previewUrl)
+                prepareAsync()
+            }
         } catch (e: IOException) {
-            Log.e("MediaPlayerError", " Ошибка при загрузке трека: ${e.message}")
+            Log.e("MediaPlayerError", "Ошибка при загрузке трека: ${e.message}")
         } catch (e: IllegalStateException) {
             Log.e("MediaPlayerError", "MediaPlayer в неправильном состоянии: ${e.message}")
-            mediaPlayer.reset()
+            resetMediaPlayer()
             preparePlayer(track)
         }
     }
 
     override fun startPlayer() {
-        if (playerState == PlayerState.STATE_PREPARED || playerState == PlayerState.STATE_PAUSED  ) {
-            mediaPlayer.start()
-            playerState = PlayerState.STATE_PLAYING
-            Log.d("AudioPlayer", "▶ MediaPlayer запущен!")
-        } else {
-            Log.e("AudioPlayer", "❌ Попытка запустить плеер в состоянии: $playerState")
-        }
+        mediaPlayer?.let {
+            if (!it.isPlaying) {
+                it.start()
+                playerState = PlayerState.STATE_PLAYING
+                Log.d("AudioPlayer", "▶ MediaPlayer запущен!")
+            }
+        } ?: Log.e("AudioPlayer", "❌ MediaPlayer = null при попытке запуска!")
     }
 
     override fun pausePlayer() {
-            mediaPlayer.pause()
-            playerState = PlayerState.STATE_PAUSED
-            Log.d("AudioPlayer", "⏸ Плеер на паузе")
-
-    }
-
-
-
-    override fun getCurrentPosition(): Int {
-        return try {
-            mediaPlayer.currentPosition
-        } catch (e: IllegalStateException) {
-            Log.e("AudioPlayer", "Error getting position: ${e.message}")
-            0
+        mediaPlayer?.let {
+            if (it.isPlaying) {
+                it.pause()
+                playerState = PlayerState.STATE_PAUSED
+                Log.d("AudioPlayer", "⏸ Плеер на паузе")
+            }
         }
     }
 
+    override fun onPause() {
+        mediaPlayer?.pause()
+    }
+
+    override fun getCurrentPosition(): Int {
+        return mediaPlayer?.currentPosition ?: 0
+    }
+
     override fun isPlaying(): Boolean {
-        return mediaPlayer.isPlaying
+        return mediaPlayer?.isPlaying ?: false
     }
 
     override fun getPlayerState(): PlayerState {
         return playerState
-
     }
-
-    override fun onPause() {
-        mediaPlayer.pause()
-    }
-
 
     override fun onDestroy() {
-        mediaPlayer.reset()
-        mediaPlayer.release()
-        playerState = PlayerState.STATE_COMPLETED
-
+        mediaPlayer?.release()
+        mediaPlayer = null
+        playerState = PlayerState.STATE_DEFAULT
+        Log.d("AudioPlayer", "🛑 MediaPlayer уничтожен!")
     }
 
-
-
-
-
+    private fun resetMediaPlayer() {
+        mediaPlayer?.apply {
+            reset()
+            playerState = PlayerState.STATE_DEFAULT
+        } ?: initializeMediaPlayer()
+    }
 }
-
