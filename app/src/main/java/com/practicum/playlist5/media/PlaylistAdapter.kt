@@ -10,6 +10,7 @@ import com.practicum.playlist5.media.ui.playlist.PlaylistViewHolder
 class PlaylistAdapter() : RecyclerView.Adapter<PlaylistViewHolder>() {
 
     var playlists: MutableList<Playlist> = mutableListOf()
+    var onItemClickListener: PlaylistViewHolder.OnItemClickListener? = null
 
     fun clear() {
         playlists.clear()
@@ -27,6 +28,6 @@ class PlaylistAdapter() : RecyclerView.Adapter<PlaylistViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
-        holder.bind(playlists[position])
+        holder.bind(playlists[position],onItemClickListener = onItemClickListener)
     }
 }

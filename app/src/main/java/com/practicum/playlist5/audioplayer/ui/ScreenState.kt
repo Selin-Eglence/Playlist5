@@ -1,5 +1,6 @@
 package com.practicum.playlist5.audioplayer.ui
 
+
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
 
-data class ScreenState(val progressText: String, val playerState: PlayerState)
+data class ScreenState(val isPlayButtonEnabled: Boolean,val progressText: String, val playerState: PlayerState)

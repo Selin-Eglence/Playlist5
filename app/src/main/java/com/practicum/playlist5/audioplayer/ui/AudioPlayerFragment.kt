@@ -17,8 +17,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.practicum.playlist5.R
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
 import com.practicum.playlist5.databinding.FragmentAudioplayerBinding
-import com.practicum.playlist5.search.ui.SearchFragment
 import com.practicum.playlist5.search.domain.models.Track
+import com.practicum.playlist5.search.ui.SearchFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -30,6 +30,8 @@ class AudioPlayerFragment : Fragment() {
     private lateinit var track: Track
     private var playlistAdapter: SheetViewAdapter? = null
     private val viewModel by viewModel<AudioPlayerViewModel>()
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -58,6 +60,9 @@ class AudioPlayerFragment : Fragment() {
         }
 
 
+
+
+
         binding.bottomSheetRecyclerView.adapter = playlistAdapter
         binding.bottomSheetRecyclerView.isVisible = true
         viewModel.loadPlaylists()
@@ -80,24 +85,9 @@ class AudioPlayerFragment : Fragment() {
                 }
             }
         }
-
         track = arguments?.getSerializable(SearchFragment.TRACK_KEY) as Track
+        setupUI(track)
 
-        Glide.with(this)
-            .load(track.artworkUrl512)
-            .placeholder(R.drawable.placeholder)
-            .error(R.drawable.placeholder)
-            .centerCrop()
-            .transform(RoundedCorners(8))
-            .into(binding.albumImage)
-
-        binding.trackName.text = track.trackName
-        binding.artistName.text = track.artistName
-        binding.albumName.text = track.collectionName
-        binding.yearName.text = track.releaseDate.substring(0, 4)
-        binding.genreName.text = track.primaryGenreName
-        binding.countryName.text = track.country
-        binding.timing.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
 
         viewModel.setTrack(track)
 
@@ -115,26 +105,27 @@ class AudioPlayerFragment : Fragment() {
 
 
         viewModel.playbackState.observe(viewLifecycleOwner) { state ->
+            binding.play.isEnabled = state.isPlayButtonEnabled
             when (state.playerState) {
                 PlayerState.STATE_PLAYING -> binding.play.setImageResource(R.drawable.pause_icon)
-                else -> binding.play.setImageResource(R.drawable.play_icon)
+                PlayerState.STATE_PAUSED,PlayerState.STATE_PREPARED -> binding.play.setImageResource(R.drawable.play_icon)
+                PlayerState.STATE_COMPLETED-> binding.play.setImageResource(R.drawable.play_icon)
+                PlayerState.STATE_DEFAULT -> binding.play.setImageResource(R.drawable.play_icon)
             }
             binding.playtracker.text = state.progressText
         }
 
         binding.play.setOnClickListener {
-            viewModel.playbackControl()
+                viewModel.playbackControl()
         }
 
         binding.lightMode.setOnClickListener {
             viewModel.onDestroy(track)
             PlayerState.STATE_COMPLETED
             findNavController().navigateUp()
-            Log.e("back", "music")
         }
 
         binding.add.setOnClickListener {
-            Log.d("add", "success")
             viewModel.loadPlaylists()
             binding.bottomSheetRecyclerView.isVisible = true
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
@@ -155,9 +146,29 @@ class AudioPlayerFragment : Fragment() {
 
         binding.RefreshButton.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            findNavController().navigate(R.id.action_audioPlayerFragment_to_newPlaylistFragment)
+            val directions = AudioPlayerFragmentDirections.actionAudioPlayerFragmentToNewPlaylistFragment(null)
+            findNavController().navigate(directions)
         }
     }
+
+    private fun setupUI(track: Track){
+
+
+        Glide.with(this)
+            .load(track.artworkUrl512)
+            .placeholder(R.drawable.placeholder)
+            .error(R.drawable.placeholder)
+            .centerCrop()
+            .transform(RoundedCorners(8))
+            .into(binding.albumImage)
+
+        binding.trackName.text = track.trackName
+        binding.artistName.text = track.artistName
+        binding.albumName.text = track.collectionName
+        binding.yearName.text = track.releaseDate.substring(0, 4)
+        binding.genreName.text = track.primaryGenreName
+        binding.countryName.text = track.country
+        binding.timing.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)}
 
     private fun updateLikeButton(isFavorite: Boolean) {
         val image = if (isFavorite) R.drawable.not_like else R.drawable.like

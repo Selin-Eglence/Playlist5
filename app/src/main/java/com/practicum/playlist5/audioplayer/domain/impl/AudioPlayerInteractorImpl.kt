@@ -1,6 +1,7 @@
 package com.practicum.playlist5.audioplayer.domain.impl
 
 
+import com.practicum.playlist5.audioplayer.data.AudioPlayerRepositoryImpl
 import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerInteractor
 import com.practicum.playlist5.audioplayer.domain.api.AudioPlayerRepository
 import com.practicum.playlist5.audioplayer.domain.models.PlayerState
@@ -9,9 +10,15 @@ import com.practicum.playlist5.search.domain.models.Track
 class AudioPlayerInteractorImpl(
     private val audioPlayerRepository: AudioPlayerRepository
 ) : AudioPlayerInteractor {
+
+    override var onPlayerPrepared: (() -> Unit)? = null
+        set(value) {
+            (audioPlayerRepository as? AudioPlayerRepositoryImpl)?.onPlayerPrepared = value
+            field = value
+        }
+
     override fun preparePlayer(track: Track) {
         audioPlayerRepository.preparePlayer(track)
-
     }
 
     override fun startPlayer() {
@@ -34,6 +41,8 @@ class AudioPlayerInteractorImpl(
         return audioPlayerRepository.getCurrentPosition()
     }
 
-
+    override fun onDestroy() {
+        return audioPlayerRepository.onDestroy()
+    }
 
 }

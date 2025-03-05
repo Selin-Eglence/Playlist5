@@ -23,5 +23,6 @@
     <dimen name="add_playlist">52dp</dimen>
     <dimen name="playlist_tracks">12sp</dimen>
     <dimen name="cover_size">45dp</dimen>
+    <dimen name="one_playlist">18sp</dimen>
 
 </resources>
